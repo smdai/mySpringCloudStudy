@@ -15,6 +15,8 @@
     <spring-boot-maven-plugin-version>2.3.12.RELEASE</spring-boot-maven-plugin-version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
+    <mybatis-plus-version>3.5.2</mybatis-plus-version>
+    <druid-version>1.2.12</druid-version>
 </properties>
     <dependencyManagement>
         <dependencies>
