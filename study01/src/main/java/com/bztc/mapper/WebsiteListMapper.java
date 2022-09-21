@@ -2,13 +2,15 @@ package com.bztc.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.bztc.entity.WebsiteList;
-import org.apache.ibatis.annotations.Mapper;
 
 /**
+ * <p>
+ * 网站列表 Mapper 接口
+ * </p>
+ *
  * @author daism
- * @create 2022-09-21 15:53
- * @description 网站列表mapper层
+ * @since 2022-09-21
  */
-@Mapper
 public interface WebsiteListMapper extends BaseMapper<WebsiteList> {
+
 }

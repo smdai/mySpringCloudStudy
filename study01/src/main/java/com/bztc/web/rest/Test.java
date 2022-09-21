@@ -1,7 +1,7 @@
 package com.bztc.web.rest;
 
-import com.bztc.com.bztc.service.WebsiteService;
 import com.bztc.entity.WebsiteList;
+import com.bztc.service.IWebsiteListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/test")
 public class Test {
     @Autowired
-    private WebsiteService websiteService;
+    private IWebsiteListService iWebsiteListService;
     /**
      * 描述：测试get请求
      *
@@ -37,7 +37,7 @@ public class Test {
      */
     @GetMapping("/testGetFromDataBase")
     public WebsiteList testGetFromDataBase(){
-        return websiteService.selectById(1);
+        return iWebsiteListService.getById(1);
     }
 }
 

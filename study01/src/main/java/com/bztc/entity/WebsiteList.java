@@ -1,26 +1,66 @@
 package com.bztc.entity;
 
 
-public class WebsiteList {
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 
-  private long id;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+@TableName("website_list")
+public class WebsiteList implements Serializable {
+
+  private static final long serialVersionUID = 1L;
+
+  /**
+   * 主表id
+   */
+  @TableId(value = "id", type = IdType.AUTO)
+  private Integer id;
+
+  /**
+   * 网站地址
+   */
   private String websiteUrl;
+
+  /**
+   * 网站名称
+   */
   private String websiteName;
+
+  /**
+   * 状态
+   */
   private String status;
+
+  /**
+   * 录入人
+   */
   private String inputUser;
-  private java.sql.Timestamp inputTime;
+
+  /**
+   * 录入时间
+   */
+  private LocalDateTime inputTime;
+
+  /**
+   * 更新人
+   */
   private String updateUser;
-  private java.sql.Timestamp updateTime;
 
+  /**
+   * 更新时间
+   */
+  private LocalDateTime updateTime;
 
-  public long getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
-
 
   public String getWebsiteUrl() {
     return websiteUrl;
@@ -30,7 +70,6 @@ public class WebsiteList {
     this.websiteUrl = websiteUrl;
   }
 
-
   public String getWebsiteName() {
     return websiteName;
   }
@@ -38,7 +77,6 @@ public class WebsiteList {
   public void setWebsiteName(String websiteName) {
     this.websiteName = websiteName;
   }
-
 
   public String getStatus() {
     return status;
@@ -48,7 +86,6 @@ public class WebsiteList {
     this.status = status;
   }
 
-
   public String getInputUser() {
     return inputUser;
   }
@@ -57,15 +94,13 @@ public class WebsiteList {
     this.inputUser = inputUser;
   }
 
-
-  public java.sql.Timestamp getInputTime() {
+  public LocalDateTime getInputTime() {
     return inputTime;
   }
 
-  public void setInputTime(java.sql.Timestamp inputTime) {
+  public void setInputTime(LocalDateTime inputTime) {
     this.inputTime = inputTime;
   }
-
 
   public String getUpdateUser() {
     return updateUser;
@@ -75,13 +110,25 @@ public class WebsiteList {
     this.updateUser = updateUser;
   }
 
-
-  public java.sql.Timestamp getUpdateTime() {
+  public LocalDateTime getUpdateTime() {
     return updateTime;
   }
 
-  public void setUpdateTime(java.sql.Timestamp updateTime) {
+  public void setUpdateTime(LocalDateTime updateTime) {
     this.updateTime = updateTime;
   }
 
+  @Override
+  public String toString() {
+    return "WebsiteList{" +
+            "id = " + id +
+            ", websiteUrl = " + websiteUrl +
+            ", websiteName = " + websiteName +
+            ", status = " + status +
+            ", inputUser = " + inputUser +
+            ", inputTime = " + inputTime +
+            ", updateUser = " + updateUser +
+            ", updateTime = " + updateTime +
+            "}";
+  }
 }
