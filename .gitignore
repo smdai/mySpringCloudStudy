@@ -14,7 +14,7 @@ buildNumber.properties
 .idea/
 .idea/**/*.xml
 *.iml
-
+.DS_Store
 # Eclipse #
 .settings/
 .classpath
