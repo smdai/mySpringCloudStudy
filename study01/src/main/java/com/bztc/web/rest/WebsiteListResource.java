@@ -11,38 +11,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 前端调后段测试类
- *
  * @author daism
- * @date 2022-09-16 11:20:17
+ * @create 2022-09-25 19:43
+ * @description 网站地址resource层
  */
 @RestController
-@RequestMapping("/test")
-public class Test {
-    private static final Logger logger = LoggerFactory.getLogger(Test.class);
+@RequestMapping("/websiteListResource")
+public class WebsiteListResource {
+    private static final Logger logger = LoggerFactory.getLogger(WebsiteListResource.class);
     @Autowired
     private IWebsiteListService iWebsiteListService;
-    /**
-     * 描述：测试get请求
-     *
-     * @return java.lang.String
+
+    /*
+     * 描述：根据主键id查询网站信息
      * @author daism
-     * @date 2022-09-16 15:33:55
-     */
-    @GetMapping("/testGetMapping")
-    public String testGetMapping() {
-        return "success";
-    }
-    /**
-     * 描述： 测试从数据库查询数据
-     * @author daism
-     * @date 2022-09-21 16:09:43
+     * @date 2022-09-25 20:32:44
+     * @param s
      * @return com.bztc.entity.WebsiteList
      */
-    @GetMapping("/testGetFromDataBase/{s}")
-    public WebsiteList testGetFromDataBase(@PathVariable String s){
+    @GetMapping("/getInfoById/{s}")
+    public WebsiteList getInfoById(@PathVariable Integer s){
         logger.info("------->/testGetFromDataBase");
-        return iWebsiteListService.getById(1);
+        return iWebsiteListService.getInfoById(s);
     }
 }
-

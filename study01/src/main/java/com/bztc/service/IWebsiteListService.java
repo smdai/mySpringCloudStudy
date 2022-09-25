@@ -12,5 +12,5 @@ import com.bztc.entity.WebsiteList;
  * @since 2022-09-21
  */
 public interface IWebsiteListService extends IService<WebsiteList> {
-
+    WebsiteList getInfoById(Integer id);
 }

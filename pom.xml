@@ -8,16 +8,17 @@
     <artifactId>study</artifactId>
     <version>1.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-<properties>
-    <spring-boot-version>2.3.12.RELEASE</spring-boot-version>
-    <spring-cloud-version>Hoxton.SR12</spring-cloud-version>
-    <spring-cloud-alibaba-version>2.2.8.RELEASE</spring-cloud-alibaba-version>
-    <spring-boot-maven-plugin-version>2.3.12.RELEASE</spring-boot-maven-plugin-version>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-    <mybatis-plus-version>3.5.2</mybatis-plus-version>
-    <druid-version>1.2.12</druid-version>
-</properties>
+    <properties>
+        <spring-boot-version>2.3.12.RELEASE</spring-boot-version>
+        <spring-cloud-version>Hoxton.SR12</spring-cloud-version>
+        <spring-cloud-alibaba-version>2.2.8.RELEASE</spring-cloud-alibaba-version>
+        <spring-boot-maven-plugin-version>2.3.12.RELEASE</spring-boot-maven-plugin-version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <mybatis-plus-version>3.5.2</mybatis-plus-version>
+        <druid-version>1.2.12</druid-version>
+        <skywalking-tools.version>8.12.0</skywalking-tools.version>
+    </properties>
     <dependencyManagement>
         <dependencies>
 
