@@ -4,13 +4,15 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.bztc.entity.WebsiteList;
 
 /**
- * <p>
- * 网站列表 Mapper 接口
- * </p>
- *
- * @author daism
- * @since 2022-09-21
- */
+* @author daishuming
+* @description 针对表【website_list(网站列表)】的数据库操作Mapper
+* @createDate 2022-09-28 10:07:53
+* @Entity generator.domain.WebsiteList
+*/
 public interface WebsiteListMapper extends BaseMapper<WebsiteList> {
 
 }
+
+
+
+

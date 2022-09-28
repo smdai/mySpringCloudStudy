@@ -1,7 +1,7 @@
 package com.bztc.web.rest;
 
 import com.bztc.entity.WebsiteList;
-import com.bztc.service.IWebsiteListService;
+import com.bztc.service.WebsiteListService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class Test {
     private static final Logger logger = LoggerFactory.getLogger(Test.class);
     @Autowired
-    private IWebsiteListService iWebsiteListService;
+    private WebsiteListService iWebsiteListService;
     /**
      * 描述：测试get请求
      *

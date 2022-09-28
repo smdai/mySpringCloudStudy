@@ -3,22 +3,19 @@ package com.bztc.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bztc.entity.WebsiteList;
 import com.bztc.mapper.WebsiteListMapper;
-import com.bztc.service.IWebsiteListService;
+import com.bztc.service.WebsiteListService;
 import org.apache.skywalking.apm.toolkit.trace.Tag;
 import org.apache.skywalking.apm.toolkit.trace.Tags;
 import org.apache.skywalking.apm.toolkit.trace.Trace;
 import org.springframework.stereotype.Service;
 
 /**
- * <p>
- * 网站列表 服务实现类
- * </p>
- *
- * @author daism
- * @since 2022-09-21
- */
+* @author daishuming
+* @description 针对表【website_list(网站列表)】的数据库操作Service实现
+* @createDate 2022-09-28 10:07:53
+*/
 @Service
-public class WebsiteListServiceImpl extends ServiceImpl<WebsiteListMapper, WebsiteList> implements IWebsiteListService {
+public class WebsiteListServiceImpl extends ServiceImpl<WebsiteListMapper, WebsiteList> implements WebsiteListService {
     /*
      * 描述：根据主键获取网站信息
      * @author daism
@@ -34,3 +31,7 @@ public class WebsiteListServiceImpl extends ServiceImpl<WebsiteListMapper, Websi
         return this.getById(id);
     }
 }
+
+
+
+
