@@ -1,7 +1,10 @@
 package com.bztc.web.rest;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.bztc.dto.QueryModel;
 import com.bztc.dto.ResultDto;
 import com.bztc.entity.WebsiteList;
 import com.bztc.service.WebsiteListService;
@@ -57,10 +60,40 @@ public class WebsiteListResource {
      * @return java.util.List<com.bztc.entity.WebsiteList>
      */
     @GetMapping("/queryByPage")
-    public ResultDto<List<WebsiteList>> queryByPageTest(QueryModel queryModel) {
-        logger.info(queryModel.toString());
-        Page<WebsiteList> queryPage = new Page<>(queryModel.getPageIndex(), queryModel.getPageSize());
-        Page<WebsiteList> websiteListPage = websiteListService.page(queryPage);
+    public ResultDto<List<WebsiteList>> queryByPage(@RequestParam("param") String params) {
+        JSONObject jsonObject = JSONUtil.parseObj(params);
+
+        Page<WebsiteList> queryPage = new Page<>((int)jsonObject.get("pageIndex"), (int)jsonObject.get("pageSize"));
+
+        QueryWrapper<WebsiteList> queryWrapper = new QueryWrapper<>();
+        if(!StrUtil.isBlankIfStr(jsonObject.get("websiteUrl"))){
+            queryWrapper.like("website_Url",jsonObject.get("websiteUrl"));
+        }
+        if(!StrUtil.isBlankIfStr(jsonObject.get("websiteName"))){
+            queryWrapper.like("website_Name",jsonObject.get("websiteName"));
+        }
+        queryWrapper.orderByDesc("input_time");
+        Page<WebsiteList> websiteListPage = websiteListService.page(queryPage,queryWrapper);
         return new ResultDto<>(websiteListPage.getTotal(),websiteListPage.getRecords());
+    }
+    /*
+     * 描述：新增网站信息
+     * @author daism
+     * @date 2022-09-29 10:35:10
+     * @param websiteList
+     * @return com.bztc.dto.ResultDto<com.bztc.entity.WebsiteList>
+     */
+    @PostMapping("/insert")
+    public ResultDto<WebsiteList> insert(@RequestBody WebsiteList websiteList){
+        logger.info(JSONUtil.toJsonStr(websiteList));
+        ResultDto<WebsiteList> resultDto = new ResultDto<>();
+        websiteList.setStatus("A");
+        websiteList.setType("B");
+        websiteList.setInputUser("admin");
+        websiteList.setUpdateUser("admin");
+        websiteListService.save(websiteList);
+        resultDto.setCode(200);
+        resultDto.setData(websiteList);
+        return resultDto;
     }
 }

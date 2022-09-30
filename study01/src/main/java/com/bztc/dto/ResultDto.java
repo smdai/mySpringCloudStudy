@@ -26,6 +26,9 @@ public class ResultDto<T> {
      */
     private T data;
 
+    public ResultDto(){
+
+    }
     public ResultDto(T data) {
         this.code = 200;
         this.message = "sucess";
