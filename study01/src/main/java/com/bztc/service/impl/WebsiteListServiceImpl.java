@@ -1,7 +1,7 @@
 package com.bztc.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.bztc.entity.WebsiteList;
+import com.bztc.domain.WebsiteList;
 import com.bztc.mapper.WebsiteListMapper;
 import com.bztc.service.WebsiteListService;
 import org.apache.skywalking.apm.toolkit.trace.Tag;

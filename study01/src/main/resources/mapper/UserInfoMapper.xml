@@ -2,14 +2,13 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bztc.mapper.WebsiteListMapper">
+<mapper namespace="com.bztc.mapper.UserInfoMapper">
 
-    <resultMap id="BaseResultMap" type="com.bztc.domain.WebsiteList">
+    <resultMap id="BaseResultMap" type="com.bztc.domain.UserInfo">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="websiteUrl" column="website_url" jdbcType="VARCHAR"/>
-            <result property="websiteName" column="website_name" jdbcType="VARCHAR"/>
+            <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+            <result property="password" column="password" jdbcType="VARCHAR"/>
             <result property="status" column="status" jdbcType="VARCHAR"/>
-            <result property="type" column="type" jdbcType="VARCHAR"/>
             <result property="inputUser" column="input_user" jdbcType="VARCHAR"/>
             <result property="inputTime" column="input_time" jdbcType="TIMESTAMP"/>
             <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
@@ -17,8 +16,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,website_url,website_name,
-        status,type,input_user,
-        input_time,update_user,update_time
+        id,user_name,password,
+        status,input_user,input_time,
+        update_user,update_time
     </sql>
 </mapper>

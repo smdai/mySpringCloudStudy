@@ -75,5 +75,32 @@
             <version>${hutool.version}</version>
         </dependency>
     </dependencies>
-
+    <build>
+        <finalName>bztc-study01-${project.version}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+<!--                <version>${spring-boot-maven-plugin.version}</version>-->
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>true</executable>
+                    <fork>true</fork>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+<!--                <version>${maven-deploy-plugin.version}</version>-->
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

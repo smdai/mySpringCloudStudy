@@ -1,7 +1,7 @@
 package com.bztc.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.bztc.entity.WebsiteList;
+import com.bztc.domain.WebsiteList;
 
 /**
 * @author daishuming

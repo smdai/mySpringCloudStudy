@@ -1,6 +1,6 @@
 package com.bztc.web.rest;
 
-import com.bztc.entity.WebsiteList;
+import com.bztc.domain.WebsiteList;
 import com.bztc.service.WebsiteListService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

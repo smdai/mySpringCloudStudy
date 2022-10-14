@@ -1,7 +1,7 @@
 package com.bztc.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.bztc.entity.WebsiteList;
+import com.bztc.domain.WebsiteList;
 
 /**
 * @author daishuming
