@@ -4,7 +4,9 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bztc.constant.Constants;
 import com.bztc.dto.ResultDto;
 import com.bztc.entity.WebsiteList;
 import com.bztc.service.WebsiteListService;
@@ -61,6 +63,7 @@ public class WebsiteListResource {
      */
     @GetMapping("/queryByPage")
     public ResultDto<List<WebsiteList>> queryByPage(@RequestParam("param") String params) {
+        logger.info("分页查询入参：{}",params);
         JSONObject jsonObject = JSONUtil.parseObj(params);
 
         Page<WebsiteList> queryPage = new Page<>((int)jsonObject.get("pageIndex"), (int)jsonObject.get("pageSize"));
@@ -72,6 +75,10 @@ public class WebsiteListResource {
         if(!StrUtil.isBlankIfStr(jsonObject.get("websiteName"))){
             queryWrapper.like("website_Name",jsonObject.get("websiteName"));
         }
+        if(!StrUtil.isBlankIfStr(jsonObject.get("type"))){
+            queryWrapper.eq("type",jsonObject.get("type"));
+        }
+        queryWrapper.eq("status",Constants.STATUS_EFFECT);//1-生效，0-失效
         queryWrapper.orderByDesc("input_time");
         Page<WebsiteList> websiteListPage = websiteListService.page(queryPage,queryWrapper);
         return new ResultDto<>(websiteListPage.getTotal(),websiteListPage.getRecords());
@@ -85,15 +92,69 @@ public class WebsiteListResource {
      */
     @PostMapping("/insert")
     public ResultDto<WebsiteList> insert(@RequestBody WebsiteList websiteList){
-        logger.info(JSONUtil.toJsonStr(websiteList));
+        logger.info("新增入参：{}",JSONUtil.toJsonStr(websiteList));
         ResultDto<WebsiteList> resultDto = new ResultDto<>();
-        websiteList.setStatus("A");
-        websiteList.setType("B");
-        websiteList.setInputUser("admin");
-        websiteList.setUpdateUser("admin");
-        websiteListService.save(websiteList);
-        resultDto.setCode(200);
-        resultDto.setData(websiteList);
+        websiteList.setStatus(Constants.STATUS_EFFECT);
+        websiteList.setInputUser(Constants.ADMIN);
+        websiteList.setUpdateUser(Constants.ADMIN);
+        try {
+            websiteListService.save(websiteList);
+            resultDto.setCode(200);
+            resultDto.setData(websiteList);
+        }catch (Exception e){
+            logger.error("插入数据库失败！",e);
+            resultDto.setCode(400);
+            resultDto.setMessage("插入数据库失败,"+e.getMessage());
+        }
+        return resultDto;
+    }
+    /*
+     * 描述：编辑-更新
+     * @author daism
+     * @date 2022-10-14 09:55:17
+     * @param websiteList
+     * @return com.bztc.dto.ResultDto<com.bztc.entity.WebsiteList>
+     */
+    @PostMapping("/update")
+    public ResultDto<WebsiteList> update(@RequestBody WebsiteList websiteList){
+        logger.info("更新入参：{}",JSONUtil.toJsonStr(websiteList));
+        ResultDto<WebsiteList> resultDto = new ResultDto<>();
+        websiteList.setUpdateUser(Constants.ADMIN);
+        try {
+            websiteListService.updateById(websiteList);
+            resultDto.setCode(200);
+            resultDto.setData(websiteList);
+        }catch (Exception e){
+            logger.error("更新数据库失败！",e);
+            resultDto.setCode(400);
+            resultDto.setMessage("更新数据库失败,"+e.getMessage());
+        }
+        return resultDto;
+    }
+    /*
+     * 描述：根据主键删除
+     * @author daism
+     * @date 2022-10-14 10:05:22
+     * @param websiteList
+     * @return com.bztc.dto.ResultDto<java.lang.Integer>
+     */
+    @PostMapping("/delete")
+    public ResultDto<Integer> delete(@RequestBody WebsiteList websiteList){
+        logger.info("删除入参：{}",JSONUtil.toJsonStr(websiteList));
+        ResultDto<Integer> resultDto = new ResultDto<>();
+        websiteList.setUpdateUser(Constants.ADMIN);
+        websiteList.setStatus(Constants.STATUS_NOAVAIL);
+        UpdateWrapper<WebsiteList> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id",websiteList.getId());
+        wrapper.set("status",Constants.STATUS_NOAVAIL);
+        try {
+            websiteListService.update(wrapper);
+            resultDto.setCode(200);
+        }catch (Exception e){
+            logger.error("删除数据库失败！",e);
+            resultDto.setCode(400);
+            resultDto.setMessage("删除数据库失败,"+e.getMessage());
+        }
         return resultDto;
     }
 }
