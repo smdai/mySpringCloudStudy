@@ -9,8 +9,15 @@ public class Constants {
     /** 状态-有效 **/
     public static final String STATUS_EFFECT = "1";
     /** 状态-无效 **/
-    public static final String STATUS_NOAVAIL = "2";
+    public static final String STATUS_NOAVAIL = "0";
 
     /** 用户-管理员 **/
     public static final String ADMIN = "admin";
+
+    /** 菜单-第一层级 **/
+    public static final int MENU_ONE_LEVEL = 1;
+    /** 菜单-第二层级 **/
+    public static final int MENU_TWO_LEVEL = 2;
+    /** 菜单-第三层级 **/
+    public static final int MENU_THREE_LEVEL = 3;
 }
