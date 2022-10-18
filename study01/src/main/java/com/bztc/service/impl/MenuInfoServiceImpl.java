@@ -61,15 +61,15 @@ public class MenuInfoServiceImpl extends ServiceImpl<MenuInfoMapper, MenuInfo> i
         userRoleQueryWrapper.eq("status",Constants.STATUS_EFFECT)
                         .eq("user_id",userInfo.getId())
                 .select("distinct role_id");
-        UserRole userRole = userRoleService.getOne(userRoleQueryWrapper);
-        if(Objects.isNull(userRole)){
+        List<UserRole> userRoles = userRoleService.list(userRoleQueryWrapper);
+        if(CollectionUtil.isEmpty(userRoles)){
             return null;
         }
         //查询权限关联
         QueryWrapper<AuthResContr> authResContrQueryWrapper = new QueryWrapper<>();
         authResContrQueryWrapper.select("distinct res_contr_id")
                                 .eq("res_object_type",Constants.RES_OBJECT_TYPE_R)
-                                .eq("res_object_id",userRole.getRoleId())
+                                .in("res_object_id",userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList()))
                                 .eq("res_contr_type",Constants.RES_CONTR_TYPE_M)
                                 .eq("status",Constants.STATUS_EFFECT);
         List<AuthResContr> authResContrs = authResContrService.list(authResContrQueryWrapper);

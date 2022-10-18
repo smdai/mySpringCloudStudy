@@ -34,6 +34,7 @@ public class MenuInfoResource {
      */
     @GetMapping("/querymenu")
     public ResultDto<List<MenuInfoDto>> queryMenu(@RequestParam("userName") String userName){
+        logger.info("登录查询菜单入参：{}",userName);
         return new ResultDto<>(menuInfoService.queryMenu(userName));
     }
 }

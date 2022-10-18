@@ -2,6 +2,8 @@ package com.bztc.service;
 
 import com.bztc.domain.AuthResContr;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.bztc.dto.ResultDto;
+import com.bztc.dto.SessionInfoDto;
 
 /**
 * @author daishuming
@@ -9,5 +11,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2022-10-18 09:25:40
 */
 public interface AuthResContrService extends IService<AuthResContr> {
-
+    ResultDto<SessionInfoDto> getSession(String userName);
 }

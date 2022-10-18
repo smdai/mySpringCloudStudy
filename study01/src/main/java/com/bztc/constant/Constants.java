@@ -25,4 +25,6 @@ public class Constants {
     public static final String RES_OBJECT_TYPE_R = "R";
     /** 关联权限类型-菜单 **/
     public static final String RES_CONTR_TYPE_M = "M";
+    /** 关联权限类型-全局编辑 **/
+    public static final String RES_CONTR_TYPE_E = "E";
 }
