@@ -20,4 +20,9 @@ public class Constants {
     public static final int MENU_TWO_LEVEL = 2;
     /** 菜单-第三层级 **/
     public static final int MENU_THREE_LEVEL = 3;
+
+    /** 关联对象类型-角色 **/
+    public static final String RES_OBJECT_TYPE_R = "R";
+    /** 关联权限类型-菜单 **/
+    public static final String RES_CONTR_TYPE_M = "M";
 }

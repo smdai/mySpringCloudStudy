@@ -5,10 +5,19 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bztc.constant.Constants;
+import com.bztc.domain.AuthResContr;
 import com.bztc.domain.MenuInfo;
+import com.bztc.domain.UserInfo;
+import com.bztc.domain.UserRole;
 import com.bztc.dto.MenuInfoDto;
 import com.bztc.mapper.MenuInfoMapper;
+import com.bztc.service.AuthResContrService;
 import com.bztc.service.MenuInfoService;
+import com.bztc.service.UserInfoService;
+import com.bztc.service.UserRoleService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,7 +32,13 @@ import java.util.stream.Collectors;
  */
 @Service
 public class MenuInfoServiceImpl extends ServiceImpl<MenuInfoMapper, MenuInfo> implements MenuInfoService {
-
+    private static final Logger logger = LoggerFactory.getLogger(MenuInfoServiceImpl.class);
+    @Autowired
+    private UserInfoService userInfoService;
+    @Autowired
+    private UserRoleService userRoleService;
+    @Autowired
+    private AuthResContrService authResContrService;
     /*
      * 描述：查询菜单
      * @author daism
@@ -33,9 +48,36 @@ public class MenuInfoServiceImpl extends ServiceImpl<MenuInfoMapper, MenuInfo> i
      */
     @Override
     public List<MenuInfoDto> queryMenu(String userName) {
-        QueryWrapper<MenuInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("status", Constants.STATUS_EFFECT);
-        List<MenuInfo> menuInfos = this.list(queryWrapper);
+        //查询用户信息
+        QueryWrapper<UserInfo> userInfoQueryWrapper = new QueryWrapper<>();
+        userInfoQueryWrapper.eq("status",Constants.STATUS_EFFECT)
+                        .eq("user_name",userName);
+        UserInfo userInfo = userInfoService.getOne(userInfoQueryWrapper);
+        if(Objects.isNull(userInfo)){
+            return null;
+        }
+        //查询用户角色
+        QueryWrapper<UserRole> userRoleQueryWrapper = new QueryWrapper<>();
+        userRoleQueryWrapper.eq("status",Constants.STATUS_EFFECT)
+                        .eq("user_id",userInfo.getId())
+                .select("distinct role_id");
+        UserRole userRole = userRoleService.getOne(userRoleQueryWrapper);
+        if(Objects.isNull(userRole)){
+            return null;
+        }
+        //查询权限关联
+        QueryWrapper<AuthResContr> authResContrQueryWrapper = new QueryWrapper<>();
+        authResContrQueryWrapper.select("distinct res_contr_id")
+                                .eq("res_object_type",Constants.RES_OBJECT_TYPE_R)
+                                .eq("res_object_id",userRole.getRoleId())
+                                .eq("res_contr_type",Constants.RES_CONTR_TYPE_M)
+                                .eq("status",Constants.STATUS_EFFECT);
+        List<AuthResContr> authResContrs = authResContrService.list(authResContrQueryWrapper);
+        //查询菜单
+        QueryWrapper<MenuInfo> menuInfoQueryWrapper = new QueryWrapper<>();
+        menuInfoQueryWrapper.eq("status", Constants.STATUS_EFFECT)
+                .in("menu_id",authResContrs.stream().map(AuthResContr::getResContrId).collect(Collectors.toList()));
+        List<MenuInfo> menuInfos = this.list(menuInfoQueryWrapper);
         return changeMenu(menuInfos);
     }
 
