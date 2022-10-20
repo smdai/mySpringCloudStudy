@@ -76,7 +76,8 @@ public class MenuInfoServiceImpl extends ServiceImpl<MenuInfoMapper, MenuInfo> i
         //查询菜单
         QueryWrapper<MenuInfo> menuInfoQueryWrapper = new QueryWrapper<>();
         menuInfoQueryWrapper.eq("status", Constants.STATUS_EFFECT)
-                .in("menu_id",authResContrs.stream().map(AuthResContr::getResContrId).collect(Collectors.toList()));
+                .in("menu_id",authResContrs.stream().map(AuthResContr::getResContrId).collect(Collectors.toList()))
+                .orderByAsc("sort_no");
         List<MenuInfo> menuInfos = this.list(menuInfoQueryWrapper);
         return changeMenu(menuInfos);
     }
@@ -88,7 +89,8 @@ public class MenuInfoServiceImpl extends ServiceImpl<MenuInfoMapper, MenuInfo> i
      * @param menuInfos
      * @return java.util.List<com.bztc.dto.MenuInfoDto>
      */
-    private List<MenuInfoDto> changeMenu(List<MenuInfo> menuInfos) {
+    @Override
+    public List<MenuInfoDto> changeMenu(List<MenuInfo> menuInfos) {
         List<MenuInfoDto> threeLevelList = menuInfos.stream().filter(it -> Constants.MENU_THREE_LEVEL == it.getMenuLevel())
                 .map(it -> {
                     MenuInfoDto menuInfoDto = new MenuInfoDto();

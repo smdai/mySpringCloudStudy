@@ -38,6 +38,15 @@ public class MenuInfoDto {
      * icon
      */
     private String icon;
+    /**
+     * 路由名称
+     */
+    private String routeName;
+
+    /**
+     * 菜单类型
+     */
+    private String menuType;
 
     private List<MenuInfoDto> subs;
 }

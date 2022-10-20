@@ -2,6 +2,8 @@ package com.bztc.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author daism
  * @create 2022-10-18 18:34
@@ -10,7 +12,15 @@ import lombok.Data;
 @Data
 public class SessionInfoDto {
     /**
-     * 是否有权限，true-有，false-没有
+     * 是否有编辑权限，true-有，false-没有
      */
-    private boolean auth;
+    private boolean editAuth;
+    /**
+     * 菜单权限列表
+     */
+    private List<String> menuAuthList;
+    /**
+     * 查询展示菜单列表
+     */
+    private List<MenuInfoDto> menuInfoDtos;
 }

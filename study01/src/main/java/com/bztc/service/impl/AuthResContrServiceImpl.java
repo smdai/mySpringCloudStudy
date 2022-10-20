@@ -5,12 +5,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bztc.constant.Constants;
 import com.bztc.domain.AuthResContr;
+import com.bztc.domain.MenuInfo;
 import com.bztc.domain.UserInfo;
 import com.bztc.domain.UserRole;
+import com.bztc.dto.MenuInfoDto;
 import com.bztc.dto.ResultDto;
 import com.bztc.dto.SessionInfoDto;
 import com.bztc.service.AuthResContrService;
 import com.bztc.mapper.AuthResContrMapper;
+import com.bztc.service.MenuInfoService;
 import com.bztc.service.UserInfoService;
 import com.bztc.service.UserRoleService;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +39,8 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
     private UserRoleService userRoleService;
     @Autowired
     private AuthResContrService authResContrService;
+    @Autowired
+    private MenuInfoService menuInfoService;
     /*
      * 描述：获取session
      * @author daism
@@ -63,20 +68,35 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
         if(CollectionUtil.isEmpty(userRoles)){
             return null;
         }
-        //查询权限关联
-        QueryWrapper<AuthResContr> authResContrQueryWrapper = new QueryWrapper<>();
-        authResContrQueryWrapper.select("distinct res_contr_id")
+        //查询编辑权限
+        QueryWrapper<AuthResContr> editAuthResContrQueryWrapper = new QueryWrapper<>();
+        editAuthResContrQueryWrapper
                 .eq("res_object_type",Constants.RES_OBJECT_TYPE_R)
                 .in("res_object_id",userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList()))
-                .eq("res_contr_type",Constants.RES_CONTR_TYPE_E)
-                .eq("res_contr_id",Constants.STATUS_EFFECT)
+//                .eq("res_contr_type",Constants.RES_CONTR_TYPE_E)
+//                .eq("res_contr_id",Constants.STATUS_EFFECT)
                 .eq("status",Constants.STATUS_EFFECT);
-        List<AuthResContr> authResContrs = authResContrService.list(authResContrQueryWrapper);
-        if(CollectionUtil.isEmpty(authResContrs)){
-            sessionInfoDto.setAuth(false);
-        }else{
-            sessionInfoDto.setAuth(true);
-        }
+        List<AuthResContr> authResContrs = authResContrService.list(editAuthResContrQueryWrapper);
+        sessionInfoDto.setEditAuth(!CollectionUtil.isEmpty(authResContrs.stream().filter(it ->
+                Constants.RES_CONTR_TYPE_E.equals(it.getResContrType()) && it.getResContrId() == 1).collect(Collectors.toList())));
+        //查询菜单权限
+        QueryWrapper<AuthResContr> menuAuthResContrQueryWrapper = new QueryWrapper<>();
+        menuAuthResContrQueryWrapper.select("distinct res_contr_id")
+                .eq("res_object_type",Constants.RES_OBJECT_TYPE_R)
+                .in("res_object_id",userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList()))
+                .eq("res_contr_type",Constants.RES_CONTR_TYPE_M)
+                .eq("status",Constants.STATUS_EFFECT);
+        List<AuthResContr> menuAuthResContrs = authResContrService.list(menuAuthResContrQueryWrapper);
+        //查询菜单
+        QueryWrapper<MenuInfo> menuInfoQueryWrapper = new QueryWrapper<>();
+        menuInfoQueryWrapper.eq("status", Constants.STATUS_EFFECT)
+                .in("menu_id",authResContrs.stream().filter(it -> Constants.RES_CONTR_TYPE_M.equals(it.getResContrType())).map(AuthResContr::getResContrId).collect(Collectors.toList()))
+                .orderByAsc("sort_no");
+        List<MenuInfo> menuInfos = menuInfoService.list(menuInfoQueryWrapper);
+        List<MenuInfoDto> menuInfoDtos = menuInfoService.changeMenu(menuInfos);
+        sessionInfoDto.setMenuInfoDtos(menuInfoDtos);
+
+        sessionInfoDto.setMenuAuthList(menuInfos.stream().map(MenuInfo::getRouteName).collect(Collectors.toList()));
         return new ResultDto<>(sessionInfoDto);
     }
 }

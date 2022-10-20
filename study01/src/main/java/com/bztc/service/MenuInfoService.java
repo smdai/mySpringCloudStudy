@@ -13,4 +13,5 @@ import java.util.List;
 */
 public interface MenuInfoService extends IService<MenuInfo> {
     List<MenuInfoDto> queryMenu(String userName);
+    List<MenuInfoDto> changeMenu(List<MenuInfo> menuInfos);
 }

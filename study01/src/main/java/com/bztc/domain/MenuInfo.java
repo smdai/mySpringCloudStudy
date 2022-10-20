@@ -4,9 +4,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * 菜单信息表
@@ -46,6 +47,18 @@ public class MenuInfo implements Serializable {
     private String menuName;
 
     /**
+     * 路由名称
+     */
+    @TableField(value = "route_name")
+    private String routeName;
+
+    /**
+     * 菜单类型
+     */
+    @TableField(value = "menu_type")
+    private String menuType;
+
+    /**
      * icon
      */
     @TableField(value = "icon")
@@ -56,6 +69,12 @@ public class MenuInfo implements Serializable {
      */
     @TableField(value = "status")
     private String status;
+
+    /**
+     * 排序
+     */
+    @TableField(value = "sort_no")
+    private String sortNo;
 
     /**
      * 录入人
@@ -101,8 +120,11 @@ public class MenuInfo implements Serializable {
             && (this.getMenuLevel() == null ? other.getMenuLevel() == null : this.getMenuLevel().equals(other.getMenuLevel()))
             && (this.getMenuUrl() == null ? other.getMenuUrl() == null : this.getMenuUrl().equals(other.getMenuUrl()))
             && (this.getMenuName() == null ? other.getMenuName() == null : this.getMenuName().equals(other.getMenuName()))
+            && (this.getRouteName() == null ? other.getRouteName() == null : this.getRouteName().equals(other.getRouteName()))
+            && (this.getMenuType() == null ? other.getMenuType() == null : this.getMenuType().equals(other.getMenuType()))
             && (this.getIcon() == null ? other.getIcon() == null : this.getIcon().equals(other.getIcon()))
             && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+            && (this.getSortNo() == null ? other.getSortNo() == null : this.getSortNo().equals(other.getSortNo()))
             && (this.getInputUser() == null ? other.getInputUser() == null : this.getInputUser().equals(other.getInputUser()))
             && (this.getInputTime() == null ? other.getInputTime() == null : this.getInputTime().equals(other.getInputTime()))
             && (this.getUpdateUser() == null ? other.getUpdateUser() == null : this.getUpdateUser().equals(other.getUpdateUser()))
@@ -118,8 +140,11 @@ public class MenuInfo implements Serializable {
         result = prime * result + ((getMenuLevel() == null) ? 0 : getMenuLevel().hashCode());
         result = prime * result + ((getMenuUrl() == null) ? 0 : getMenuUrl().hashCode());
         result = prime * result + ((getMenuName() == null) ? 0 : getMenuName().hashCode());
+        result = prime * result + ((getRouteName() == null) ? 0 : getRouteName().hashCode());
+        result = prime * result + ((getMenuType() == null) ? 0 : getMenuType().hashCode());
         result = prime * result + ((getIcon() == null) ? 0 : getIcon().hashCode());
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
+        result = prime * result + ((getSortNo() == null) ? 0 : getSortNo().hashCode());
         result = prime * result + ((getInputUser() == null) ? 0 : getInputUser().hashCode());
         result = prime * result + ((getInputTime() == null) ? 0 : getInputTime().hashCode());
         result = prime * result + ((getUpdateUser() == null) ? 0 : getUpdateUser().hashCode());
@@ -138,8 +163,11 @@ public class MenuInfo implements Serializable {
         sb.append(", menuLevel=").append(menuLevel);
         sb.append(", menuUrl=").append(menuUrl);
         sb.append(", menuName=").append(menuName);
+        sb.append(", routeName=").append(routeName);
+        sb.append(", menuType=").append(menuType);
         sb.append(", icon=").append(icon);
         sb.append(", status=").append(status);
+        sb.append(", sortNo=").append(sortNo);
         sb.append(", inputUser=").append(inputUser);
         sb.append(", inputTime=").append(inputTime);
         sb.append(", updateUser=").append(updateUser);
