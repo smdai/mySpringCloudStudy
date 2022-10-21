@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @description 登录相关
  */
 @RestController
-@RequestMapping("/api/loginResource")
+@RequestMapping("/bztcSystem/api/loginResource")
 public class LoginResource {
     private static final Logger logger = LoggerFactory.getLogger(LoginResource.class);
     @Autowired

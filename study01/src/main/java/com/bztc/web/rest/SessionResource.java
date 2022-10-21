@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @description session信息
  */
 @RestController
-@RequestMapping("/api/sessionResource")
+@RequestMapping("/bztcSystem/api/sessionResource")
 @Slf4j
 public class SessionResource {
     @Autowired

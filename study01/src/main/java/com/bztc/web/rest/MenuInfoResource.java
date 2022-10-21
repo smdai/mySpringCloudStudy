@@ -19,7 +19,7 @@ import java.util.List;
  * @description 菜单管理controller层
  */
 @RestController
-@RequestMapping("/api/menuInfoResource")
+@RequestMapping("/bztcSystem/api/menuInfoResource")
 public class MenuInfoResource {
     private static final Logger logger = LoggerFactory.getLogger(MenuInfoResource.class);
     @Autowired

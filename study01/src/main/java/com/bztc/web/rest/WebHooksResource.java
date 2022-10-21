@@ -16,7 +16,7 @@ import java.util.List;
  * @description webhooks钩子实现
  */
 @RestController
-@RequestMapping("/webHooksResource")
+@RequestMapping("/bztcSystem/webHooksResource")
 public class WebHooksResource {
     private static final Logger logger = LoggerFactory.getLogger(WebHooksResource.class);
 

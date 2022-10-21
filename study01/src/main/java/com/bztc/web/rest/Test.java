@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2022-09-16 11:20:17
  */
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/bztcSystem/test")
 public class Test {
     private static final Logger logger = LoggerFactory.getLogger(Test.class);
     @Autowired

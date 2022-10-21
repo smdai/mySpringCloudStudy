@@ -23,7 +23,7 @@ import java.util.List;
  * @description 网站地址resource层
  */
 @RestController
-@RequestMapping("/api/websiteListResource")
+@RequestMapping("/bztcSystem/api/websiteListResource")
 public class WebsiteListResource {
     private static final Logger logger = LoggerFactory.getLogger(WebsiteListResource.class);
     @Autowired
