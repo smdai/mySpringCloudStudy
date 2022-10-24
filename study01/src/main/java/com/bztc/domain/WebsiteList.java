@@ -57,7 +57,7 @@ public class WebsiteList implements Serializable {
      * 录入时间
      */
     @TableField(value = "input_time")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date inputTime;
 
     /**
@@ -70,7 +70,7 @@ public class WebsiteList implements Serializable {
      * 更新时间
      */
     @TableField(value = "update_time")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     @TableField(exist = false)
