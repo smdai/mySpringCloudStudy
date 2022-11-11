@@ -1,18 +1,3 @@
-server:
-  port: 8001
-
 spring:
   profiles:
     active: dev
-  application:
-    name: study01-service
-  datasource:
-    type: com.alibaba.druid.pool.DruidDataSource # 当前数据源操作类型
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://10.8.0.1:3306/bztcdb?useUnicode=true&characterEncoding=utf-8&useSSL=false
-    username: bztc
-    password: bztc
-mybatis-plus:
-  mapper-locations:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

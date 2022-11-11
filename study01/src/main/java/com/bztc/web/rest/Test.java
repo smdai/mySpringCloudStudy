@@ -2,9 +2,10 @@ package com.bztc.web.rest;
 
 import com.bztc.domain.WebsiteList;
 import com.bztc.service.WebsiteListService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,10 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/bztcSystem/test")
+@RefreshScope
+@Slf4j
 public class Test {
-    private static final Logger logger = LoggerFactory.getLogger(Test.class);
     @Autowired
     private WebsiteListService iWebsiteListService;
+
+    @Value("${useLocalCache:false}")
+    private boolean useLocalCache;
     /**
      * 描述：测试get请求
      *
@@ -40,9 +45,21 @@ public class Test {
      * @return com.bztc.entity.WebsiteList
      */
     @GetMapping("/testGetFromDataBase/{s}")
-    public WebsiteList testGetFromDataBase(@PathVariable String s){
-        logger.info("------->/testGetFromDataBase");
-        return iWebsiteListService.getById(1);
+    public WebsiteList testGetFromDataBase(@PathVariable int s){
+        log.info("------->/testGetFromDataBase");
+        return iWebsiteListService.getById(s);
+    }
+    /*
+     * 描述：nacos配置测试
+     * @author daism
+     * @date 2022-11-11 10:13:34
+     * @param
+     * @return boolean
+     */
+    @RequestMapping("/testnacosconfig")
+    public boolean get() {
+        log.info("useLocalCache===={}",useLocalCache);
+        return useLocalCache;
     }
 }
 
