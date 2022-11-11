@@ -2,6 +2,7 @@ package com.bztc.web.rest;
 
 import com.bztc.domain.WebsiteList;
 import com.bztc.service.WebsiteListService;
+import com.bztc.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class Test {
     @Autowired
     private WebsiteListService iWebsiteListService;
+    @Autowired
+    private RedisUtil redisUtil;
 
     @Value("${useLocalCache:false}")
     private boolean useLocalCache;
@@ -60,6 +63,29 @@ public class Test {
     public boolean get() {
         log.info("useLocalCache===={}",useLocalCache);
         return useLocalCache;
+    }
+    /*
+     * 描述：测试redis
+     * @author daism
+     * @date 2022-11-11 17:50:22
+     * @param
+     * @return java.lang.String
+     */
+    @GetMapping("/testRedis")
+    public String testRedis(){
+        redisUtil.set("dai","shuming");
+        return "success";
+    }
+    /*
+     * 描述：测试redis
+     * @author daism
+     * @date 2022-11-11 17:50:34
+     * @param
+     * @return java.lang.String
+     */
+    @GetMapping("/testRedisGet")
+    public String testRedisGet(){
+        return (String)redisUtil.get("dai");
     }
 }
 
