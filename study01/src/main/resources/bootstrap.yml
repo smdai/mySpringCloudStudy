@@ -3,28 +3,20 @@ server:
 spring:
   application:
     name: study01
-#  datasource:
-#    type: com.alibaba.druid.pool.DruidDataSource # 当前数据源操作类型
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://10.8.0.1:3306/bztcdb?useUnicode=true&characterEncoding=utf-8&useSSL=false
-#    username: bztc
-#    password: bztc
+  profiles:
+    active: @project.active@
   cloud:
     nacos:
       config:
-        server-addr: 10.8.0.1:8848
+        server-addr: ${NACOS-HOST:10.8.0.1}:${NACOS-PORT:8848}
         username: nacos
         password: nacos
-        namespace: 75d22319-6ee4-41eb-8048-45fd48947c1f
+        namespace: @nacos.namespace@
         group: STUDY01_GROUP
         file-extension: properties
       discovery:
-        server-addr: 10.8.0.1:8848
-        username: nacos
-        password: nacos
-        namespace: 75d22319-6ee4-41eb-8048-45fd48947c1f
-        group: STUDY01_GROUP
-#mybatis-plus:
-#  mapper-locations:
-#  configuration:
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+        server-addr: ${spring.cloud.nacos.config.server-addr}
+        username: ${spring.cloud.nacos.config.username}
+        password: ${spring.cloud.nacos.config.password}
+        namespace: @nacos.namespace@
+        group: ${spring.cloud.nacos.config.group}

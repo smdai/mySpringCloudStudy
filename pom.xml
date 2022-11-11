@@ -51,6 +51,12 @@
         </dependencies>
     </dependencyManagement>
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -71,6 +77,30 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <!-- 环境标识，需要与配置文件的名称相对应 -->
+                <project.active>dev</project.active>
+                <!--Nacos配置中心命名空间,用于支持多环境.这里必须使用ID，不能使用名称,默认为空-->
+                <nacos.namespace>75d22319-6ee4-41eb-8048-45fd48947c1f</nacos.namespace>
+            </properties>
+            <activation>
+                <!-- 默认环境 -->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <!-- 环境标识，需要与配置文件的名称相对应 -->
+                <project.active>prod</project.active>
+                <!--Nacos配置中心命名空间,用于支持多环境.这里必须使用ID，不能使用名称,默认为空-->
+                <nacos.namespace>29f0bdab-2193-491f-8b5b-387e48e727dc</nacos.namespace>
+            </properties>
+        </profile>
+    </profiles>
     <modules>
         <module>study01</module>
     </modules>
