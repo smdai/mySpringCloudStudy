@@ -78,12 +78,12 @@
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-<!--            <version>2021.1</version>-->
+            <version>${nacos.version}</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-<!--            <version>${latest.version}</version>-->
+            <version>${nacos.version}</version>
         </dependency>
     </dependencies>
     <build>
