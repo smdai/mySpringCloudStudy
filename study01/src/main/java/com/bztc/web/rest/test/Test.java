@@ -1,4 +1,4 @@
-package com.bztc.web.rest;
+package com.bztc.web.rest.test;
 
 import com.bztc.domain.WebsiteList;
 import com.bztc.service.WebsiteListService;
