@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bztc.mapper.MenuInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.bztc.domain.MenuInfo">
+            <id property="menuId" column="menu_id" jdbcType="INTEGER"/>
+            <result property="upMenuId" column="up_menu_id" jdbcType="INTEGER"/>
+            <result property="menuLevel" column="menu_level" jdbcType="INTEGER"/>
+            <result property="menuUrl" column="menu_url" jdbcType="VARCHAR"/>
+            <result property="menuName" column="menu_name" jdbcType="VARCHAR"/>
+            <result property="routeName" column="route_name" jdbcType="VARCHAR"/>
+            <result property="menuType" column="menu_type" jdbcType="VARCHAR"/>
+            <result property="icon" column="icon" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="VARCHAR"/>
+            <result property="sortNo" column="sort_no" jdbcType="VARCHAR"/>
+            <result property="inputUser" column="input_user" jdbcType="VARCHAR"/>
+            <result property="inputTime" column="input_time" jdbcType="TIMESTAMP"/>
+            <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        menu_id,up_menu_id,menu_level,
+        menu_url,menu_name,route_name,
+        menu_type,icon,status,
+        sort_no,input_user,input_time,
+        update_user,update_time
+    </sql>
+</mapper>
