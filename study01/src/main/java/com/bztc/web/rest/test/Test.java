@@ -1,5 +1,6 @@
 package com.bztc.web.rest.test;
 
+import cn.hutool.json.JSONUtil;
 import com.bztc.domain.WebsiteList;
 import com.bztc.service.WebsiteListService;
 import com.bztc.utils.KafkaProducerUtil;
@@ -10,7 +11,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 前端调后段测试类
@@ -32,6 +37,7 @@ public class Test {
     private boolean useLocalCache;
     @Value("${kafka.config.bootstrapServers}")
     private String bootstrapServers;
+
     /**
      * 描述：测试get请求
      *
@@ -97,14 +103,31 @@ public class Test {
 
     /**
      * 测试kafka
+     * kafka-userInfo-json
      *
      * @return
      */
     @GetMapping("/testKafka")
     public String testKafka(@RequestParam("topic") String topic) {
-        KafkaProducerUtil.sendMessage(topic, "我的fakka测试" + LocalDateTime.now());
-//        log.info("kafkaProperties>>>>>:{}",kafkaProperties.getBootstrapServers());
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "daism");
+        map.put("age", 12);
+        map.put("address", "江苏省南京市");
+//        map.put("updateTime", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        map.put("updateTime", LocalDateTime.now());
+        map.put("updateDate", LocalDateTime.now());
+        KafkaProducerUtil.sendMessage(topic, JSONUtil.toJsonStr(map));
         return "success";
+    }
+
+    public static void main(String[] args) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "daism");
+        map.put("age", 12);
+        map.put("address", "江苏省南京市");
+        map.put("dateStr", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        map.put("date", LocalDate.now());
+        System.out.println(JSONUtil.toJsonStr(map));
     }
 }
 
