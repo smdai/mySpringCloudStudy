@@ -1,11 +1,11 @@
 package com.bztc.web.rest.study;
 
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.bztc.constant.EsIndexConstants;
 import com.bztc.constant.KafkaConstants;
 import com.bztc.domain.study.UserInfoStudy;
 import com.bztc.dto.ResultDto;
+import com.bztc.dto.study.UserInfoStudyDto;
 import com.bztc.enumeration.LoginEnum;
 import com.bztc.enumeration.WebStatusEnum;
 import com.bztc.service.KafkaService;
@@ -13,7 +13,10 @@ import com.bztc.utils.EsIndexUtil;
 import com.bztc.utils.KafkaProducerUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,14 +35,14 @@ public class KafkaResource {
     KafkaService kafkaService;
 
     /**
-     * @param params
+     * 分页查询
+     * @param userInfoStudyDto
      * @return
      */
-    @GetMapping("/queryByPage")
-    public ResultDto<List<UserInfoStudy>> queryByPage(@RequestParam("param") String params) {
-        log.info("分页查询入参：{}", params);
-        JSONObject jsonObject = JSONUtil.parseObj(params);
-        return kafkaService.queryByPage(EsIndexUtil.getAllIndex(EsIndexConstants.BZTC_KAFKA_USERINFO_JSON), jsonObject);
+    @PostMapping("/queryByPage")
+    public ResultDto<List<UserInfoStudy>> queryByPage(@RequestBody UserInfoStudyDto userInfoStudyDto) {
+        log.info("分页查询入参：{}", JSONUtil.toJsonStr(userInfoStudyDto));
+        return kafkaService.queryByPage(EsIndexUtil.getAllIndex(EsIndexConstants.BZTC_KAFKA_USERINFO_JSON), userInfoStudyDto);
     }
     /**
      * 删除es
@@ -103,6 +106,10 @@ public class KafkaResource {
     public ResultDto<Integer> insertEsByKafka(@RequestBody UserInfoStudy userInfo) {
         log.info("通过kafka插入es入参：{}", JSONUtil.toJsonStr(userInfo));
         ResultDto<Integer> resultDto = new ResultDto<>();
+        userInfo.setInputDate(LocalDate.now());
+        userInfo.setUpdateDate(LocalDate.now());
+        userInfo.setInputTime(LocalDateTime.now());
+        userInfo.setUpdateTime(LocalDateTime.now());
         try {
             KafkaProducerUtil.sendMessage(KafkaConstants.BZTC_KAFKA_USERINFO_JSON_TOPIC, JSONUtil.toJsonStr(userInfo));
             resultDto.setCode(WebStatusEnum.SUCCESS.key);

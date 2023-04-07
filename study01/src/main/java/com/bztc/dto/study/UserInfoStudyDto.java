@@ -1,24 +1,28 @@
-package com.bztc.domain.study;
+package com.bztc.dto.study;
 
+import com.bztc.dto.QueryCommonDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
  * @author daism
- * @create 2023-03-29 16:45
- * @description 学习-用户信息
+ * @create 2023-04-07 16:09
+ * @description 用户信息dto
  */
 @Data
-public class UserInfoStudy implements Serializable {
-    private static final long serialVersionUID = 8617469045128408558L;
+@EqualsAndHashCode(callSuper = true)
+public class UserInfoStudyDto extends QueryCommonDto {
+
+    private static final long serialVersionUID = -6903562897891442961L;
+
     private String id;
     private String name;
     private String sex;
-    private int age;
+    private Integer age;
     private String phone;
     private String address;
     @JsonFormat(pattern = "yyyy-MM-dd")

@@ -1,10 +1,11 @@
 package com.bztc.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.bztc.domain.study.UserInfoStudy;
 import com.bztc.dto.ResultDto;
+import com.bztc.dto.study.UserInfoStudyDto;
 import com.bztc.service.KafkaService;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.delete.DeleteRequest;
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,28 +100,31 @@ public class KafkaServiceImpl implements KafkaService {
      * @return
      */
     @Override
-    public ResultDto<List<UserInfoStudy>> queryByPage(String indexName, JSONObject jsonObject) {
+    public ResultDto<List<UserInfoStudy>> queryByPage(String indexName, UserInfoStudyDto userInfoStudyDto) {
         ResultDto<List<UserInfoStudy>> resultDto = new ResultDto<>();
         List<UserInfoStudy> list = new ArrayList<>();
         try {
-            int pageIndex = (int)jsonObject.get("pageIndex");
-            int pageSize = (int)jsonObject.get("pageSize");
+            int pageIndex = userInfoStudyDto.getPageIndex();
+            int pageSize = userInfoStudyDto.getPageSize();
 
             SearchRequest request = new SearchRequest(indexName);
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-            if(!StrUtil.isBlankIfStr(jsonObject.get("name"))){
-                boolQueryBuilder.must(QueryBuilders.matchQuery("name",jsonObject.get("name")));
+            if(!StrUtil.isBlankIfStr(userInfoStudyDto.getName())){
+                boolQueryBuilder.must(QueryBuilders.matchQuery("name",userInfoStudyDto.getName()));
             }
-            if(!StrUtil.isBlankIfStr(jsonObject.get("address"))){
-                boolQueryBuilder.should(QueryBuilders.matchQuery("address",jsonObject.get("address")));
+            if(!StrUtil.isBlankIfStr(userInfoStudyDto.getAddress())){
+                boolQueryBuilder.should(QueryBuilders.matchQuery("address",userInfoStudyDto.getAddress()));
             }
-            if(!StrUtil.isBlankIfStr(jsonObject.get("age"))){
-                boolQueryBuilder.must(QueryBuilders.matchQuery("age",jsonObject.get("age")));
+            if(!StrUtil.isBlankIfStr(userInfoStudyDto.getAge())){
+                boolQueryBuilder.must(QueryBuilders.matchQuery("age",userInfoStudyDto.getAge()));
             }
-            if(!StrUtil.isBlankIfStr(jsonObject.get("sex"))){
-                boolQueryBuilder.must(QueryBuilders.matchQuery("sex",jsonObject.get("sex")));
+            if(!StrUtil.isBlankIfStr(userInfoStudyDto.getSex())){
+                boolQueryBuilder.must(QueryBuilders.matchQuery("sex",userInfoStudyDto.getSex()));
+            }
+            if(CollectionUtil.isNotEmpty(userInfoStudyDto.getQueryInputTime())){
+                boolQueryBuilder.filter(QueryBuilders.rangeQuery("inputTime").gte(userInfoStudyDto.getQueryInputTime().get(0).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))).lte(userInfoStudyDto.getQueryInputTime().get(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));
             }
             searchSourceBuilder.query(boolQueryBuilder);
             request.source(searchSourceBuilder);
