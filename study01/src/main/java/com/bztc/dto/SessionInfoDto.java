@@ -23,4 +23,12 @@ public class SessionInfoDto {
      * 查询展示菜单列表
      */
     private List<MenuInfoDto> menuInfoDtos;
+    /**
+     * 登录令牌
+     */
+    private String token;
+    /**
+     * 用户id
+     */
+    private Integer userId;
 }

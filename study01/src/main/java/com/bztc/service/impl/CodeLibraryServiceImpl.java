@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bztc.constant.Constants;
+import com.bztc.constant.RedisConstants;
 import com.bztc.domain.CodeLibrary;
 import com.bztc.mapper.CodeLibraryMapper;
 import com.bztc.service.CodeLibraryService;
@@ -34,7 +35,7 @@ public class CodeLibraryServiceImpl extends ServiceImpl<CodeLibraryMapper, CodeL
      * @return
      */
     @Override
-    @Cacheable(value = "codeLibrary:item", key = "#code")
+    @Cacheable(value = RedisConstants.CODELIBRARY_ITEM_KEY, key = "#code")
     public List<Map<String, String>> queryCodeLibrary(String code) {
         QueryWrapper<CodeLibrary> codeLibraryQueryWrapper = new QueryWrapper<>();
         codeLibraryQueryWrapper.eq("status", Constants.STATUS_EFFECT);
@@ -72,7 +73,7 @@ public class CodeLibraryServiceImpl extends ServiceImpl<CodeLibraryMapper, CodeL
         }));
         codeLibraryListMap.forEach((k, v) -> {
             List<Map<String, String>> collects = v.stream().peek(it -> it.remove("catalog")).collect(Collectors.toList());
-            redisUtil.set("codeLibrary:item:" + k, collects);
+            redisUtil.set(RedisConstants.CODELIBRARY_ITEM_KEY + ":" + k, collects);
         });
     }
 }

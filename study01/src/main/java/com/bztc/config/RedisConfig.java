@@ -1,17 +1,25 @@
 package com.bztc.config;
 
+import com.bztc.constant.RedisConstants;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author daism
@@ -52,14 +60,35 @@ public class RedisConfig {
     /**
      * 配置Redis缓存注解的value序列化方式
      */
-    @Bean
-    public RedisCacheConfiguration redisCacheConfiguration() {
+    private RedisCacheConfiguration getRedisCacheConfigurationWithTtl(Integer seconds) {
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig();
         configuration = configuration.serializeValuesWith(
                 RedisSerializationContext.SerializationPair.fromSerializer(
                         RedisSerializer.json()
                 )
         ).computePrefixWith(name -> name + ":");
+        if (Objects.nonNull(seconds)) {
+            configuration = configuration.entryTtl(Duration.ofSeconds(seconds));
+        }
         return configuration;
+    }
+
+    private Map<String, RedisCacheConfiguration> getRedisCacheConfigurationMap() {
+        Map<String, RedisCacheConfiguration> redisCacheConfigurationMap = new HashMap<>(8);
+        // 自定义设置缓存时间
+        // 这个k0 表示的是缓存注解中的 cacheNames/value
+        redisCacheConfigurationMap.put(RedisConstants.SESSION_TOKEN_KEY, this.getRedisCacheConfigurationWithTtl(RedisConstants.SESSION_TOKEN_TTL_SECONDS));
+        return redisCacheConfigurationMap;
+    }
+
+    @Bean
+    public RedisCacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
+        return new RedisCacheManager(
+                RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory),
+                // 默认策略，未配置的 key 会使用这个
+                this.getRedisCacheConfigurationWithTtl(null),
+                // 指定 key 策略
+                this.getRedisCacheConfigurationMap()
+        );
     }
 }
