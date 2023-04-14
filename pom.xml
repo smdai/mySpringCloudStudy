@@ -106,6 +106,7 @@
         </profile>
     </profiles>
     <modules>
-        <module>study01</module>
+        <module>bztc-study01</module>
+        <module>gateway8888</module>
     </modules>
 </project>
