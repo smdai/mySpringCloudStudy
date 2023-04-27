@@ -25,12 +25,12 @@ public class MenuInfoResource {
     @Autowired
     private MenuInfoService menuInfoService;
 
-    /*
+    /**
      * 描述：查询菜单
+     *
+     * @return com.bztc.dto.ResultDto<java.lang.String>
      * @author daism
      * @date 2022-10-17 17:14:33
-     * @param userName
-     * @return com.bztc.dto.ResultDto<java.lang.String>
      */
     @GetMapping("/querymenu")
     public ResultDto<List<MenuInfoDto>> queryMenu(@RequestParam("userName") String userName) {

@@ -12,9 +12,11 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class MybatisPlusConfiguration {
-    //配置分页拦截器
+    /**
+     * 配置分页拦截器
+     */
     @Bean
-    public MybatisPlusInterceptor getMybatisPlusInterceptor(){
+    public MybatisPlusInterceptor getMybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor());
         return interceptor;

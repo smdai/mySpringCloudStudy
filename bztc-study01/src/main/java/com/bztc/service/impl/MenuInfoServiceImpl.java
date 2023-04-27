@@ -39,55 +39,56 @@ public class MenuInfoServiceImpl extends ServiceImpl<MenuInfoMapper, MenuInfo> i
     private UserRoleService userRoleService;
     @Autowired
     private AuthResContrService authResContrService;
-    /*
+
+    /**
      * 描述：查询菜单
+     *
+     * @return java.util.List<com.bztc.domain.MenuInfo>
      * @author daism
      * @date 2022-10-17 17:34:43
-     * @param userName
-     * @return java.util.List<com.bztc.domain.MenuInfo>
      */
     @Override
     public List<MenuInfoDto> queryMenu(String userName) {
         //查询用户信息
         QueryWrapper<UserInfo> userInfoQueryWrapper = new QueryWrapper<>();
-        userInfoQueryWrapper.eq("status",Constants.STATUS_EFFECT)
-                        .eq("user_name",userName);
+        userInfoQueryWrapper.eq("status", Constants.STATUS_EFFECT)
+                .eq("user_name", userName);
         UserInfo userInfo = userInfoService.getOne(userInfoQueryWrapper);
-        if(Objects.isNull(userInfo)){
+        if (Objects.isNull(userInfo)) {
             return null;
         }
         //查询用户角色
         QueryWrapper<UserRole> userRoleQueryWrapper = new QueryWrapper<>();
-        userRoleQueryWrapper.eq("status",Constants.STATUS_EFFECT)
-                        .eq("user_id",userInfo.getId())
+        userRoleQueryWrapper.eq("status", Constants.STATUS_EFFECT)
+                .eq("user_id", userInfo.getId())
                 .select("distinct role_id");
         List<UserRole> userRoles = userRoleService.list(userRoleQueryWrapper);
-        if(CollectionUtil.isEmpty(userRoles)){
+        if (CollectionUtil.isEmpty(userRoles)) {
             return null;
         }
         //查询权限关联
         QueryWrapper<AuthResContr> authResContrQueryWrapper = new QueryWrapper<>();
         authResContrQueryWrapper.select("distinct res_contr_id")
-                                .eq("res_object_type",Constants.RES_OBJECT_TYPE_R)
-                                .in("res_object_id",userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList()))
-                                .eq("res_contr_type",Constants.RES_CONTR_TYPE_M)
-                                .eq("status",Constants.STATUS_EFFECT);
+                .eq("res_object_type", Constants.RES_OBJECT_TYPE_R)
+                .in("res_object_id", userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList()))
+                .eq("res_contr_type", Constants.RES_CONTR_TYPE_M)
+                .eq("status", Constants.STATUS_EFFECT);
         List<AuthResContr> authResContrs = authResContrService.list(authResContrQueryWrapper);
         //查询菜单
         QueryWrapper<MenuInfo> menuInfoQueryWrapper = new QueryWrapper<>();
         menuInfoQueryWrapper.eq("status", Constants.STATUS_EFFECT)
-                .in("menu_id",authResContrs.stream().map(AuthResContr::getResContrId).collect(Collectors.toList()))
+                .in("menu_id", authResContrs.stream().map(AuthResContr::getResContrId).collect(Collectors.toList()))
                 .orderByAsc("sort_no");
         List<MenuInfo> menuInfos = this.list(menuInfoQueryWrapper);
         return changeMenu(menuInfos);
     }
 
-    /*
+    /**
      * 描述：菜单分层转化
+     *
+     * @return java.util.List<com.bztc.dto.MenuInfoDto>
      * @author daism
      * @date 2022-10-17 17:52:09
-     * @param menuInfos
-     * @return java.util.List<com.bztc.dto.MenuInfoDto>
      */
     @Override
     public List<MenuInfoDto> changeMenu(List<MenuInfo> menuInfos) {

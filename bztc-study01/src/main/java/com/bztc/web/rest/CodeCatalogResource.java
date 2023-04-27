@@ -26,9 +26,6 @@ public class CodeCatalogResource {
 
     /**
      * 查询多个字典
-     *
-     * @param codes
-     * @return
      */
     @PostMapping("/queryCodeLibraries")
     public Map<String, List<Map<String, String>>> queryCodeLibraries(@RequestBody String... codes) {

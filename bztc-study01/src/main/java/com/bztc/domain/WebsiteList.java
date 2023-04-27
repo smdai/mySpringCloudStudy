@@ -12,69 +12,62 @@ import java.util.Date;
 
 /**
  * 网站列表
+ *
+ * @author daishuming
  * @TableName website_list
  */
-@TableName(value ="website_list")
+@TableName(value = "website_list")
 @Data
 public class WebsiteList implements Serializable {
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
     /**
      * 主表id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-
     /**
      * 网站地址
      */
     @TableField(value = "website_url")
     private String websiteUrl;
-
     /**
      * 网站名称
      */
     @TableField(value = "website_name")
     private String websiteName;
-
     /**
      * 状态
      */
     @TableField(value = "status")
     private String status;
-
     /**
      * 网站类型
      */
     @TableField(value = "type")
     private String type;
-
     /**
      * 录入人
      */
     @TableField(value = "input_user")
     private String inputUser;
-
     /**
      * 录入时间
      */
     @TableField(value = "input_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date inputTime;
-
     /**
      * 更新人
      */
     @TableField(value = "update_user")
     private String updateUser;
-
     /**
      * 更新时间
      */
     @TableField(value = "update_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 
     @Override
     public boolean equals(Object that) {
@@ -89,14 +82,14 @@ public class WebsiteList implements Serializable {
         }
         WebsiteList other = (WebsiteList) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getWebsiteUrl() == null ? other.getWebsiteUrl() == null : this.getWebsiteUrl().equals(other.getWebsiteUrl()))
-            && (this.getWebsiteName() == null ? other.getWebsiteName() == null : this.getWebsiteName().equals(other.getWebsiteName()))
-            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
-            && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
-            && (this.getInputUser() == null ? other.getInputUser() == null : this.getInputUser().equals(other.getInputUser()))
-            && (this.getInputTime() == null ? other.getInputTime() == null : this.getInputTime().equals(other.getInputTime()))
-            && (this.getUpdateUser() == null ? other.getUpdateUser() == null : this.getUpdateUser().equals(other.getUpdateUser()))
-            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
+                && (this.getWebsiteUrl() == null ? other.getWebsiteUrl() == null : this.getWebsiteUrl().equals(other.getWebsiteUrl()))
+                && (this.getWebsiteName() == null ? other.getWebsiteName() == null : this.getWebsiteName().equals(other.getWebsiteName()))
+                && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+                && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
+                && (this.getInputUser() == null ? other.getInputUser() == null : this.getInputUser().equals(other.getInputUser()))
+                && (this.getInputTime() == null ? other.getInputTime() == null : this.getInputTime().equals(other.getInputTime()))
+                && (this.getUpdateUser() == null ? other.getUpdateUser() == null : this.getUpdateUser().equals(other.getUpdateUser()))
+                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
     }
 
     @Override
@@ -117,21 +110,19 @@ public class WebsiteList implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", websiteUrl=").append(websiteUrl);
-        sb.append(", websiteName=").append(websiteName);
-        sb.append(", status=").append(status);
-        sb.append(", type=").append(type);
-        sb.append(", inputUser=").append(inputUser);
-        sb.append(", inputTime=").append(inputTime);
-        sb.append(", updateUser=").append(updateUser);
-        sb.append(", updateTime=").append(updateTime);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+        return getClass().getSimpleName() +
+                " [" +
+                "Hash = " + hashCode() +
+                ", id=" + id +
+                ", websiteUrl=" + websiteUrl +
+                ", websiteName=" + websiteName +
+                ", status=" + status +
+                ", type=" + type +
+                ", inputUser=" + inputUser +
+                ", inputTime=" + inputTime +
+                ", updateUser=" + updateUser +
+                ", updateTime=" + updateTime +
+                ", serialVersionUID=" + serialVersionUID +
+                "]";
     }
 }

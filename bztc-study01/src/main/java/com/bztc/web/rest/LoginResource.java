@@ -25,12 +25,12 @@ public class LoginResource {
     @Autowired
     public UserInfoService userInfoService;
 
-    /*
+    /**
      * 描述：用户登录
+     *
+     * @return com.bztc.dto.ResultDto<java.lang.Integer>
      * @author daism
      * @date 2022-10-14 17:46:00
-     * @param userInfo
-     * @return com.bztc.dto.ResultDto<java.lang.Integer>
      */
     @PostMapping("/login")
     public ResultDto<Integer> insert(@RequestBody UserInfo userInfo) {

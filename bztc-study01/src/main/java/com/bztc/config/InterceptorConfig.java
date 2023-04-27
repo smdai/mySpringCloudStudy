@@ -19,8 +19,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
     }
 
     private void addV1Rule(InterceptorRegistry registry) {
-        //注册自己的拦截器并设置拦截的请求路径
-        registry.addInterceptor(new CustomizeAccessInterceptor()).addPathPatterns("/**");  //拦截所有请求
+        //注册自己的拦截器并设置拦截的请求路径 拦截所有请求
+        registry.addInterceptor(new CustomizeAccessInterceptor()).addPathPatterns("/**");
 //        registry.addInterceptor(new CustomizeAccessInterceptor()).addPathPatterns("/student/getStudentName");  //拦截student相关请求
     }
 }

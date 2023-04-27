@@ -26,9 +26,10 @@ public class ResultDto<T> {
      */
     private T data;
 
-    public ResultDto(){
+    public ResultDto() {
 
     }
+
     public ResultDto(T data) {
         this.code = 200;
         this.message = "sucess";
@@ -37,7 +38,7 @@ public class ResultDto<T> {
 
     public ResultDto(Long total, T data) {
         this.code = 200;
-        this.message = "sucess";
+        this.message = "success";
         this.data = data;
         this.total = total;
     }

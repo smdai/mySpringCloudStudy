@@ -2,8 +2,8 @@ package com.bztc.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bztc.domain.CodeCatalog;
-import com.bztc.service.CodeCatalogService;
 import com.bztc.mapper.CodeCatalogMapper;
+import com.bztc.service.CodeCatalogService;
 import com.bztc.service.CodeLibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,9 +24,6 @@ public class CodeCatalogServiceImpl extends ServiceImpl<CodeCatalogMapper, CodeC
 
     /**
      * 查询数据字典
-     *
-     * @param codes
-     * @return
      */
     @Override
     public Map<String, List<Map<String, String>>> queryCodeLibraries(String... codes) {

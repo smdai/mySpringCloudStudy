@@ -10,11 +10,24 @@ import java.util.Map;
  * @description 前后端交互枚举
  */
 public enum WebStatusEnum {
+    /**
+     * 成功
+     */
     SUCCESS(200, "成功"),
+    /**
+     * 失败
+     */
     WRONG_ERROR(999, "失败"),
     ;
 
-    public static final Map<Integer, String> keyValue = new HashMap<>();
+    public static final Map<Integer, String> KEY_VALUE = new HashMap<>();
+
+    static {
+        for (WebStatusEnum enumData : EnumSet.allOf(WebStatusEnum.class)) {
+            KEY_VALUE.put(enumData.key, enumData.value);
+        }
+    }
+
     public final Integer key;
     public final String value;
 
@@ -24,16 +37,10 @@ public enum WebStatusEnum {
     }
 
     public static String lookup(Integer key) {
-        return keyValue.get(key);
+        return KEY_VALUE.get(key);
     }
 
     public final String value() {
-        return keyValue.get(this.key);
-    }
-
-    static {
-        for (WebStatusEnum enumData : EnumSet.allOf(WebStatusEnum.class)) {
-            keyValue.put(enumData.key, enumData.value);
-        }
+        return KEY_VALUE.get(this.key);
     }
 }

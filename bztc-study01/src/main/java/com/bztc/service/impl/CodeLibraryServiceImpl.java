@@ -30,12 +30,9 @@ public class CodeLibraryServiceImpl extends ServiceImpl<CodeLibraryMapper, CodeL
 
     /**
      * 查询单个数据字典
-     *
-     * @param code
-     * @return
      */
     @Override
-    @Cacheable(value = RedisConstants.CODELIBRARY_ITEM_KEY, key = "#code")
+    @Cacheable(value = RedisConstants.CODE_LIBRARY_ITEM_KEY, key = "#code")
     public List<Map<String, String>> queryCodeLibrary(String code) {
         QueryWrapper<CodeLibrary> codeLibraryQueryWrapper = new QueryWrapper<>();
         codeLibraryQueryWrapper.eq("status", Constants.STATUS_EFFECT);
@@ -58,7 +55,6 @@ public class CodeLibraryServiceImpl extends ServiceImpl<CodeLibraryMapper, CodeL
     @Override
     public void freshCodeLibrary() {
         QueryWrapper<CodeLibrary> codeLibraryQueryWrapper = new QueryWrapper<>();
-//        codeLibraryQueryWrapper.select("item_catalog_code","item_code","item_name");
         codeLibraryQueryWrapper.eq("status", Constants.STATUS_EFFECT);
         List<CodeLibrary> codeLibraries = this.list(codeLibraryQueryWrapper);
         List<Map<String, String>> mapList = codeLibraries.stream().map(it -> {
@@ -68,12 +64,10 @@ public class CodeLibraryServiceImpl extends ServiceImpl<CodeLibraryMapper, CodeL
             map.put("value", it.getItemName());
             return map;
         }).collect(Collectors.toList());
-        Map<String, List<Map<String, String>>> codeLibraryListMap = mapList.stream().collect(Collectors.groupingBy(it -> {
-            return it.get("catalog");
-        }));
+        Map<String, List<Map<String, String>>> codeLibraryListMap = mapList.stream().collect(Collectors.groupingBy(it -> it.get("catalog")));
         codeLibraryListMap.forEach((k, v) -> {
             List<Map<String, String>> collects = v.stream().peek(it -> it.remove("catalog")).collect(Collectors.toList());
-            redisUtil.set(RedisConstants.CODELIBRARY_ITEM_KEY + ":" + k, collects);
+            redisUtil.set(RedisConstants.CODE_LIBRARY_ITEM_KEY + ":" + k, collects);
         });
     }
 }

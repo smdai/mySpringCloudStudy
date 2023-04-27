@@ -1,6 +1,8 @@
 package com.bztc.enumeration;
 
-import java.util.*;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author daism
@@ -8,13 +10,32 @@ import java.util.*;
  * @description 用户登录枚举
  */
 public enum LoginEnum {
+    /**
+     * 登录成功
+     */
     SUCCESS(200, "登录成功"),
+    /**
+     * 用户不存在
+     */
     NON_ERROR(300, "用户不存在"),
-    NOAVAIL_ERROR(400, "用户已停用"),
+    /**
+     * 用户已停用
+     */
+    NO_AVAIL_ERROR(400, "用户已停用"),
+    /**
+     * 用户名或密码不正确
+     */
     WRONG_ERROR(500, "用户名或密码不正确"),
     ;
 
-    public static final Map<Integer, String> keyValue = new HashMap<>();
+    public static final Map<Integer, String> KEY_VALUE = new HashMap<>();
+
+    static {
+        for (LoginEnum enumData : EnumSet.allOf(LoginEnum.class)) {
+            KEY_VALUE.put(enumData.key, enumData.value);
+        }
+    }
+
     public final Integer key;
     public final String value;
 
@@ -24,16 +45,10 @@ public enum LoginEnum {
     }
 
     public static String lookup(Integer key) {
-        return keyValue.get(key);
+        return KEY_VALUE.get(key);
     }
 
     public final String value() {
-        return keyValue.get(this.key);
-    }
-
-    static {
-        for (LoginEnum enumData : EnumSet.allOf(LoginEnum.class)) {
-            keyValue.put(enumData.key, enumData.value);
-        }
+        return KEY_VALUE.get(this.key);
     }
 }

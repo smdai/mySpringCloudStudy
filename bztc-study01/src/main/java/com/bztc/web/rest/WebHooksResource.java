@@ -20,12 +20,11 @@ import java.util.List;
 public class WebHooksResource {
     private static final Logger logger = LoggerFactory.getLogger(WebHooksResource.class);
 
-    /*
+    /**
      * 描述：告警通知
+     *
      * @author daism
      * @date 2022-09-25 20:45:22
-     * @param
-     * @return void
      */
     @PostMapping("/notifyTest")
     public void notifyTest(@RequestBody List<AlarmMessageDto> alarmMessageList) {

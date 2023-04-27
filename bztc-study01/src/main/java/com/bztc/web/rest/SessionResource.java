@@ -22,12 +22,12 @@ public class SessionResource {
     @Autowired
     private AuthResContrService authResContrService;
 
-    /*
+    /**
      * 描述：获取session信息
+     *
+     * @return com.bztc.dto.ResultDto<com.bztc.dto.SessionInfoDto>
      * @author daism
      * @date 2022-10-18 18:35:19
-     * @param userName
-     * @return com.bztc.dto.ResultDto<com.bztc.dto.SessionInfoDto>
      */
     @GetMapping("/getsession")
     public ResultDto<SessionInfoDto> getSession(@RequestParam("userName") String userName) {

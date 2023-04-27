@@ -15,9 +15,6 @@ import org.springframework.stereotype.Service;
 public class SessionServiceImpl implements SessionService {
     /**
      * 获取token
-     *
-     * @param userId
-     * @return
      */
     @Override
     @CachePut(value = RedisConstants.SESSION_TOKEN_KEY, key = "#userId")

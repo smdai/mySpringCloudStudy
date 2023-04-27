@@ -42,8 +42,6 @@ public class KafkaServiceImpl implements KafkaService {
 
     /**
      * 直接删除es
-     *
-     * @param userInfo
      */
     @Override
     public void deleteEs(String indexName, UserInfoStudy userInfo) {
@@ -55,10 +53,9 @@ public class KafkaServiceImpl implements KafkaService {
             log.error("删除es异常。", e);
         }
     }
+
     /**
      * 直接更新es
-     *
-     * @param userInfo
      */
     @Override
     public void updateEs(String indexName, UserInfoStudy userInfo) {
@@ -71,10 +68,9 @@ public class KafkaServiceImpl implements KafkaService {
             log.error("更新es异常。", e);
         }
     }
+
     /**
      * 直接插入es
-     *
-     * @param userInfo
      */
     @Override
     public void insertEs(String indexName, UserInfoStudy userInfo) {
@@ -96,8 +92,6 @@ public class KafkaServiceImpl implements KafkaService {
 
     /**
      * 分页查询
-     *
-     * @return
      */
     @Override
     public ResultDto<List<UserInfoStudy>> queryByPage(String indexName, UserInfoStudyDto userInfoStudyDto) {
@@ -111,19 +105,19 @@ public class KafkaServiceImpl implements KafkaService {
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-            if(!StrUtil.isBlankIfStr(userInfoStudyDto.getName())){
-                boolQueryBuilder.must(QueryBuilders.matchQuery("name",userInfoStudyDto.getName()));
+            if (!StrUtil.isBlankIfStr(userInfoStudyDto.getName())) {
+                boolQueryBuilder.must(QueryBuilders.matchQuery("name", userInfoStudyDto.getName()));
             }
-            if(!StrUtil.isBlankIfStr(userInfoStudyDto.getAddress())){
-                boolQueryBuilder.should(QueryBuilders.matchQuery("address",userInfoStudyDto.getAddress()));
+            if (!StrUtil.isBlankIfStr(userInfoStudyDto.getAddress())) {
+                boolQueryBuilder.should(QueryBuilders.matchQuery("address", userInfoStudyDto.getAddress()));
             }
-            if(!StrUtil.isBlankIfStr(userInfoStudyDto.getAge())){
-                boolQueryBuilder.must(QueryBuilders.matchQuery("age",userInfoStudyDto.getAge()));
+            if (!StrUtil.isBlankIfStr(userInfoStudyDto.getAge())) {
+                boolQueryBuilder.must(QueryBuilders.matchQuery("age", userInfoStudyDto.getAge()));
             }
-            if(!StrUtil.isBlankIfStr(userInfoStudyDto.getSex())){
-                boolQueryBuilder.must(QueryBuilders.matchQuery("sex",userInfoStudyDto.getSex()));
+            if (!StrUtil.isBlankIfStr(userInfoStudyDto.getSex())) {
+                boolQueryBuilder.must(QueryBuilders.matchQuery("sex", userInfoStudyDto.getSex()));
             }
-            if(CollectionUtil.isNotEmpty(userInfoStudyDto.getQueryInputTime())){
+            if (CollectionUtil.isNotEmpty(userInfoStudyDto.getQueryInputTime())) {
                 boolQueryBuilder.filter(QueryBuilders.rangeQuery("inputTime").gte(userInfoStudyDto.getQueryInputTime().get(0).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))).lte(userInfoStudyDto.getQueryInputTime().get(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));
             }
             searchSourceBuilder.query(boolQueryBuilder);

@@ -6,6 +6,7 @@ import com.bztc.utils.RedisUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -17,17 +18,25 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
  * @author daism
  * @create 2023-04-14 17:20
  * @description 权限过滤
+ * //顺序注解：指定过滤器的顺序。（也可以通过Ordered接口实现）
  */
-@Order(-1) //顺序注解：指定过滤器的顺序。（也可以通过Ordered接口实现）
+@Order(-1)
 @Component
 public class AuthorizeFilter implements GlobalFilter, Ordered {
     private static final Logger logger = LoggerFactory.getLogger(AuthorizeFilter.class);
+    private static final int AUTHORIZATION_CHECK_LENGTH = 8;
+
+    @Value("${white.urls}")
+    private String whiteUrls;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -43,9 +52,13 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
             //5.获取userId
             String userId = headers.getFirst("userId");
             logger.info("requestUrl:{},userId:{},authorization:{}", url, userId, authorization);
-
-            if (!url.endsWith("/login") && !url.endsWith("/getsession")) {
-                if (StringUtils.isBlank(authorization) || authorization.length() < 8 || StringUtils.isBlank(userId)) {
+            logger.info("whiteUrls:{}", whiteUrls);
+            List<String> whiteUrlList = new ArrayList<>();
+            if (StringUtils.isNotBlank(whiteUrls)) {
+                whiteUrlList = Arrays.asList(whiteUrls.split(","));
+            }
+            if (!whiteUrlList.contains(url)) {
+                if (StringUtils.isBlank(authorization) || authorization.length() < AUTHORIZATION_CHECK_LENGTH || StringUtils.isBlank(userId)) {
                     logger.error("authorization or userId is null");
                     exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                     return exchange.getResponse().setComplete();
@@ -66,7 +79,7 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
                 }
                 String redisToken = (String) o;
                 if (!redisToken.equals(token)) {
-                    logger.error("userid[{}],token inconformity", userId);
+                    logger.error("userid[{}],token unconformity", userId);
                     exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                     return exchange.getResponse().setComplete();
                 }

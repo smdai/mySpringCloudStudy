@@ -36,9 +36,6 @@ public class KafkaResource {
 
     /**
      * 分页查询
-     *
-     * @param userInfoStudyDto
-     * @return
      */
     @PostMapping("/queryByPage")
     public ResultDto<List<UserInfoStudy>> queryByPage(@RequestBody UserInfoStudyDto userInfoStudyDto) {
@@ -48,9 +45,6 @@ public class KafkaResource {
 
     /**
      * 删除es
-     *
-     * @param userInfo
-     * @return
      */
     @PostMapping("/deleteEs")
     public ResultDto<Integer> deleteEs(@RequestBody UserInfoStudy userInfo) {
@@ -64,9 +58,6 @@ public class KafkaResource {
 
     /**
      * 插入es
-     *
-     * @param userInfo
-     * @return
      */
     @PostMapping("/insertEs")
     public ResultDto<Integer> insertEs(@RequestBody UserInfoStudy userInfo) {
@@ -84,9 +75,6 @@ public class KafkaResource {
 
     /**
      * 修改es
-     *
-     * @param userInfo
-     * @return
      */
     @PostMapping("/updateEs")
     public ResultDto<Integer> updateEs(@RequestBody UserInfoStudy userInfo) {
@@ -102,9 +90,6 @@ public class KafkaResource {
 
     /**
      * 通过kafka插入es
-     *
-     * @param userInfo
-     * @return
      */
     @PostMapping("/insertEsByKafka")
     public ResultDto<Integer> insertEsByKafka(@RequestBody UserInfoStudy userInfo) {

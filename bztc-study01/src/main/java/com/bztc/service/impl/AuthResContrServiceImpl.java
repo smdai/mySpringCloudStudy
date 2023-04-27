@@ -41,12 +41,12 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
     @Autowired
     private SessionService sessionService;
 
-    /*
+    /**
      * 描述：获取session
+     *
+     * @return com.bztc.dto.ResultDto<com.bztc.dto.SessionInfoDto>
      * @author daism
      * @date 2022-10-18 18:45:55
-     * @param userName
-     * @return com.bztc.dto.ResultDto<com.bztc.dto.SessionInfoDto>
      */
     @Override
     public ResultDto<SessionInfoDto> getSession(String userName) {

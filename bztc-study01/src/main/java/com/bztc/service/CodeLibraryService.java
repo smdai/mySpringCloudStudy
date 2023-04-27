@@ -13,7 +13,16 @@ import java.util.Map;
  */
 public interface CodeLibraryService extends IService<CodeLibrary> {
 
+    /**
+     * 查询单个数据字典
+     *
+     * @param code 字典英文值
+     * @return 字典映射信息
+     */
     List<Map<String, String>> queryCodeLibrary(String code);
 
+    /**
+     * 刷新全部缓存
+     */
     void freshCodeLibrary();
 }

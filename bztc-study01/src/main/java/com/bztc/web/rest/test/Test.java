@@ -1,5 +1,6 @@
 package com.bztc.web.rest.test;
 
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.json.JSONUtil;
 import com.bztc.domain.WebsiteList;
 import com.bztc.service.WebsiteListService;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -39,7 +39,7 @@ public class Test {
     private String bootstrapServers;
 
     public static void main(String[] args) {
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = MapUtil.newHashMap();
         map.put("name", "daism");
         map.put("age", 12);
         map.put("address", "江苏省南京市");
@@ -73,12 +73,12 @@ public class Test {
         return iWebsiteListService.getById(s);
     }
 
-    /*
+    /**
      * 描述：nacos配置测试
+     *
+     * @return boolean
      * @author daism
      * @date 2022-11-11 10:13:34
-     * @param
-     * @return boolean
      */
     @RequestMapping("/testnacosconfig")
     public boolean get() {
@@ -86,12 +86,12 @@ public class Test {
         return useLocalCache;
     }
 
-    /*
+    /**
      * 描述：测试redis
+     *
+     * @return java.lang.String
      * @author daism
      * @date 2022-11-11 17:50:22
-     * @param
-     * @return java.lang.String
      */
     @GetMapping("/testRedis")
     public String testRedis() {
@@ -99,12 +99,12 @@ public class Test {
         return "success";
     }
 
-    /*
+    /**
      * 描述：测试redis
+     *
+     * @return java.lang.String
      * @author daism
      * @date 2022-11-11 17:50:34
-     * @param
-     * @return java.lang.String
      */
     @GetMapping("/testRedisGet")
     public String testRedisGet() {
@@ -114,16 +114,13 @@ public class Test {
     /**
      * 测试kafka
      * kafka-userInfo-json
-     *
-     * @return
      */
     @GetMapping("/testKafka")
     public String testKafka(@RequestParam("topic") String topic) {
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = MapUtil.newHashMap();
         map.put("name", "daism");
         map.put("age", 12);
         map.put("address", "江苏省南京市");
-//        map.put("updateTime", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         map.put("updateTime", LocalDateTime.now());
         map.put("updateDate", LocalDateTime.now());
         KafkaProducerUtil.sendMessage(topic, JSONUtil.toJsonStr(map));

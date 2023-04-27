@@ -4,79 +4,72 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * 权限关联表
+ *
+ * @author daishuming
  * @TableName auth_res_contr
  */
-@TableName(value ="auth_res_contr")
+@TableName(value = "auth_res_contr")
 @Data
 public class AuthResContr implements Serializable {
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
     /**
      * 主键id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-
     /**
      * 关联对象类型
      */
     @TableField(value = "res_object_type")
     private String resObjectType;
-
     /**
      * 关联对象id
      */
     @TableField(value = "res_object_id")
     private Integer resObjectId;
-
     /**
      * 关联控制类型
      */
     @TableField(value = "res_contr_type")
     private String resContrType;
-
     /**
      * 关联控制id
      */
     @TableField(value = "res_contr_id")
     private Integer resContrId;
-
     /**
      * 状态
      */
     @TableField(value = "status")
     private String status;
-
     /**
      * 录入人
      */
     @TableField(value = "input_user")
     private String inputUser;
-
     /**
      * 录入时间
      */
     @TableField(value = "input_time")
     private Date inputTime;
-
     /**
      * 更新人
      */
     @TableField(value = "update_user")
     private String updateUser;
-
     /**
      * 更新时间
      */
     @TableField(value = "update_time")
     private Date updateTime;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 
     @Override
     public boolean equals(Object that) {
@@ -91,15 +84,15 @@ public class AuthResContr implements Serializable {
         }
         AuthResContr other = (AuthResContr) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getResObjectType() == null ? other.getResObjectType() == null : this.getResObjectType().equals(other.getResObjectType()))
-            && (this.getResObjectId() == null ? other.getResObjectId() == null : this.getResObjectId().equals(other.getResObjectId()))
-            && (this.getResContrType() == null ? other.getResContrType() == null : this.getResContrType().equals(other.getResContrType()))
-            && (this.getResContrId() == null ? other.getResContrId() == null : this.getResContrId().equals(other.getResContrId()))
-            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
-            && (this.getInputUser() == null ? other.getInputUser() == null : this.getInputUser().equals(other.getInputUser()))
-            && (this.getInputTime() == null ? other.getInputTime() == null : this.getInputTime().equals(other.getInputTime()))
-            && (this.getUpdateUser() == null ? other.getUpdateUser() == null : this.getUpdateUser().equals(other.getUpdateUser()))
-            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
+                && (this.getResObjectType() == null ? other.getResObjectType() == null : this.getResObjectType().equals(other.getResObjectType()))
+                && (this.getResObjectId() == null ? other.getResObjectId() == null : this.getResObjectId().equals(other.getResObjectId()))
+                && (this.getResContrType() == null ? other.getResContrType() == null : this.getResContrType().equals(other.getResContrType()))
+                && (this.getResContrId() == null ? other.getResContrId() == null : this.getResContrId().equals(other.getResContrId()))
+                && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+                && (this.getInputUser() == null ? other.getInputUser() == null : this.getInputUser().equals(other.getInputUser()))
+                && (this.getInputTime() == null ? other.getInputTime() == null : this.getInputTime().equals(other.getInputTime()))
+                && (this.getUpdateUser() == null ? other.getUpdateUser() == null : this.getUpdateUser().equals(other.getUpdateUser()))
+                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
     }
 
     @Override
@@ -121,22 +114,20 @@ public class AuthResContr implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", resObjectType=").append(resObjectType);
-        sb.append(", resObjectId=").append(resObjectId);
-        sb.append(", resContrType=").append(resContrType);
-        sb.append(", resContrId=").append(resContrId);
-        sb.append(", status=").append(status);
-        sb.append(", inputUser=").append(inputUser);
-        sb.append(", inputTime=").append(inputTime);
-        sb.append(", updateUser=").append(updateUser);
-        sb.append(", updateTime=").append(updateTime);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+        return getClass().getSimpleName() +
+                " [" +
+                "Hash = " + hashCode() +
+                ", id=" + id +
+                ", resObjectType=" + resObjectType +
+                ", resObjectId=" + resObjectId +
+                ", resContrType=" + resContrType +
+                ", resContrId=" + resContrId +
+                ", status=" + status +
+                ", inputUser=" + inputUser +
+                ", inputTime=" + inputTime +
+                ", updateUser=" + updateUser +
+                ", updateTime=" + updateTime +
+                ", serialVersionUID=" + serialVersionUID +
+                "]";
     }
 }

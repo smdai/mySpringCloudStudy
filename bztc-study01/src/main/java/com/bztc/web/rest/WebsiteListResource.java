@@ -26,15 +26,18 @@ import java.util.List;
 @RequestMapping("/api/websiteListResource")
 public class WebsiteListResource {
     private static final Logger logger = LoggerFactory.getLogger(WebsiteListResource.class);
+    private static final String WEBSITE_URL = "websiteUrl";
+    private static final String WEBSITE_NAME = "websiteName";
+    private static final String TYPE = "type";
     @Autowired
     private WebsiteListService websiteListService;
 
-    /*
+    /**
      * 描述：根据主键id查询网站信息
+     *
+     * @return com.bztc.entity.WebsiteList
      * @author daism
      * @date 2022-09-25 20:32:44
-     * @param s
-     * @return com.bztc.entity.WebsiteList
      */
     @GetMapping("/getInfoById/{s}")
     public WebsiteList getInfoById(@PathVariable Integer s) {
@@ -42,24 +45,24 @@ public class WebsiteListResource {
         return websiteListService.getInfoById(s);
     }
 
-    /*
+    /**
      * 描述：查询所有网站列表
+     *
+     * @return java.util.List<com.bztc.entity.WebsiteList>
      * @author daism
      * @date 2022-09-28 10:25:22
-     * @param
-     * @return java.util.List<com.bztc.entity.WebsiteList>
      */
     @GetMapping("/queryAll")
     public List<WebsiteList> queryAll() {
         return websiteListService.list();
     }
 
-    /*
+    /**
      * 描述：分页查询
+     *
+     * @return java.util.List<com.bztc.entity.WebsiteList>
      * @author daism
      * @date 2022-09-28 14:52:04
-     * @param
-     * @return java.util.List<com.bztc.entity.WebsiteList>
      */
     @GetMapping("/queryByPage")
     public ResultDto<List<WebsiteList>> queryByPage(@RequestParam("param") String params) {
@@ -69,27 +72,28 @@ public class WebsiteListResource {
         Page<WebsiteList> queryPage = new Page<>((int) jsonObject.get("pageIndex"), (int) jsonObject.get("pageSize"));
 
         QueryWrapper<WebsiteList> queryWrapper = new QueryWrapper<>();
-        if (!StrUtil.isBlankIfStr(jsonObject.get("websiteUrl"))) {
-            queryWrapper.like("website_Url", jsonObject.get("websiteUrl"));
+        if (!StrUtil.isBlankIfStr(jsonObject.get(WEBSITE_URL))) {
+            queryWrapper.like("website_Url", jsonObject.get(WEBSITE_URL));
         }
-        if (!StrUtil.isBlankIfStr(jsonObject.get("websiteName"))) {
-            queryWrapper.like("website_Name", jsonObject.get("websiteName"));
+        if (!StrUtil.isBlankIfStr(jsonObject.get(WEBSITE_NAME))) {
+            queryWrapper.like("website_Name", jsonObject.get(WEBSITE_NAME));
         }
-        if (!StrUtil.isBlankIfStr(jsonObject.get("type"))) {
-            queryWrapper.eq("type", jsonObject.get("type"));
+        if (!StrUtil.isBlankIfStr(jsonObject.get(TYPE))) {
+            queryWrapper.eq("type", jsonObject.get(TYPE));
         }
-        queryWrapper.eq("status", Constants.STATUS_EFFECT);//1-生效，0-失效
+        //1-生效，0-失效
+        queryWrapper.eq("status", Constants.STATUS_EFFECT);
         queryWrapper.orderByDesc("input_time");
         Page<WebsiteList> websiteListPage = websiteListService.page(queryPage, queryWrapper);
         return new ResultDto<>(websiteListPage.getTotal(), websiteListPage.getRecords());
     }
 
-    /*
+    /**
      * 描述：新增网站信息
+     *
+     * @return com.bztc.dto.ResultDto<com.bztc.entity.WebsiteList>
      * @author daism
      * @date 2022-09-29 10:35:10
-     * @param websiteList
-     * @return com.bztc.dto.ResultDto<com.bztc.entity.WebsiteList>
      */
     @PostMapping("/insert")
     public ResultDto<WebsiteList> insert(@RequestBody WebsiteList websiteList) {
@@ -110,12 +114,12 @@ public class WebsiteListResource {
         return resultDto;
     }
 
-    /*
+    /**
      * 描述：编辑-更新
+     *
+     * @return com.bztc.dto.ResultDto<com.bztc.entity.WebsiteList>
      * @author daism
      * @date 2022-10-14 09:55:17
-     * @param websiteList
-     * @return com.bztc.dto.ResultDto<com.bztc.entity.WebsiteList>
      */
     @PostMapping("/update")
     public ResultDto<WebsiteList> update(@RequestBody WebsiteList websiteList) {
@@ -134,12 +138,12 @@ public class WebsiteListResource {
         return resultDto;
     }
 
-    /*
+    /**
      * 描述：根据主键删除
+     *
+     * @return com.bztc.dto.ResultDto<java.lang.Integer>
      * @author daism
      * @date 2022-10-14 10:05:22
-     * @param websiteList
-     * @return com.bztc.dto.ResultDto<java.lang.Integer>
      */
     @PostMapping("/delete")
     public ResultDto<Integer> delete(@RequestBody WebsiteList websiteList) {

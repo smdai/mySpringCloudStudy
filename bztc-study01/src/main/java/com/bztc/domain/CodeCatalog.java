@@ -12,61 +12,54 @@ import java.util.Date;
 /**
  * 字典目录表
  *
+ * @author daishuming
  * @TableName code_catalog
  */
 @TableName(value = "code_catalog")
 @Data
 public class CodeCatalog implements Serializable {
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
     /**
      * 主键id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-
     /**
      * 数据字典目录英文值
      */
     @TableField(value = "item_catalog_code")
     private String itemCatalogCode;
-
     /**
      * 数据字典目录中文值
      */
     @TableField(value = "item_catalog_name")
     private String itemCatalogName;
-
     /**
      * 备注
      */
     @TableField(value = "remark")
     private String remark;
-
     /**
      * 录入人
      */
     @TableField(value = "input_user")
     private String inputUser;
-
     /**
      * 录入时间
      */
     @TableField(value = "input_time")
     private Date inputTime;
-
     /**
      * 更新人
      */
     @TableField(value = "update_user")
     private String updateUser;
-
     /**
      * 更新时间
      */
     @TableField(value = "update_time")
     private Date updateTime;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 
     @Override
     public boolean equals(Object that) {
@@ -107,20 +100,18 @@ public class CodeCatalog implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", itemCatalogCode=").append(itemCatalogCode);
-        sb.append(", itemCatalogName=").append(itemCatalogName);
-        sb.append(", remark=").append(remark);
-        sb.append(", inputUser=").append(inputUser);
-        sb.append(", inputTime=").append(inputTime);
-        sb.append(", updateUser=").append(updateUser);
-        sb.append(", updateTime=").append(updateTime);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+        return getClass().getSimpleName() +
+                " [" +
+                "Hash = " + hashCode() +
+                ", id=" + id +
+                ", itemCatalogCode=" + itemCatalogCode +
+                ", itemCatalogName=" + itemCatalogName +
+                ", remark=" + remark +
+                ", inputUser=" + inputUser +
+                ", inputTime=" + inputTime +
+                ", updateUser=" + updateUser +
+                ", updateTime=" + updateTime +
+                ", serialVersionUID=" + serialVersionUID +
+                "]";
     }
 }
