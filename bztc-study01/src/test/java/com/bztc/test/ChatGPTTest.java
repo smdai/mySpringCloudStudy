@@ -1,5 +1,7 @@
 package com.bztc.test;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,8 +9,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ChatGPTTest {
+    @Value("${chatgpt.token}")
+    static String token;
+
     public static void main(String[] args) {
-        String token = "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";
+//        String token = "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";
         try {
             // 设置API端点URL和请求参数
             String endpointUrl = "https://api.openai.com/v1/engines/davinci-codex/completions";
