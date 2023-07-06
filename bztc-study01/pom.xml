@@ -120,6 +120,21 @@
             <artifactId>chatgpt</artifactId>
             <version>${chatgpt.version}</version>
         </dependency>
+        <!-- groovy集成插件 -->
+        <dependency>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>${groovy-all.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-core</artifactId>
+            <version>${spock-core.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
     </dependencies>
     <build>
         <finalName>bztc-study01-${project.version}</finalName>
