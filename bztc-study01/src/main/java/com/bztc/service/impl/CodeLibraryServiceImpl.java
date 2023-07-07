@@ -37,6 +37,7 @@ public class CodeLibraryServiceImpl extends ServiceImpl<CodeLibraryMapper, CodeL
         QueryWrapper<CodeLibrary> codeLibraryQueryWrapper = new QueryWrapper<>();
         codeLibraryQueryWrapper.eq("status", Constants.STATUS_EFFECT);
         codeLibraryQueryWrapper.eq("item_Catalog_Code", code);
+        codeLibraryQueryWrapper.orderByAsc("sort_no");
         List<CodeLibrary> codeLibraries = this.list(codeLibraryQueryWrapper);
         if (CollectionUtil.isEmpty(codeLibraries)) {
             return null;
@@ -56,6 +57,7 @@ public class CodeLibraryServiceImpl extends ServiceImpl<CodeLibraryMapper, CodeL
     public void freshCodeLibrary() {
         QueryWrapper<CodeLibrary> codeLibraryQueryWrapper = new QueryWrapper<>();
         codeLibraryQueryWrapper.eq("status", Constants.STATUS_EFFECT);
+        codeLibraryQueryWrapper.orderByAsc("sort_no");
         List<CodeLibrary> codeLibraries = this.list(codeLibraryQueryWrapper);
         List<Map<String, String>> mapList = codeLibraries.stream().map(it -> {
             Map<String, String> map = new HashMap<>();

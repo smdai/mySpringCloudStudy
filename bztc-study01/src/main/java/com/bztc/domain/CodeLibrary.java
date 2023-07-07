@@ -12,7 +12,6 @@ import java.util.Date;
 /**
  * 字典详细表
  *
- * @author daishuming
  * @TableName code_library
  */
 @TableName(value = "code_library")
@@ -70,6 +69,11 @@ public class CodeLibrary implements Serializable {
      */
     @TableField(value = "update_time")
     private Date updateTime;
+    /**
+     * 排序号
+     */
+    @TableField(value = "sort_no")
+    private String sortNo;
 
     @Override
     public boolean equals(Object that) {
@@ -92,7 +96,8 @@ public class CodeLibrary implements Serializable {
                 && (this.getInputUser() == null ? other.getInputUser() == null : this.getInputUser().equals(other.getInputUser()))
                 && (this.getInputTime() == null ? other.getInputTime() == null : this.getInputTime().equals(other.getInputTime()))
                 && (this.getUpdateUser() == null ? other.getUpdateUser() == null : this.getUpdateUser().equals(other.getUpdateUser()))
-                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
+                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
+                && (this.getSortNo() == null ? other.getSortNo() == null : this.getSortNo().equals(other.getSortNo()));
     }
 
     @Override
@@ -109,25 +114,29 @@ public class CodeLibrary implements Serializable {
         result = prime * result + ((getInputTime() == null) ? 0 : getInputTime().hashCode());
         result = prime * result + ((getUpdateUser() == null) ? 0 : getUpdateUser().hashCode());
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
+        result = prime * result + ((getSortNo() == null) ? 0 : getSortNo().hashCode());
         return result;
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() +
-                " [" +
-                "Hash = " + hashCode() +
-                ", id=" + id +
-                ", itemCatalogCode=" + itemCatalogCode +
-                ", itemCode=" + itemCode +
-                ", itemName=" + itemName +
-                ", remark=" + remark +
-                ", status=" + status +
-                ", inputUser=" + inputUser +
-                ", inputTime=" + inputTime +
-                ", updateUser=" + updateUser +
-                ", updateTime=" + updateTime +
-                ", serialVersionUID=" + serialVersionUID +
-                "]";
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", id=").append(id);
+        sb.append(", itemCatalogCode=").append(itemCatalogCode);
+        sb.append(", itemCode=").append(itemCode);
+        sb.append(", itemName=").append(itemName);
+        sb.append(", remark=").append(remark);
+        sb.append(", status=").append(status);
+        sb.append(", inputUser=").append(inputUser);
+        sb.append(", inputTime=").append(inputTime);
+        sb.append(", updateUser=").append(updateUser);
+        sb.append(", updateTime=").append(updateTime);
+        sb.append(", sortNo=").append(sortNo);
+        sb.append(", serialVersionUID=").append(serialVersionUID);
+        sb.append("]");
+        return sb.toString();
     }
 }
