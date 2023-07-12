@@ -7,7 +7,8 @@ class GroovyTest extends Specification {
     def dataSource
     def main = {
         def param = {
-            return dataSource?.name
+            def age = dataSource?.age as String
+            return age ? age : -99999
         }
         param.call()
     }

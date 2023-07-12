@@ -1,5 +1,7 @@
 package com.bztc.web.rest;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -9,12 +11,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bztc.constant.Constants;
 import com.bztc.domain.RuleNgParam;
 import com.bztc.dto.ResultDto;
+import com.bztc.dto.RuleNgParamDto;
 import com.bztc.service.RuleNgParamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author daism
@@ -54,6 +58,62 @@ public class RuleNgParamResource {
         queryWrapper.orderByDesc("input_time");
         Page<RuleNgParam> websiteListPage = ruleNgParamService.page(queryPage, queryWrapper);
         return new ResultDto<>(websiteListPage.getTotal(), websiteListPage.getRecords());
+    }
+
+    /**
+     * 描述：查询所有数据
+     *
+     * @return java.util.List<com.bztc.entity.RuleNgParam>
+     * @author daism
+     * @date 2022-09-28 14:52:04
+     */
+    @GetMapping("/queryAll")
+    public ResultDto<List<RuleNgParam>> queryAll(@RequestParam("param") String params) {
+        log.info("查询所有数据入参：{}", params);
+        JSONObject jsonObject = JSONUtil.parseObj(params);
+        QueryWrapper<RuleNgParam> queryWrapper = new QueryWrapper<>();
+        if (!StrUtil.isBlankIfStr(jsonObject.get("paramCode"))) {
+            queryWrapper.like("param_Code", jsonObject.get("paramCode"));
+        }
+        if (!StrUtil.isBlankIfStr(jsonObject.get("paramName"))) {
+            queryWrapper.like("param_Name", jsonObject.get("paramName"));
+        }
+        if (!StrUtil.isBlankIfStr(jsonObject.get("dsType"))) {
+            queryWrapper.eq("ds_Type", jsonObject.get("dsType"));
+        }
+        //1-生效，0-失效
+        queryWrapper.eq("param_status", Constants.STATUS_EFFECT);
+        queryWrapper.orderByDesc("input_time");
+        List<RuleNgParam> websiteListPage = ruleNgParamService.list(queryWrapper);
+        return new ResultDto<>(websiteListPage);
+    }
+
+    /**
+     * 描述：执行参数结果
+     *
+     * @return java.util.List<com.bztc.entity.RuleNgParam>
+     * @author daism
+     * @date 2022-09-28 14:52:04
+     */
+    @PostMapping("/execute")
+    public ResultDto<List<RuleNgParamDto>> execute(@RequestBody RuleNgParamDto ruleNgParamDto) {
+        log.info("执行参数结果入参：{}", JSONUtil.toJsonStr(ruleNgParamDto));
+        Page<RuleNgParam> queryPage = new Page<>(ruleNgParamDto.getPageIndex(), ruleNgParamDto.getPageSize());
+
+        QueryWrapper<RuleNgParam> queryWrapper = new QueryWrapper<>();
+        if (!CollectionUtil.isEmpty(ruleNgParamDto.getParamCodeList())) {
+            queryWrapper.in("param_Code", ruleNgParamDto.getParamCodeList());
+        }
+        Page<RuleNgParam> websiteListPage = ruleNgParamService.page(queryPage, queryWrapper);
+
+        List<RuleNgParamDto> ruleNgParamDtos = websiteListPage.getRecords().stream().map(it -> {
+            RuleNgParamDto retRuleNgParamDto = new RuleNgParamDto();
+            BeanUtil.copyProperties(it, retRuleNgParamDto);
+            retRuleNgParamDto.setParamResult(ruleNgParamService.getResult(ruleNgParamDto.getJsonMsg(), it));
+            return retRuleNgParamDto;
+        }).collect(Collectors.toList());
+
+        return new ResultDto<>(websiteListPage.getTotal(), ruleNgParamDtos);
     }
 
     /**
