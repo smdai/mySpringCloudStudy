@@ -101,9 +101,13 @@ public class RuleNgParamResource {
         Page<RuleNgParam> queryPage = new Page<>(ruleNgParamDto.getPageIndex(), ruleNgParamDto.getPageSize());
 
         QueryWrapper<RuleNgParam> queryWrapper = new QueryWrapper<>();
-        if (!CollectionUtil.isEmpty(ruleNgParamDto.getParamCodeList())) {
-            queryWrapper.in("param_Code", ruleNgParamDto.getParamCodeList());
+        if (CollectionUtil.isEmpty(ruleNgParamDto.getParamCodeList())) {
+            ResultDto<List<RuleNgParamDto>> resultDto = new ResultDto<>();
+            resultDto.setCode(999);
+            resultDto.setMessage("请选择参数！");
+            return resultDto;
         }
+        queryWrapper.in("param_Code", ruleNgParamDto.getParamCodeList());
         Page<RuleNgParam> websiteListPage = ruleNgParamService.page(queryPage, queryWrapper);
 
         List<RuleNgParamDto> ruleNgParamDtos = websiteListPage.getRecords().stream().map(it -> {
