@@ -24,6 +24,25 @@ public class RedisUtilTest {
     @Autowired
     CodeLibraryService codeLibraryService;
 
+    public static void main(String[] args) {
+        String s = "c";
+        switch (s) {
+            case "s":
+                System.out.println("abc");
+                break;
+            case "a":
+                System.out.println("a");
+                break;
+            case "b":
+            case "c":
+            case "d":
+                System.out.println("bcd");
+                break;
+            default:
+                break;
+        }
+    }
+
     @Test
     public void setTest() {
         redisUtil.set("daism", "aaaaaaaaaaaaa");
