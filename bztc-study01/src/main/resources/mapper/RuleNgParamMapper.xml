@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bztc.mapper.RuleNgParamMapper">
+
+    <resultMap id="BaseResultMap" type="com.bztc.domain.RuleNgParam">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="paramCode" column="param_code" jdbcType="VARCHAR"/>
+        <result property="paramName" column="param_name" jdbcType="VARCHAR"/>
+        <result property="paramDesc" column="param_desc" jdbcType="VARCHAR"/>
+        <result property="paramType" column="param_type" jdbcType="VARCHAR"/>
+        <result property="paramSubClazz" column="param_sub_clazz" jdbcType="VARCHAR"/>
+        <result property="dsType" column="ds_type" jdbcType="VARCHAR"/>
+        <result property="customize" column="customize" jdbcType="VARCHAR"/>
+        <result property="script" column="script" jdbcType="VARCHAR"/>
+        <result property="paramStatus" column="param_status" jdbcType="VARCHAR"/>
+        <result property="scriptHash" column="script_hash" jdbcType="VARCHAR"/>
+        <result property="defaultValue" column="default_value" jdbcType="VARCHAR"/>
+        <result property="tag" column="tag" jdbcType="VARCHAR"/>
+        <result property="inputUser" column="input_user" jdbcType="VARCHAR"/>
+        <result property="inputTime" column="input_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,param_code,param_name,
+        param_desc,param_type,param_sub_clazz,
+        ds_type,customize,script,
+        param_status,script_hash,default_value,
+        tag,input_user,input_time,
+        update_user,update_time
+    </sql>
+</mapper>

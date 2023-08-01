@@ -1,0 +1,42 @@
+server:
+  port: 8888
+spring:
+  application:
+    name: gateway8888
+  profiles:
+    active: @project.active@
+  cloud:
+    nacos:
+      config:
+        server-addr: ${NACOS-HOST:10.8.0.1}:${NACOS-PORT:8848}
+        username: nacos
+        password: nacos
+        namespace: @nacos.namespace@
+        group: STUDY01_GROUP
+        file-extension: yml
+      discovery:
+        server-addr: ${spring.cloud.nacos.config.server-addr}
+        username: ${spring.cloud.nacos.config.username}
+        password: ${spring.cloud.nacos.config.password}
+        namespace: @nacos.namespace@
+        group: ${spring.cloud.nacos.config.group}
+    # 网关配置
+#    gateway:
+#      # 路由配置：转发规则
+#      routes: #集合。
+#      # id: 唯一标识。默认是一个uuid
+#      # uri: 转发路径
+#      # predicates: 条件,用于请求网关路径的匹配规则
+#      # filters：配置局部过滤器的
+#      #        - id: gateway-study01
+#      # 静态路由
+#      #          uri: http://localhost:8001/
+#      # 动态路由
+#      #          uri: lb://study01
+#      #          predicates:
+#      #            - path=/bztcsystem/api/**
+#      # 微服务名称配置
+#      discovery:
+#        locator:
+#          enabled: true # 设置为true 请求路径前可以添加微服务名称（开启微服务发现功能）
+#          lower-case-service-id: true # 将请求路径上的服务名配置为小写
