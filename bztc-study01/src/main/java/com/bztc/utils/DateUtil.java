@@ -1,6 +1,7 @@
 package com.bztc.utils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -21,4 +22,14 @@ public class DateUtil {
     public static LocalDate getLocalDate(String dateStr, String pattern) {
         return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(pattern));
     }
+
+    /**
+     * 获取当前时间
+     *
+     * @return 当前时间
+     */
+    public static String getLocalTimeNowStr() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(PATTERN_YYYY_MM_DD_HH_MM_SS));
+    }
+
 }

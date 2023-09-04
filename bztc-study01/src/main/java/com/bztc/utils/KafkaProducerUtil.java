@@ -2,7 +2,9 @@ package com.bztc.utils;
 
 import com.bztc.config.KafkaProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.producer.*;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 
 import java.util.Properties;
 
@@ -16,7 +18,7 @@ public class KafkaProducerUtil {
     /**
      * 发送kafka消息
      *
-     * @param topic 主题
+     * @param topic   主题
      * @param message 信息
      */
     public static void sendMessage(String topic, String message) {
@@ -24,14 +26,11 @@ public class KafkaProducerUtil {
         Properties properties = kafkaProperties.initProperties();
         try (Producer<String, String> producer = new KafkaProducer<String, String>(properties)) {
             ProducerRecord<String, String> stringStringProducerRecord = new ProducerRecord<>(topic, message);
-            producer.send(stringStringProducerRecord, new Callback() {
-                @Override
-                public void onCompletion(RecordMetadata recordMetadata, Exception e) {
-                    if (e != null) {
-                        log.error("kafka发送信息失败！topic = {}", topic, e);
-                    } else {
-                        log.info("kafka发送信息成功！topic = {},partition = {},offset = {}", topic, recordMetadata.partition(), recordMetadata.offset());
-                    }
+            producer.send(stringStringProducerRecord, (recordMetadata, e) -> {
+                if (e != null) {
+                    log.error("kafka发送信息失败！topic = {}", topic, e);
+                } else {
+                    log.info("kafka发送信息成功！topic = {},partition = {},offset = {}", topic, recordMetadata.partition(), recordMetadata.offset());
                 }
             });
         } catch (Exception e) {

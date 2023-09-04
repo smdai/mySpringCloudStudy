@@ -133,7 +133,12 @@
             <version>${spock-core.version}</version>
             <scope>test</scope>
         </dependency>
-
+        <!-- rabbitmq -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+            <version>${rabbit-mq-amqp.version}</version>
+        </dependency>
 
     </dependencies>
     <build>

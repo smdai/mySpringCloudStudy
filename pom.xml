@@ -27,6 +27,7 @@
         <chatgpt.version>1.1.1</chatgpt.version>
         <groovy-all.version>4.0.10</groovy-all.version>
         <spock-core.version>2.3-groovy-4.0</spock-core.version>
+        <rabbit-mq-amqp.version>2.3.12.RELEASE</rabbit-mq-amqp.version>
     </properties>
     <dependencyManagement>
         <dependencies>
