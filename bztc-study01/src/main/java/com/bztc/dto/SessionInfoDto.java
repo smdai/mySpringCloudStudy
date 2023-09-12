@@ -31,4 +31,8 @@ public class SessionInfoDto {
      * 用户id
      */
     private Integer userId;
+    /**
+     * 登录状态
+     */
+    private int loginStatus;
 }

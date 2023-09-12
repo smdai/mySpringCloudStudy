@@ -25,7 +25,7 @@ public class SessionResourceTest {
 
     @Test
     public void getSessionTest() {
-        ResultDto<SessionInfoDto> admin = sessionResource.getSession("admin");
+        ResultDto<SessionInfoDto> admin = sessionResource.getSession();
         System.out.println(JSONUtil.toJsonStr(admin));
     }
 }

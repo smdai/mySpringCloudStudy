@@ -2,6 +2,7 @@ package com.bztc.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.bztc.domain.UserInfo;
+import com.bztc.dto.SessionInfoDto;
 import com.bztc.enumeration.LoginEnum;
 
 /**
@@ -18,5 +19,5 @@ public interface UserInfoService extends IService<UserInfo> {
      * @author daism
      * @date 2022-10-14 17:22:28
      */
-    int login(UserInfo userInfo);
+    SessionInfoDto login(UserInfo userInfo);
 }

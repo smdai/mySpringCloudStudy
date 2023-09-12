@@ -14,10 +14,9 @@ public interface AuthResContrService extends IService<AuthResContr> {
     /**
      * 描述：获取session
      *
-     * @param userName 用户名称
      * @return com.bztc.dto.ResultDto<com.bztc.dto.SessionInfoDto>
      * @author daism
      * @date 2022-10-18 18:45:55
      */
-    ResultDto<SessionInfoDto> getSession(String userName);
+    ResultDto<SessionInfoDto> getSession();
 }

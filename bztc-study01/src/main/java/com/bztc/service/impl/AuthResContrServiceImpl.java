@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bztc.constant.Constants;
+import com.bztc.constant.RedisConstants;
 import com.bztc.domain.AuthResContr;
 import com.bztc.domain.MenuInfo;
 import com.bztc.domain.UserInfo;
@@ -12,7 +13,12 @@ import com.bztc.dto.MenuInfoDto;
 import com.bztc.dto.ResultDto;
 import com.bztc.dto.SessionInfoDto;
 import com.bztc.mapper.AuthResContrMapper;
-import com.bztc.service.*;
+import com.bztc.service.AuthResContrService;
+import com.bztc.service.MenuInfoService;
+import com.bztc.service.UserInfoService;
+import com.bztc.service.UserRoleService;
+import com.bztc.utils.RedisUtil;
+import com.bztc.utils.RequestHeaderUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,7 +45,7 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
     @Autowired
     private MenuInfoService menuInfoService;
     @Autowired
-    private SessionService sessionService;
+    private RedisUtil redisUtil;
 
     /**
      * 描述：获取session
@@ -49,12 +55,18 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
      * @date 2022-10-18 18:45:55
      */
     @Override
-    public ResultDto<SessionInfoDto> getSession(String userName) {
+    public ResultDto<SessionInfoDto> getSession() {
         SessionInfoDto sessionInfoDto = new SessionInfoDto();
+        //获取userId
+        Object userId = redisUtil.get(RedisConstants.SESSION_USERID_KEY + ":" + RequestHeaderUtil.getToken());
+        if (Objects.isNull(userId)) {
+            log.error("token 不正确。");
+            return null;
+        }
         //查询用户信息
         QueryWrapper<UserInfo> userInfoQueryWrapper = new QueryWrapper<>();
         userInfoQueryWrapper.eq("status", Constants.STATUS_EFFECT)
-                .eq("user_name", userName);
+                .eq("id", userId.toString());
         UserInfo userInfo = userInfoService.getOne(userInfoQueryWrapper);
         if (Objects.isNull(userInfo)) {
             return null;
@@ -98,8 +110,8 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
 
         sessionInfoDto.setMenuAuthList(menuInfos.stream().map(MenuInfo::getRouteName).collect(Collectors.toList()));
         //获取token
-        sessionInfoDto.setToken(sessionService.getToken(String.valueOf(userInfo.getId())));
-        sessionInfoDto.setUserId(userInfo.getId());
+//        sessionInfoDto.setToken(sessionService.getToken(String.valueOf(userInfo.getId())));
+//        sessionInfoDto.setUserId(userInfo.getId());
         return new ResultDto<>(sessionInfoDto);
     }
 }

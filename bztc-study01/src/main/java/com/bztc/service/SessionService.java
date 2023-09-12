@@ -11,4 +11,6 @@ public interface SessionService {
      * @return token
      */
     String getToken(String userId);
+
+    int setToken(int userId, String token);
 }

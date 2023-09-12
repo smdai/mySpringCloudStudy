@@ -85,6 +85,7 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
                 }
                 //初始化缓存时间
                 redisUtil.expire(RedisConstants.SESSION_TOKEN_KEY + ":" + userId, RedisConstants.SESSION_TOKEN_TTL_SECONDS);
+                redisUtil.expire(RedisConstants.SESSION_USERID_KEY + ":" + token, RedisConstants.SESSION_TOKEN_TTL_SECONDS);
             }
             return chain.filter(exchange);
         } catch (Exception e) {

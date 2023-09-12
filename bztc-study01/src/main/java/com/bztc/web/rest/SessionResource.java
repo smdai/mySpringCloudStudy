@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -30,8 +29,8 @@ public class SessionResource {
      * @date 2022-10-18 18:35:19
      */
     @GetMapping("/getsession")
-    public ResultDto<SessionInfoDto> getSession(@RequestParam("userName") String userName) {
-        log.info("获取session信息入参：{}", userName);
-        return authResContrService.getSession(userName);
+    public ResultDto<SessionInfoDto> getSession() {
+        log.info("获取session信息");
+        return authResContrService.getSession();
     }
 }

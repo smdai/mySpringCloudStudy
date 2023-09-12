@@ -3,6 +3,7 @@ package com.bztc.web.rest;
 import cn.hutool.json.JSONUtil;
 import com.bztc.domain.UserInfo;
 import com.bztc.dto.ResultDto;
+import com.bztc.dto.SessionInfoDto;
 import com.bztc.enumeration.LoginEnum;
 import com.bztc.service.UserInfoService;
 import org.slf4j.Logger;
@@ -33,12 +34,15 @@ public class LoginResource {
      * @date 2022-10-14 17:46:00
      */
     @PostMapping("/login")
-    public ResultDto<Integer> insert(@RequestBody UserInfo userInfo) {
+    public ResultDto<SessionInfoDto> insert(@RequestBody UserInfo userInfo) {
         logger.info("登录入参：{}", JSONUtil.toJsonStr(userInfo));
-        ResultDto<Integer> resultDto = new ResultDto<>();
-        int status = userInfoService.login(userInfo);
-        resultDto.setCode(status);
-        resultDto.setMessage(LoginEnum.lookup(status));
+        ResultDto<SessionInfoDto> resultDto = new ResultDto<>();
+        SessionInfoDto sessionInfoDto = userInfoService.login(userInfo);
+        resultDto.setCode(sessionInfoDto.getLoginStatus());
+        resultDto.setMessage(LoginEnum.lookup(sessionInfoDto.getLoginStatus()));
+        if (sessionInfoDto.getLoginStatus() == LoginEnum.SUCCESS.key) {
+            resultDto.setData(sessionInfoDto);
+        }
         return resultDto;
     }
 }

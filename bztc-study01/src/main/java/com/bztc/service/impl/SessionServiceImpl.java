@@ -21,4 +21,15 @@ public class SessionServiceImpl implements SessionService {
     public String getToken(String userId) {
         return userId + "-" + UUID.randomUUID();
     }
+
+    /**
+     * 设置token
+     *
+     * @return userId
+     */
+    @Override
+    @CachePut(value = RedisConstants.SESSION_USERID_KEY, key = "#token")
+    public int setToken(int userId, String token) {
+        return userId;
+    }
 }

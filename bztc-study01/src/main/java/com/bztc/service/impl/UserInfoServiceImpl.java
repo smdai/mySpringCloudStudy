@@ -4,9 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bztc.constant.Constants;
 import com.bztc.domain.UserInfo;
+import com.bztc.dto.SessionInfoDto;
 import com.bztc.enumeration.LoginEnum;
 import com.bztc.mapper.UserInfoMapper;
+import com.bztc.service.SessionService;
 import com.bztc.service.UserInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -18,6 +21,8 @@ import java.util.Objects;
  */
 @Service
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> implements UserInfoService {
+    @Autowired
+    SessionService sessionService;
 
     /**
      * 描述：用户登录
@@ -27,17 +32,26 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
      * @date 2022-10-14 17:22:28
      */
     @Override
-    public int login(UserInfo userInfoLogin) {
+    public SessionInfoDto login(UserInfo userInfoLogin) {
+        SessionInfoDto sessionInfoDto = new SessionInfoDto();
         QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_name", userInfoLogin.getUserName());
         UserInfo userInfoData = this.getOne(queryWrapper);
         if (Objects.isNull(userInfoData) || !userInfoData.getPassword().equals(userInfoLogin.getPassword())) {
-            return LoginEnum.WRONG_ERROR.key;
+            sessionInfoDto.setLoginStatus(LoginEnum.WRONG_ERROR.key);
+            return sessionInfoDto;
         }
         if (!Constants.STATUS_EFFECT.equals(userInfoData.getStatus())) {
-            return LoginEnum.NO_AVAIL_ERROR.key;
+            sessionInfoDto.setLoginStatus(LoginEnum.NO_AVAIL_ERROR.key);
+            return sessionInfoDto;
         }
-        return LoginEnum.SUCCESS.key;
+        String token = sessionService.getToken(String.valueOf(userInfoData.getId()));
+        int i = sessionService.setToken(userInfoData.getId(), token);
+        sessionInfoDto.setToken(token);
+        sessionInfoDto.setUserId(userInfoData.getId());
+        sessionInfoDto.setLoginStatus(LoginEnum.SUCCESS.key);
+
+        return sessionInfoDto;
     }
 }
 
