@@ -13,10 +13,7 @@ import com.bztc.dto.MenuInfoDto;
 import com.bztc.dto.ResultDto;
 import com.bztc.dto.SessionInfoDto;
 import com.bztc.mapper.AuthResContrMapper;
-import com.bztc.service.AuthResContrService;
-import com.bztc.service.MenuInfoService;
-import com.bztc.service.UserInfoService;
-import com.bztc.service.UserRoleService;
+import com.bztc.service.*;
 import com.bztc.utils.RedisUtil;
 import com.bztc.utils.RequestHeaderUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +43,8 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
     private MenuInfoService menuInfoService;
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    private SessionService sessionService;
 
     /**
      * 描述：获取session
@@ -112,6 +111,7 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
         //获取token
 //        sessionInfoDto.setToken(sessionService.getToken(String.valueOf(userInfo.getId())));
 //        sessionInfoDto.setUserId(userInfo.getId());
+        sessionService.setSessionInfo(userId.toString(), sessionInfoDto);
         return new ResultDto<>(sessionInfoDto);
     }
 }

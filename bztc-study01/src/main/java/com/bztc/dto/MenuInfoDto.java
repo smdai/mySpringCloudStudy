@@ -49,4 +49,8 @@ public class MenuInfoDto {
     private String menuType;
 
     private List<MenuInfoDto> subs;
+    /**
+     * vue路径
+     */
+    private String componentUrl;
 }

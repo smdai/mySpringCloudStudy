@@ -13,6 +13,7 @@
             <result property="routeName" column="route_name" jdbcType="VARCHAR"/>
             <result property="menuType" column="menu_type" jdbcType="VARCHAR"/>
             <result property="icon" column="icon" jdbcType="VARCHAR"/>
+            <result property="componentUrl" column="component_url" jdbcType="VARCHAR"/>
             <result property="status" column="status" jdbcType="VARCHAR"/>
             <result property="sortNo" column="sort_no" jdbcType="VARCHAR"/>
             <result property="inputUser" column="input_user" jdbcType="VARCHAR"/>
@@ -24,8 +25,8 @@
     <sql id="Base_Column_List">
         menu_id,up_menu_id,menu_level,
         menu_url,menu_name,route_name,
-        menu_type,icon,status,
-        sort_no,input_user,input_time,
-        update_user,update_time
+        menu_type,icon,component_url,
+        status,sort_no,input_user,
+        input_time,update_user,update_time
     </sql>
 </mapper>

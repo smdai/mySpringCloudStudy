@@ -12,7 +12,6 @@ import java.util.Date;
 /**
  * 菜单信息表
  *
- * @author daishuming
  * @TableName menu_info
  */
 @TableName(value = "menu_info")
@@ -60,6 +59,11 @@ public class MenuInfo implements Serializable {
      */
     @TableField(value = "icon")
     private String icon;
+    /**
+     * vue路径
+     */
+    @TableField(value = "component_url")
+    private String componentUrl;
     /**
      * 状态
      */
@@ -111,6 +115,7 @@ public class MenuInfo implements Serializable {
                 && (this.getRouteName() == null ? other.getRouteName() == null : this.getRouteName().equals(other.getRouteName()))
                 && (this.getMenuType() == null ? other.getMenuType() == null : this.getMenuType().equals(other.getMenuType()))
                 && (this.getIcon() == null ? other.getIcon() == null : this.getIcon().equals(other.getIcon()))
+                && (this.getComponentUrl() == null ? other.getComponentUrl() == null : this.getComponentUrl().equals(other.getComponentUrl()))
                 && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
                 && (this.getSortNo() == null ? other.getSortNo() == null : this.getSortNo().equals(other.getSortNo()))
                 && (this.getInputUser() == null ? other.getInputUser() == null : this.getInputUser().equals(other.getInputUser()))
@@ -131,6 +136,7 @@ public class MenuInfo implements Serializable {
         result = prime * result + ((getRouteName() == null) ? 0 : getRouteName().hashCode());
         result = prime * result + ((getMenuType() == null) ? 0 : getMenuType().hashCode());
         result = prime * result + ((getIcon() == null) ? 0 : getIcon().hashCode());
+        result = prime * result + ((getComponentUrl() == null) ? 0 : getComponentUrl().hashCode());
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
         result = prime * result + ((getSortNo() == null) ? 0 : getSortNo().hashCode());
         result = prime * result + ((getInputUser() == null) ? 0 : getInputUser().hashCode());
@@ -142,24 +148,27 @@ public class MenuInfo implements Serializable {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() +
-                " [" +
-                "Hash = " + hashCode() +
-                ", menuId=" + menuId +
-                ", upMenuId=" + upMenuId +
-                ", menuLevel=" + menuLevel +
-                ", menuUrl=" + menuUrl +
-                ", menuName=" + menuName +
-                ", routeName=" + routeName +
-                ", menuType=" + menuType +
-                ", icon=" + icon +
-                ", status=" + status +
-                ", sortNo=" + sortNo +
-                ", inputUser=" + inputUser +
-                ", inputTime=" + inputTime +
-                ", updateUser=" + updateUser +
-                ", updateTime=" + updateTime +
-                ", serialVersionUID=" + serialVersionUID +
-                "]";
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", menuId=").append(menuId);
+        sb.append(", upMenuId=").append(upMenuId);
+        sb.append(", menuLevel=").append(menuLevel);
+        sb.append(", menuUrl=").append(menuUrl);
+        sb.append(", menuName=").append(menuName);
+        sb.append(", routeName=").append(routeName);
+        sb.append(", menuType=").append(menuType);
+        sb.append(", icon=").append(icon);
+        sb.append(", componentUrl=").append(componentUrl);
+        sb.append(", status=").append(status);
+        sb.append(", sortNo=").append(sortNo);
+        sb.append(", inputUser=").append(inputUser);
+        sb.append(", inputTime=").append(inputTime);
+        sb.append(", updateUser=").append(updateUser);
+        sb.append(", updateTime=").append(updateTime);
+        sb.append(", serialVersionUID=").append(serialVersionUID);
+        sb.append("]");
+        return sb.toString();
     }
 }

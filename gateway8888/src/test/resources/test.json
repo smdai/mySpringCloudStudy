@@ -1,0 +1,191 @@
+[
+  {
+    "path": "/dashboard",
+    "name": "dashboard",
+    "meta": {
+      "title": "系统首页"
+    }
+  },
+  {
+    "path": "/table",
+    "name": "table",
+    "meta": {
+      "title": "基础表格"
+    }
+  },
+  {
+    "path": "/tabs",
+    "name": "tabs",
+    "meta": {
+      "title": "tab选项卡"
+    }
+  },
+  {
+    "path": "/3",
+    "name": "3",
+    "meta": {
+      "title": "表单相关"
+    }
+  },
+  {
+    "path": "/form",
+    "name": "form",
+    "meta": {
+      "title": "基本表单"
+    }
+  },
+  {
+    "path": "/upload",
+    "name": "upload",
+    "meta": {
+      "title": "文件上传"
+    }
+  },
+  {
+    "path": "/4",
+    "name": "4",
+    "meta": {
+      "title": "三级菜单"
+    }
+  },
+  {
+    "path": "/editor",
+    "name": "editor",
+    "meta": {
+      "title": "富文本编辑器"
+    }
+  },
+  {
+    "path": "/markdown",
+    "name": "markdown",
+    "meta": {
+      "title": "markdown编辑器"
+    }
+  },
+  {
+    "path": "/icon",
+    "name": "icon",
+    "meta": {
+      "title": "自定义图标"
+    }
+  },
+  {
+    "path": "/charts",
+    "name": "charts",
+    "meta": {
+      "title": "schart图表"
+    }
+  },
+  {
+    "path": "/permission",
+    "name": "permission",
+    "meta": {
+      "title": "权限管理"
+    }
+  },
+  {
+    "path": "/donate",
+    "name": "donate",
+    "meta": {
+      "title": "支持作者"
+    }
+  },
+  {
+    "path": "/groovy",
+    "name": "groovy",
+    "meta": {
+      "title": "groovy相关"
+    }
+  },
+  {
+    "path": "/groovytest",
+    "name": "groovytest",
+    "meta": {
+      "title": "groovy测试"
+    }
+  },
+  {
+    "path": "/rulengparam",
+    "name": "rulengparam",
+    "meta": {
+      "title": "参数管理"
+    }
+  },
+  {
+    "path": "/website",
+    "name": "website",
+    "meta": {
+      "title": "网站导航"
+    }
+  },
+  {
+    "path": "/websitetable",
+    "name": "websitetable",
+    "meta": {
+      "title": "常用网站"
+    }
+  },
+  {
+    "path": "/yusystable",
+    "name": "yusystable",
+    "meta": {
+      "title": "宇信网站"
+    }
+  },
+  {
+    "path": "/animationtable",
+    "name": "animationtable",
+    "meta": {
+      "title": "动漫网站"
+    }
+  },
+  {
+    "path": "/musictable",
+    "name": "musictable",
+    "meta": {
+      "title": "音乐网站"
+    }
+  },
+  {
+    "path": "/studytable",
+    "name": "studytable",
+    "meta": {
+      "title": "学习网站"
+    }
+  },
+  {
+    "path": "/toolstable",
+    "name": "toolstable",
+    "meta": {
+      "title": "工具网站"
+    }
+  },
+  {
+    "path": "/videotable",
+    "name": "videotable",
+    "meta": {
+      "title": "视频网站"
+    }
+  },
+  {
+    "path": "/vpnintranettable",
+    "name": "vpnintranettable",
+    "meta": {
+      "title": "vpn内网"
+    }
+  },
+  {
+    "path": "/23",
+    "name": "23",
+    "meta": {
+      "title": "自学相关"
+    }
+  },
+  {
+    "path": "/kafkaEstable",
+    "name": "kafkaEstable",
+    "meta": {
+      "title": "Es操作"
+    }
+  }
+]
