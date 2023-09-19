@@ -135,13 +135,17 @@ public class MenuInfoResource {
     public ResultDto<Integer> delete(@RequestBody MenuInfo menuInfo) {
         logger.info("删除入参：{}", JSONUtil.toJsonStr(menuInfo));
         ResultDto<Integer> resultDto = new ResultDto<>();
-        menuInfo.setUpdateUser(Constants.ADMIN);
-        menuInfo.setStatus(Constants.STATUS_NOAVAIL);
-        UpdateWrapper<MenuInfo> wrapper = new UpdateWrapper<>();
-        wrapper.eq("menu_id", menuInfo.getMenuId());
-        wrapper.set("status", Constants.STATUS_NOAVAIL);
         try {
-            this.menuInfoService.update(wrapper);
+            if (Constants.STATUS_EFFECT.equals(menuInfo.getStatus())) {
+                menuInfo.setUpdateUser(Constants.ADMIN);
+                menuInfo.setStatus(Constants.STATUS_NOAVAIL);
+                UpdateWrapper<MenuInfo> wrapper = new UpdateWrapper<>();
+                wrapper.eq("menu_id", menuInfo.getMenuId());
+                wrapper.set("status", Constants.STATUS_NOAVAIL);
+                this.menuInfoService.update(wrapper);
+            } else {
+                this.menuInfoService.removeById(menuInfo);
+            }
             resultDto.setCode(200);
         } catch (Exception e) {
             logger.error("删除数据库失败！", e);
