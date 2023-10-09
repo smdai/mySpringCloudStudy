@@ -1,5 +1,6 @@
 package com.bztc.web.rest;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -51,6 +52,23 @@ public class RoleInfoResource {
         //1-生效，0-失效
         queryWrapper.orderByAsc("role_id");
         Page<RoleInfo> websiteListPage = this.roleInfoService.page(queryPage, queryWrapper);
+        return new ResultDto<>(websiteListPage.getTotal(), websiteListPage.getRecords());
+    }
+
+    /**
+     * 查询某个用户未关联的角色列表
+     *
+     * @return 用户
+     */
+    @GetMapping("/queryusernoroles")
+    public ResultDto<List<RoleInfo>> queryUserNoRoles(@RequestParam("param") String params) {
+        logger.info("分页查询入参：{}", params);
+        JSONObject jsonObject = JSONUtil.parseObj(params);
+
+        Page<RoleInfo> queryPage = new Page<>((int) jsonObject.get("pageIndex"), (int) jsonObject.get("pageSize"));
+        Object userId = jsonObject.get("userId");
+        Assert.notNull(userId, "userId不能为空");
+        Page<RoleInfo> websiteListPage = this.roleInfoService.queryUserNoRoles(queryPage, userId.toString());
         return new ResultDto<>(websiteListPage.getTotal(), websiteListPage.getRecords());
     }
 

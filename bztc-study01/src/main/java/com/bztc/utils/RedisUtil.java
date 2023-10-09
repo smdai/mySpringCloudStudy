@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2021/12/8 10:52
  */
 
-@Component
+@Component("redisUtil")
 @Slf4j
 public class RedisUtil {
 

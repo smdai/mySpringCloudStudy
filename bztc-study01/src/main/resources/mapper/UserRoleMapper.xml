@@ -5,19 +5,27 @@
 <mapper namespace="com.bztc.mapper.UserRoleMapper">
 
     <resultMap id="BaseResultMap" type="com.bztc.domain.UserRole">
-            <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="userId" column="user_id" jdbcType="INTEGER"/>
-            <result property="roleId" column="role_id" jdbcType="INTEGER"/>
-            <result property="status" column="status" jdbcType="VARCHAR"/>
-            <result property="inputUser" column="input_user" jdbcType="VARCHAR"/>
-            <result property="inputTime" column="input_time" jdbcType="TIMESTAMP"/>
-            <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="roleId" column="role_id" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="inputUser" column="input_user" jdbcType="VARCHAR"/>
+        <result property="inputTime" column="input_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,user_id,role_id,
+        id
+        ,user_id,role_id,
         status,input_user,input_time,
         update_user,update_time
     </sql>
+    <select id="selectUserRoleByUserId" parameterType="java.lang.String" resultType="java.util.Map">
+        select userrole.role_id, ri.role_name
+        from user_role userrole
+                 left join role_info ri on userrole.role_id = ri.role_id
+        where userrole.user_id = #{userId}
+        order by userrole.role_id
+    </select>
 </mapper>
