@@ -5,14 +5,14 @@
 <mapper namespace="com.bztc.mapper.UserInfoMapper">
 
     <resultMap id="BaseResultMap" type="com.bztc.domain.UserInfo">
-            <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="userName" column="user_name" jdbcType="VARCHAR"/>
-            <result property="password" column="password" jdbcType="VARCHAR"/>
-            <result property="status" column="status" jdbcType="VARCHAR"/>
-            <result property="inputUser" column="input_user" jdbcType="VARCHAR"/>
-            <result property="inputTime" column="input_time" jdbcType="TIMESTAMP"/>
-            <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="inputUser" column="input_user" jdbcType="VARCHAR"/>
+        <result property="inputTime" column="input_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -20,4 +20,13 @@
         status,input_user,input_time,
         update_user,update_time
     </sql>
+    <select id="queryUserNoRoles" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select ui.id, ui.user_name
+        from user_info ui
+        where ui.status = '1'
+          and not exists(select 1
+                         from user_role userrole
+                         where ui.id = userrole.user_id
+                           and userrole.role_id = #{roleId})
+    </select>
 </mapper>

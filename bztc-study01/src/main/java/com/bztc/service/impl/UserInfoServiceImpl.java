@@ -1,6 +1,7 @@
 package com.bztc.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bztc.constant.Constants;
 import com.bztc.domain.UserInfo;
@@ -52,6 +53,18 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         sessionInfoDto.setLoginStatus(LoginEnum.SUCCESS.key);
 
         return sessionInfoDto;
+    }
+
+    /**
+     * 查询未关联角色的用户
+     *
+     * @param rowPage
+     * @param roleId
+     * @return
+     */
+    @Override
+    public Page<UserInfo> queryUserNoRoles(Page<UserInfo> rowPage, String roleId) {
+        return this.baseMapper.queryUserNoRoles(rowPage, roleId);
     }
 }
 

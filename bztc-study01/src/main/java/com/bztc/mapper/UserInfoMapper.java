@@ -1,16 +1,25 @@
 package com.bztc.mapper;
 
-import com.bztc.domain.UserInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bztc.domain.UserInfo;
+import org.apache.ibatis.annotations.Param;
 
 /**
-* @author daishuming
-* @description 针对表【user_info(用户信息表)】的数据库操作Mapper
-* @createDate 2022-10-14 16:45:30
-* @Entity com.bztc.domain.UserInfo
-*/
+ * @author daishuming
+ * @description 针对表【user_info(用户信息表)】的数据库操作Mapper
+ * @createDate 2022-10-14 16:45:30
+ * @Entity com.bztc.domain.UserInfo
+ */
 public interface UserInfoMapper extends BaseMapper<UserInfo> {
-
+    /**
+     * 查询未关联角色的用户
+     *
+     * @param rowPage
+     * @param roleId
+     * @return
+     */
+    Page<UserInfo> queryUserNoRoles(Page<UserInfo> rowPage, @Param("roleId") String roleId);
 }
 
 

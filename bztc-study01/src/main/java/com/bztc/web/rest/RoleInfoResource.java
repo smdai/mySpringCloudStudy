@@ -1,5 +1,6 @@
 package com.bztc.web.rest;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
@@ -9,8 +10,10 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bztc.constant.Constants;
 import com.bztc.domain.RoleInfo;
+import com.bztc.domain.UserRole;
 import com.bztc.dto.ResultDto;
 import com.bztc.service.RoleInfoService;
+import com.bztc.service.UserRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,8 @@ public class RoleInfoResource {
     private static final Logger logger = LoggerFactory.getLogger(RoleInfoResource.class);
     @Autowired
     private RoleInfoService roleInfoService;
+    @Autowired
+    private UserRoleService userRoleService;
 
     /**
      * 查询角色列表
@@ -134,6 +139,13 @@ public class RoleInfoResource {
         logger.info("删除入参：{}", JSONUtil.toJsonStr(roleInfo));
         ResultDto<Integer> resultDto = new ResultDto<>();
         try {
+            //校验-关联的用户不能删除
+            List<UserRole> userRoleList = userRoleService.selectByRoleId(roleInfo.getRoleId());
+            if (CollectionUtil.isNotEmpty(userRoleList)) {
+                resultDto.setCode(400);
+                resultDto.setMessage("有关联用户，不能删除。");
+                return resultDto;
+            }
             if (Constants.STATUS_EFFECT.equals(roleInfo.getStatus())) {
                 roleInfo.setUpdateUser(Constants.ADMIN);
                 roleInfo.setStatus(Constants.STATUS_NOAVAIL);

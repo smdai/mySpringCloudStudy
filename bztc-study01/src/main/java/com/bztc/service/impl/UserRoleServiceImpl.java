@@ -1,13 +1,16 @@
 package com.bztc.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.bztc.constant.Constants;
 import com.bztc.domain.UserRole;
 import com.bztc.mapper.UserRoleMapper;
 import com.bztc.service.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,6 +33,32 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
     @Override
     public Page<Map<String, Object>> selectUserRoleByUserId(Page<UserRole> queryPage, String userId) {
         return userRoleMapper.selectUserRoleByUserId(queryPage, userId);
+    }
+
+    /**
+     * 查询用户角色
+     *
+     * @param queryPage
+     * @param roleId
+     * @return
+     */
+    @Override
+    public Page<Map<String, Object>> selectUserRoleByRoleId(Page<UserRole> queryPage, String roleId) {
+        return userRoleMapper.selectUserRoleByRoleId(queryPage, roleId);
+    }
+
+    /**
+     * 根据roleid查询
+     *
+     * @param roleId
+     * @return
+     */
+    @Override
+    public List<UserRole> selectByRoleId(int roleId) {
+        QueryWrapper<UserRole> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("role_id", roleId)
+                .eq("status", Constants.STATUS_EFFECT);
+        return this.baseMapper.selectList(queryWrapper);
     }
 }
 

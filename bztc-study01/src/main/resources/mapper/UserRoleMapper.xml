@@ -28,4 +28,11 @@
         where userrole.user_id = #{userId}
         order by userrole.role_id
     </select>
+    <select id="selectUserRoleByRoleId" parameterType="java.lang.String" resultType="java.util.Map">
+        select userrole.user_id, ui.user_name
+        from user_role userrole
+                 left join user_info ui on userrole.user_id = ui.id
+        where userrole.role_id = #{roleId}
+        order by userrole.user_id
+    </select>
 </mapper>

@@ -23,6 +23,14 @@ public interface UserRoleMapper extends BaseMapper<UserRole> {
      * @return
      */
     Page<Map<String, Object>> selectUserRoleByUserId(Page<UserRole> rowPage, @Param("userId") String userId);
+
+    /**
+     * 查询用户角色
+     *
+     * @param roleId
+     * @return
+     */
+    Page<Map<String, Object>> selectUserRoleByRoleId(Page<UserRole> rowPage, @Param("roleId") String roleId);
 }
 
 

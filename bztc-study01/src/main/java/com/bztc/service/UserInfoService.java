@@ -1,9 +1,11 @@
 package com.bztc.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.bztc.domain.UserInfo;
 import com.bztc.dto.SessionInfoDto;
 import com.bztc.enumeration.LoginEnum;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author daishuming
@@ -20,4 +22,13 @@ public interface UserInfoService extends IService<UserInfo> {
      * @date 2022-10-14 17:22:28
      */
     SessionInfoDto login(UserInfo userInfo);
+
+    /**
+     * 查询未关联角色的用户
+     *
+     * @param rowPage
+     * @param roleId
+     * @return
+     */
+    Page<UserInfo> queryUserNoRoles(Page<UserInfo> rowPage, @Param("roleId") String roleId);
 }

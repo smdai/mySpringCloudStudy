@@ -1,11 +1,5 @@
 package com.bztc.handler;
 
-/**
- * @author daism
- * @create 2023-10-09 11:27
- * @description 全局异常处理
- */
-
 import com.bztc.dto.R;
 import com.bztc.dto.ResultDto;
 import com.bztc.exception.ApiException;
@@ -16,6 +10,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * @author daism
+ * @create 2023-10-09 11:27
+ * @description 全局异常处理
+ */
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
@@ -65,7 +64,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.OK)
     public ResultDto argumentException(IllegalArgumentException e) {
-        log.error("IllegalArgumentException exception {}", e.getMessage());
+        log.error("IllegalArgumentException exception", e);
         return R.fail(e.getMessage());
     }
 }

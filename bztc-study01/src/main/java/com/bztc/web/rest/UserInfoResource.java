@@ -1,5 +1,6 @@
 package com.bztc.web.rest;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.json.JSONObject;
@@ -57,7 +58,7 @@ public class UserInfoResource {
     }
 
     /**
-     * 描述：新增菜单
+     * 描述：新增用户
      *
      * @return com.bztc.dto.ResultDto<com.bztc.entity.userInfo>
      * @author daism
@@ -136,5 +137,22 @@ public class UserInfoResource {
             resultDto.setMessage("删除数据库失败," + e.getMessage());
         }
         return resultDto;
+    }
+
+    /**
+     * 查询某个角色未关联用户列表
+     *
+     * @return 用户
+     */
+    @GetMapping("/queryusersnoroles")
+    public ResultDto<List<UserInfo>> queryUsersNoRoles(@RequestParam("param") String params) {
+        logger.info("分页查询入参：{}", params);
+        JSONObject jsonObject = JSONUtil.parseObj(params);
+
+        Page<UserInfo> queryPage = new Page<>((int) jsonObject.get("pageIndex"), (int) jsonObject.get("pageSize"));
+        Object roleId = jsonObject.get("roleId");
+        Assert.notNull(roleId, "roleId不能为空");
+        Page<UserInfo> listPage = this.userInfoService.queryUserNoRoles(queryPage, roleId.toString());
+        return new ResultDto<>(listPage.getTotal(), listPage.getRecords());
     }
 }
