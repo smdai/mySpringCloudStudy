@@ -42,6 +42,10 @@ public class Constants {
      **/
     public static final String RES_CONTR_TYPE_M = "M";
     /**
+     * 关联权限类型-控制点
+     **/
+    public static final String RES_CONTR_TYPE_C = "C";
+    /**
      * 关联权限类型-全局编辑
      **/
     public static final String RES_CONTR_TYPE_E = "E";

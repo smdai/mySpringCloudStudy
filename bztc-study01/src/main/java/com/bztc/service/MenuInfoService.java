@@ -15,12 +15,11 @@ public interface MenuInfoService extends IService<MenuInfo> {
     /**
      * 描述：查询菜单
      *
-     * @param userName 用户名称
      * @return java.util.List<com.bztc.domain.MenuInfo>
      * @author daism
      * @date 2022-10-17 17:34:43
      */
-    List<MenuInfoDto> queryMenu(String userName);
+    List<MenuInfoDto> queryMenu();
 
     /**
      * 描述：菜单分层转化
@@ -31,4 +30,12 @@ public interface MenuInfoService extends IService<MenuInfo> {
      * @date 2022-10-17 17:52:09
      */
     List<MenuInfoDto> changeMenu(List<MenuInfo> menuInfos);
+
+    /**
+     * 查询下一层级菜单
+     *
+     * @param menuId
+     * @return
+     */
+    List<MenuInfo> queryNextMenu(int menuId);
 }

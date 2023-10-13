@@ -12,11 +12,13 @@ import com.bztc.constant.Constants;
 import com.bztc.domain.RoleInfo;
 import com.bztc.domain.UserRole;
 import com.bztc.dto.ResultDto;
+import com.bztc.service.AuthResContrService;
 import com.bztc.service.RoleInfoService;
 import com.bztc.service.UserRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,6 +36,8 @@ public class RoleInfoResource {
     private RoleInfoService roleInfoService;
     @Autowired
     private UserRoleService userRoleService;
+    @Autowired
+    private AuthResContrService authResContrService;
 
     /**
      * 查询角色列表
@@ -135,6 +139,7 @@ public class RoleInfoResource {
      * @date 2022-10-14 10:05:22
      */
     @PostMapping("/delete")
+    @Transactional
     public ResultDto<Integer> delete(@RequestBody RoleInfo roleInfo) {
         logger.info("删除入参：{}", JSONUtil.toJsonStr(roleInfo));
         ResultDto<Integer> resultDto = new ResultDto<>();
@@ -155,6 +160,7 @@ public class RoleInfoResource {
                 this.roleInfoService.update(wrapper);
             } else {
                 this.roleInfoService.removeById(roleInfo);
+                this.authResContrService.deleteByRoleId(roleInfo.getRoleId());
             }
             resultDto.setCode(200);
         } catch (Exception e) {

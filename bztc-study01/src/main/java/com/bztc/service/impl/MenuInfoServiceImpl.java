@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bztc.constant.Constants;
 import com.bztc.domain.AuthResContr;
 import com.bztc.domain.MenuInfo;
-import com.bztc.domain.UserInfo;
 import com.bztc.domain.UserRole;
 import com.bztc.dto.MenuInfoDto;
 import com.bztc.mapper.MenuInfoMapper;
@@ -15,6 +14,7 @@ import com.bztc.service.AuthResContrService;
 import com.bztc.service.MenuInfoService;
 import com.bztc.service.UserInfoService;
 import com.bztc.service.UserRoleService;
+import com.bztc.utils.UserUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,19 +48,11 @@ public class MenuInfoServiceImpl extends ServiceImpl<MenuInfoMapper, MenuInfo> i
      * @date 2022-10-17 17:34:43
      */
     @Override
-    public List<MenuInfoDto> queryMenu(String userName) {
-        //查询用户信息
-        QueryWrapper<UserInfo> userInfoQueryWrapper = new QueryWrapper<>();
-        userInfoQueryWrapper.eq("status", Constants.STATUS_EFFECT)
-                .eq("user_name", userName);
-        UserInfo userInfo = userInfoService.getOne(userInfoQueryWrapper);
-        if (Objects.isNull(userInfo)) {
-            return null;
-        }
+    public List<MenuInfoDto> queryMenu() {
         //查询用户角色
         QueryWrapper<UserRole> userRoleQueryWrapper = new QueryWrapper<>();
         userRoleQueryWrapper.eq("status", Constants.STATUS_EFFECT)
-                .eq("user_id", userInfo.getId())
+                .eq("user_id", UserUtil.getUserId())
                 .select("distinct role_id");
         List<UserRole> userRoles = userRoleService.list(userRoleQueryWrapper);
         if (CollectionUtil.isEmpty(userRoles)) {
@@ -139,6 +131,21 @@ public class MenuInfoServiceImpl extends ServiceImpl<MenuInfoMapper, MenuInfo> i
 
         return oneLevelList;
     }
+
+    /**
+     * 查询下一层级菜单
+     *
+     * @param menuId
+     * @return
+     */
+    @Override
+    public List<MenuInfo> queryNextMenu(int menuId) {
+        QueryWrapper<MenuInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("up_menu_id", menuId);
+        queryWrapper.orderByAsc("sort_no");
+        return this.baseMapper.selectList(queryWrapper);
+    }
+
 }
 
 
