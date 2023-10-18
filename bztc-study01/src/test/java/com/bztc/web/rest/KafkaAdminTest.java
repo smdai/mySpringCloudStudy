@@ -98,9 +98,7 @@ public class KafkaAdminTest {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-        stringTopicDescriptionMap.forEach((topicName, topicDescription) -> {
-            System.out.println("name：" + topicName + "，desc：" + topicDescription);
-        });
+        stringTopicDescriptionMap.forEach((topicName, topicDescription) -> System.out.println("name：" + topicName + "，desc：" + topicDescription));
     }
 
     /**

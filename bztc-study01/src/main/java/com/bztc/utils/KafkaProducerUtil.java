@@ -24,7 +24,7 @@ public class KafkaProducerUtil {
     public static void sendMessage(String topic, String message) {
         KafkaProperties kafkaProperties = ApplicationContextUtil.getBean("KafkaProperties", KafkaProperties.class);
         Properties properties = kafkaProperties.initProperties();
-        try (Producer<String, String> producer = new KafkaProducer<String, String>(properties)) {
+        try (Producer<String, String> producer = new KafkaProducer<>(properties)) {
             ProducerRecord<String, String> stringStringProducerRecord = new ProducerRecord<>(topic, message);
             producer.send(stringStringProducerRecord, (recordMetadata, e) -> {
                 if (e != null) {

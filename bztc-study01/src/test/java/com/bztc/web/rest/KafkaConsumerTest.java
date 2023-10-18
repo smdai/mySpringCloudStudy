@@ -1,19 +1,14 @@
 package com.bztc.web.rest;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.consumer.Consumer;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.consumer.OffsetAndMetadata;
-import org.apache.kafka.clients.consumer.OffsetCommitCallback;
-import org.apache.kafka.common.TopicPartition;
+import org.apache.kafka.clients.consumer.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Properties;
 
 @Slf4j
 public class KafkaConsumerTest {
@@ -64,15 +59,12 @@ public class KafkaConsumerTest {
                 // commitSync同步阻塞当前线程（自动失败重试）
                 // consumer.commitSync();
                 // commitAsync异步不会阻塞当前线程，没有失败重试，回调callback函数获取提交信息，记录日志
-                consumer.commitAsync(new OffsetCommitCallback() {
-                    @Override
-                    public void onComplete(Map<TopicPartition, OffsetAndMetadata> offsets, Exception exception) {
-                        if (Objects.isNull(exception)) {
-                            System.out.println("手工提交Offset成功：" + offsets.toString());
-                        } else {
-                            System.out.println("手工提交Offset失败：" + offsets.toString());
-                            exception.printStackTrace();
-                        }
+                consumer.commitAsync((offsets, exception) -> {
+                    if (Objects.isNull(exception)) {
+                        System.out.println("手工提交Offset成功：" + offsets.toString());
+                    } else {
+                        System.out.println("手工提交Offset失败：" + offsets.toString());
+                        exception.printStackTrace();
                     }
                 });
             }

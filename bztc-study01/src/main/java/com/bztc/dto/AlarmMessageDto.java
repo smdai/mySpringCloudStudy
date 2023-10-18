@@ -3,10 +3,11 @@ package com.bztc.dto;
 import lombok.Data;
 
 import java.util.List;
+
 /**
  * @author daism
  * @create 2022-09-25 20:57
- * @description skywalking告警dto类
+ * @description skyWalking告警dto类
  */
 @Data
 public class AlarmMessageDto {
@@ -23,7 +24,7 @@ public class AlarmMessageDto {
     private transient boolean onlyAsCondition;
 
     @Data
-    public static class Tag{
+    public static class Tag {
         private String key;
         private String value;
     }

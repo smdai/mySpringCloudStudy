@@ -72,7 +72,7 @@ public class KafkaTest {
         prop.put("buffer.memory", 33554432);
         String topic = "kafka-test1";
         KafkaProducer<String, String> producer = new KafkaProducer<>(prop);
-        producer.send(new ProducerRecord<String, String>(topic, Integer.toString(2), "hello kafka4"));
+        producer.send(new ProducerRecord<>(topic, Integer.toString(2), "hello kafka4"));
         producer.close();
     }
 

@@ -1,10 +1,6 @@
 package com.bztc.web.rest;
 
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.kafka.clients.producer.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -65,7 +61,7 @@ public class KafkaProduceTest {
     @DisplayName("生产者发送消息")
     public void producer_send_test() {
         Properties properties = initProperties();
-        Producer<String, String> producer = new KafkaProducer<String, String>(properties);
+        Producer<String, String> producer = new KafkaProducer<>(properties);
         ProducerRecord<String, String> stringStringProducerRecord = new ProducerRecord<>("test-topic", "key1", "value1");
         Future<RecordMetadata> future = producer.send(stringStringProducerRecord);
         try {

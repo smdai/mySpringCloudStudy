@@ -23,7 +23,7 @@ public class WebsiteListServiceImpl extends ServiceImpl<WebsiteListMapper, Websi
      * @author daism
      * @date 2022-09-25 19:41:39
      */
-    @Trace //将方法记录到sky walking中
+    @Trace
     @Tags({@Tag(key = "getInfoById", value = "returnedObj"), @Tag(key = "getInfoById", value = "arg[0]")})//记录参数和返回值
     @Override
     public WebsiteList getInfoById(Integer id) {
