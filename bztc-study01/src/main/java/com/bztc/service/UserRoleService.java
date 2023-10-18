@@ -36,4 +36,12 @@ public interface UserRoleService extends IService<UserRole> {
      * @return
      */
     List<UserRole> selectByRoleId(int roleId);
+
+    /**
+     * 根据userid删除
+     *
+     * @param userId
+     * @return
+     */
+    int deleteByUserId(int userId);
 }

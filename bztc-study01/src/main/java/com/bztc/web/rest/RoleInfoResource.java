@@ -139,7 +139,7 @@ public class RoleInfoResource {
      * @date 2022-10-14 10:05:22
      */
     @PostMapping("/delete")
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public ResultDto<Integer> delete(@RequestBody RoleInfo roleInfo) {
         logger.info("删除入参：{}", JSONUtil.toJsonStr(roleInfo));
         ResultDto<Integer> resultDto = new ResultDto<>();

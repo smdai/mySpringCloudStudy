@@ -60,6 +60,19 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
                 .eq("status", Constants.STATUS_EFFECT);
         return this.baseMapper.selectList(queryWrapper);
     }
+
+    /**
+     * 根据userid删除
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public int deleteByUserId(int userId) {
+        QueryWrapper<UserRole> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", userId);
+        return this.baseMapper.delete(queryWrapper);
+    }
 }
 
 

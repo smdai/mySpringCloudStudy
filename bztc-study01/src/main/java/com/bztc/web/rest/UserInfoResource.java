@@ -12,9 +12,11 @@ import com.bztc.constant.Constants;
 import com.bztc.domain.UserInfo;
 import com.bztc.dto.ResultDto;
 import com.bztc.service.UserInfoService;
+import com.bztc.service.UserRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +32,8 @@ public class UserInfoResource {
     private static final Logger logger = LoggerFactory.getLogger(UserInfoResource.class);
     @Autowired
     private UserInfoService userInfoService;
+    @Autowired
+    private UserRoleService userRoleService;
 
     /**
      * 查询用户列表
@@ -116,6 +120,7 @@ public class UserInfoResource {
      * @date 2022-10-14 10:05:22
      */
     @PostMapping("/delete")
+    @Transactional(rollbackFor = Exception.class)
     public ResultDto<Integer> delete(@RequestBody UserInfo userInfo) {
         logger.info("删除入参：{}", JSONUtil.toJsonStr(userInfo));
         ResultDto<Integer> resultDto = new ResultDto<>();
@@ -129,6 +134,7 @@ public class UserInfoResource {
                 this.userInfoService.update(wrapper);
             } else {
                 this.userInfoService.removeById(userInfo);
+                userRoleService.deleteByUserId(userInfo.getId());
             }
             resultDto.setCode(200);
         } catch (Exception e) {

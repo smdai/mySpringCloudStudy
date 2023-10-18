@@ -105,7 +105,6 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
                 .in("res_object_id", userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList()))
                 .eq("res_contr_type", Constants.RES_CONTR_TYPE_M)
                 .eq("status", Constants.STATUS_EFFECT);
-        List<AuthResContr> menuAuthResContrs = authResContrService.list(menuAuthResContrQueryWrapper);
         //查询菜单
         QueryWrapper<MenuInfo> menuInfoQueryWrapper = new QueryWrapper<>();
         menuInfoQueryWrapper.eq("status", Constants.STATUS_EFFECT)
@@ -117,8 +116,6 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
 
         sessionInfoDto.setMenuAuthList(menuInfos.stream().map(MenuInfo::getRouteName).collect(Collectors.toList()));
         //获取token
-//        sessionInfoDto.setToken(sessionService.getToken(String.valueOf(userInfo.getId())));
-//        sessionInfoDto.setUserId(userInfo.getId());
         sessionService.setSessionInfo(userId.toString(), sessionInfoDto);
         return new ResultDto<>(sessionInfoDto);
     }
@@ -204,29 +201,23 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
                             threeAuthSourceDto.setSourceType(Constants.RES_CONTR_TYPE_M);
                             threeAuthSourceDto.setSourceId(three.getMenuId());
                             threeAuthSourceDto.setObjectId(Constants.RES_CONTR_TYPE_M + three.getMenuId());
-//                            threeAuthSourceDto.setAuthFlag(false);
                             threeAuthSourceDto.setSourceName(three.getMenuName());
                             threeAuthSourceDto.setLabel(three.getMenuName());
                             //查询控制点
                             List<AuthSourceDto> threeChildren = new ArrayList<>();
                             threeAuthSourceDto.setChildren(threeChildren);
-//                            threeAuthSourceDto.setHasChildren(CollectionUtil.isNotEmpty(threeChildren));
                             return threeAuthSourceDto;
                         }).collect(Collectors.toList());
                     } else {
-                        //查询控制点
                         twoChildren = new ArrayList<>();
                     }
                     twoAuthSourceDto.setChildren(twoChildren);
-//                    twoAuthSourceDto.setHasChildren(CollectionUtil.isNotEmpty(twoChildren));
                     return twoAuthSourceDto;
                 }).collect(Collectors.toList());
             } else {
-                //查询控制点
                 oneChildren = new ArrayList<>();
             }
             oneAuthSourceDto.setChildren(oneChildren);
-//            oneAuthSourceDto.setHasChildren(CollectionUtil.isNotEmpty(oneChildren));
             return oneAuthSourceDto;
         }).collect(Collectors.toList());
         return list;
@@ -239,7 +230,7 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public ResultDto<Integer> save(List<AuthSourceDto> authSourceDtos, Integer roleId) {
         //过滤出最后一层级的资源
         List<AuthSourceDto> filterAuthSourceDtos = authSourceDtos.stream().filter(it -> CollectionUtil.isEmpty(it.getChildren())).collect(Collectors.toList());
@@ -277,7 +268,8 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
     public int deleteByRoleId(int roleId) {
         QueryWrapper<AuthResContr> authResContrQueryWrapper = new QueryWrapper<>();
         authResContrQueryWrapper.eq("res_object_type", Constants.RES_OBJECT_TYPE_R)
-                .eq("res_object_id", roleId);
+                .eq("res_object_id", roleId)
+                .in("res_contr_type", Arrays.asList(Constants.RES_CONTR_TYPE_M, Constants.RES_CONTR_TYPE_C));
         return this.authResContrMapper.delete(authResContrQueryWrapper);
     }
 
