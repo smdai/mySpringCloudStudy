@@ -3,6 +3,7 @@ package com.bztc.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.bztc.domain.MenuInfo;
 import com.bztc.dto.MenuInfoDto;
+import com.bztc.dto.MenuTreeDto;
 
 import java.util.List;
 
@@ -38,4 +39,11 @@ public interface MenuInfoService extends IService<MenuInfo> {
      * @return
      */
     List<MenuInfo> queryNextMenu(int menuId);
+
+    /**
+     * 查询菜单树
+     *
+     * @return
+     */
+    List<MenuTreeDto> queryAllMenuTree();
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bztc.mapper.ControlInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.bztc.domain.ControlInfo">
+        <id property="controlId" column="control_id" jdbcType="INTEGER"/>
+        <result property="menuId" column="menu_id" jdbcType="INTEGER"/>
+        <result property="controlKey" column="control_key" jdbcType="VARCHAR"/>
+        <result property="controlName" column="control_name" jdbcType="VARCHAR"/>
+        <result property="requestType" column="request_type" jdbcType="VARCHAR"/>
+        <result property="controlUrl" column="control_url" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="inputUser" column="input_user" jdbcType="VARCHAR"/>
+        <result property="inputTime" column="input_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        control_id,menu_id,control_key,
+        control_name,request_type,control_url,status,
+        input_user,input_time,update_user,
+        update_time
+    </sql>
+</mapper>

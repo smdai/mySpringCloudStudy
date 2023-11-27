@@ -1,6 +1,5 @@
 package com.bztc.test;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,13 +11,14 @@ import java.util.List;
  */
 public class Test {
     public static void main(String[] args) {
-        List<Long> list = new ArrayList<>();
-//        list.add(1L);
-//        list.add((long) 111.11);
-        System.out.println(list);
-        Object[] objects = list.toArray();
-        String s = null;
-        BigDecimal b = new BigDecimal(s);
-        System.out.println(Arrays.toString(objects));
+        String s = "10001,20001,30001";
+        System.out.println(Arrays.asList(s.split(",", -1)).contains("1"));
+        List<String> longList = new ArrayList<>();
+        longList.add("1");
+        longList.add("4");
+        longList.add("1000");
+        String[] strings = longList.toArray(new String[0]);
+
+        System.out.println(Arrays.toString(strings));
     }
 }

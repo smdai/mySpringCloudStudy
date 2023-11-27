@@ -9,6 +9,7 @@ import com.bztc.domain.AuthResContr;
 import com.bztc.domain.MenuInfo;
 import com.bztc.domain.UserRole;
 import com.bztc.dto.MenuInfoDto;
+import com.bztc.dto.MenuTreeDto;
 import com.bztc.mapper.MenuInfoMapper;
 import com.bztc.service.AuthResContrService;
 import com.bztc.service.MenuInfoService;
@@ -144,6 +145,64 @@ public class MenuInfoServiceImpl extends ServiceImpl<MenuInfoMapper, MenuInfo> i
         queryWrapper.eq("up_menu_id", menuId);
         queryWrapper.orderByAsc("sort_no");
         return this.baseMapper.selectList(queryWrapper);
+    }
+
+    /**
+     * 查询菜单树
+     *
+     * @return
+     */
+    @Override
+    public List<MenuTreeDto> queryAllMenuTree() {
+        List<MenuTreeDto> list;
+        //查询所有菜单
+        QueryWrapper<MenuInfo> menuInfoQueryWrapper = new QueryWrapper<>();
+        menuInfoQueryWrapper.eq("status", Constants.STATUS_EFFECT);
+        List<MenuInfo> menuInfos = this.baseMapper.selectList(menuInfoQueryWrapper);
+        List<MenuInfo> levelOneMenus = menuInfos.stream().filter(it -> it.getMenuLevel().equals(Constants.MENU_ONE_LEVEL)).collect(Collectors.toList());
+        List<MenuInfo> levelTwoMenus = menuInfos.stream().filter(it -> it.getMenuLevel().equals(Constants.MENU_TWO_LEVEL)).collect(Collectors.toList());
+        List<MenuInfo> levelThreeMenus = menuInfos.stream().filter(it -> it.getMenuLevel().equals(Constants.MENU_THREE_LEVEL)).collect(Collectors.toList());
+        list = levelOneMenus.stream().map(one -> {
+            MenuTreeDto oneMenuTreeDto = new MenuTreeDto();
+            oneMenuTreeDto.setMenuId(one.getMenuId());
+            oneMenuTreeDto.setMenuName(one.getMenuName());
+            oneMenuTreeDto.setLabel((one.getMenuName()));
+            oneMenuTreeDto.setLevel(Constants.MENU_ONE_LEVEL);
+            //查询是否有下一级菜单
+            List<MenuInfo> twoMenus = levelTwoMenus.stream().filter(two -> two.getUpMenuId().equals(one.getMenuId())).collect(Collectors.toList());
+            List<MenuTreeDto> oneChildren;
+            if (CollectionUtil.isNotEmpty(twoMenus)) {
+                oneChildren = twoMenus.stream().map(two -> {
+                    MenuTreeDto twoMenuTreeDto = new MenuTreeDto();
+                    twoMenuTreeDto.setMenuId(two.getMenuId());
+                    twoMenuTreeDto.setMenuName(two.getMenuName());
+                    twoMenuTreeDto.setLabel(two.getMenuName());
+                    twoMenuTreeDto.setLevel(Constants.MENU_TWO_LEVEL);
+                    //查询是否有下一级菜单
+                    List<MenuInfo> threeMenus = levelThreeMenus.stream().filter(three -> three.getUpMenuId().equals(two.getMenuId())).collect(Collectors.toList());
+                    List<MenuTreeDto> twoChildren;
+                    if (CollectionUtil.isNotEmpty(threeMenus)) {
+                        twoChildren = threeMenus.stream().map(three -> {
+                            MenuTreeDto threeMenuTreeDto = new MenuTreeDto();
+                            threeMenuTreeDto.setMenuId(three.getMenuId());
+                            threeMenuTreeDto.setMenuName(three.getMenuName());
+                            threeMenuTreeDto.setLabel(three.getMenuName());
+                            threeMenuTreeDto.setLevel(Constants.MENU_THREE_LEVEL);
+                            return threeMenuTreeDto;
+                        }).collect(Collectors.toList());
+                    } else {
+                        twoChildren = new ArrayList<>();
+                    }
+                    twoMenuTreeDto.setChildren(twoChildren);
+                    return twoMenuTreeDto;
+                }).collect(Collectors.toList());
+            } else {
+                oneChildren = new ArrayList<>();
+            }
+            oneMenuTreeDto.setChildren(oneChildren);
+            return oneMenuTreeDto;
+        }).collect(Collectors.toList());
+        return list;
     }
 
 }

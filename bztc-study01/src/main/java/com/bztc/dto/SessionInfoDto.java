@@ -16,6 +16,10 @@ public class SessionInfoDto {
      */
     private boolean editAuth;
     /**
+     * 控制点权限列表
+     */
+    private List<ControlInfoDto> controlInfoDtos;
+    /**
      * 菜单权限列表
      */
     private List<String> menuAuthList;

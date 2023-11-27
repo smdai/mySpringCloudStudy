@@ -55,4 +55,20 @@ public interface AuthResContrService extends IService<AuthResContr> {
      * @return
      */
     int deleteByRoleId(int roleId);
+
+    /**
+     * 根据控制点id删除
+     *
+     * @param controlId
+     * @return
+     */
+    int deleteByControlId(int controlId);
+
+    /**
+     * 根据菜单id删除
+     *
+     * @param menuId
+     * @return
+     */
+    int deleteByMenuId(int menuId);
 }

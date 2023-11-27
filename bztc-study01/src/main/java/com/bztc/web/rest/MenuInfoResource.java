@@ -9,7 +9,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bztc.constant.Constants;
 import com.bztc.domain.MenuInfo;
 import com.bztc.dto.MenuInfoDto;
+import com.bztc.dto.MenuTreeDto;
 import com.bztc.dto.ResultDto;
+import com.bztc.service.AuthResContrService;
 import com.bztc.service.MenuInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,8 @@ public class MenuInfoResource {
     private static final Logger logger = LoggerFactory.getLogger(MenuInfoResource.class);
     @Autowired
     private MenuInfoService menuInfoService;
+    @Autowired
+    private AuthResContrService authResContrService;
 
     /**
      * 描述：查询菜单
@@ -145,6 +149,7 @@ public class MenuInfoResource {
                 this.menuInfoService.update(wrapper);
             } else {
                 this.menuInfoService.removeById(menuInfo);
+                this.authResContrService.deleteByMenuId(menuInfo.getMenuId());
             }
             resultDto.setCode(200);
         } catch (Exception e) {
@@ -153,5 +158,15 @@ public class MenuInfoResource {
             resultDto.setMessage("删除数据库失败," + e.getMessage());
         }
         return resultDto;
+    }
+
+    /**
+     * 查询菜单树
+     *
+     * @return
+     */
+    @GetMapping("/queryallmenutree")
+    public ResultDto<List<MenuTreeDto>> queryAllMenuTree() {
+        return new ResultDto<>(menuInfoService.queryAllMenuTree());
     }
 }

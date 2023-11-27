@@ -6,14 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bztc.constant.Constants;
 import com.bztc.constant.RedisConstants;
-import com.bztc.domain.AuthResContr;
-import com.bztc.domain.MenuInfo;
-import com.bztc.domain.UserInfo;
-import com.bztc.domain.UserRole;
-import com.bztc.dto.AuthSourceDto;
-import com.bztc.dto.MenuInfoDto;
-import com.bztc.dto.ResultDto;
-import com.bztc.dto.SessionInfoDto;
+import com.bztc.domain.*;
+import com.bztc.dto.*;
 import com.bztc.mapper.AuthResContrMapper;
 import com.bztc.mapper.MenuInfoMapper;
 import com.bztc.service.*;
@@ -53,6 +47,8 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
     private MenuInfoMapper menuInfoMapper;
     @Autowired
     private AuthResContrMapper authResContrMapper;
+    @Autowired
+    private ControlInfoService controlInfoService;
 
     /**
      * 描述：获取session
@@ -98,13 +94,6 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
         List<AuthResContr> authResContrs = authResContrService.list(editAuthResContrQueryWrapper);
         sessionInfoDto.setEditAuth(!CollectionUtil.isEmpty(authResContrs.stream().filter(it ->
                 Constants.RES_CONTR_TYPE_E.equals(it.getResContrType()) && it.getResContrId() == 1).collect(Collectors.toList())));
-        //查询菜单权限
-        QueryWrapper<AuthResContr> menuAuthResContrQueryWrapper = new QueryWrapper<>();
-        menuAuthResContrQueryWrapper.select("distinct res_contr_id")
-                .eq("res_object_type", Constants.RES_OBJECT_TYPE_R)
-                .in("res_object_id", userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList()))
-                .eq("res_contr_type", Constants.RES_CONTR_TYPE_M)
-                .eq("status", Constants.STATUS_EFFECT);
         //查询菜单
         QueryWrapper<MenuInfo> menuInfoQueryWrapper = new QueryWrapper<>();
         menuInfoQueryWrapper.eq("status", Constants.STATUS_EFFECT)
@@ -113,8 +102,25 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
         List<MenuInfo> menuInfos = menuInfoService.list(menuInfoQueryWrapper);
         List<MenuInfoDto> menuInfoDtos = menuInfoService.changeMenu(menuInfos);
         sessionInfoDto.setMenuInfoDtos(menuInfoDtos);
-
         sessionInfoDto.setMenuAuthList(menuInfos.stream().map(MenuInfo::getRouteName).collect(Collectors.toList()));
+        //查询控制点
+        List<Integer> controlIds = authResContrs.stream().filter(it -> Constants.RES_CONTR_TYPE_C.equals(it.getResContrType())).map(AuthResContr::getResContrId).collect(Collectors.toList());
+        if (CollectionUtil.isNotEmpty(controlIds)) {
+            QueryWrapper<ControlInfo> controlInfoQueryWrapper = new QueryWrapper<>();
+            controlInfoQueryWrapper.eq("status", Constants.STATUS_EFFECT)
+                    .in("control_id", authResContrs.stream().filter(it -> Constants.RES_CONTR_TYPE_C.equals(it.getResContrType())).map(AuthResContr::getResContrId).collect(Collectors.toList()));
+            List<ControlInfo> controlInfoList = controlInfoService.list(controlInfoQueryWrapper);
+            if (CollectionUtil.isNotEmpty(controlInfoList)) {
+                List<ControlInfoDto> controlInfoDtos = controlInfoList.stream().map(it -> {
+                    ControlInfoDto controlInfoDto = new ControlInfoDto();
+                    controlInfoDto.setControlId(it.getControlId());
+                    controlInfoDto.setControlKey(it.getControlKey());
+                    controlInfoDto.setControlUrl(it.getControlUrl());
+                    return controlInfoDto;
+                }).collect(Collectors.toList());
+                sessionInfoDto.setControlInfoDtos(controlInfoDtos);
+            }
+        }
         //获取token
         sessionService.setSessionInfo(userId.toString(), sessionInfoDto);
         return new ResultDto<>(sessionInfoDto);
@@ -142,6 +148,13 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
                 authSourceDto.setSourceName(menuInfo.getMenuName());
                 authSourceDto.setSourceType(Constants.RES_CONTR_TYPE_M);
                 authSourceDto.setLabel(menuInfo.getMenuName());
+            } else if (Constants.RES_CONTR_TYPE_C.equals(it.getResContrType())) {
+                ControlInfo controlInfo = controlInfoService.getBaseMapper().selectById(it.getResContrId());
+                authSourceDto.setObjectId(Constants.RES_CONTR_TYPE_C + controlInfo.getControlId());
+                authSourceDto.setSourceId(controlInfo.getControlId());
+                authSourceDto.setSourceName(controlInfo.getControlName());
+                authSourceDto.setSourceType(Constants.RES_CONTR_TYPE_C);
+                authSourceDto.setLabel(controlInfo.getControlName());
             }
             return authSourceDto;
         }).collect(Collectors.toList());
@@ -204,18 +217,18 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
                             threeAuthSourceDto.setSourceName(three.getMenuName());
                             threeAuthSourceDto.setLabel(three.getMenuName());
                             //查询控制点
-                            List<AuthSourceDto> threeChildren = new ArrayList<>();
+                            List<AuthSourceDto> threeChildren = controlInfoService.queryControlByMenuId(three.getMenuId());
                             threeAuthSourceDto.setChildren(threeChildren);
                             return threeAuthSourceDto;
                         }).collect(Collectors.toList());
                     } else {
-                        twoChildren = new ArrayList<>();
+                        twoChildren = controlInfoService.queryControlByMenuId(two.getMenuId());
                     }
                     twoAuthSourceDto.setChildren(twoChildren);
                     return twoAuthSourceDto;
                 }).collect(Collectors.toList());
             } else {
-                oneChildren = new ArrayList<>();
+                oneChildren = controlInfoService.queryControlByMenuId(one.getMenuId());
             }
             oneAuthSourceDto.setChildren(oneChildren);
             return oneAuthSourceDto;
@@ -271,6 +284,32 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
                 .eq("res_object_id", roleId)
                 .in("res_contr_type", Arrays.asList(Constants.RES_CONTR_TYPE_M, Constants.RES_CONTR_TYPE_C));
         return this.authResContrMapper.delete(authResContrQueryWrapper);
+    }
+
+    /**
+     * 根据控制点id删除
+     *
+     * @param controlId
+     * @return
+     */
+    @Override
+    public int deleteByControlId(int controlId) {
+        QueryWrapper<AuthResContr> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("res_contr_id", controlId).eq("res_contr_type", Constants.RES_CONTR_TYPE_C);
+        return this.authResContrMapper.delete(queryWrapper);
+    }
+
+    /**
+     * 根据菜单id删除
+     *
+     * @param menuId
+     * @return
+     */
+    @Override
+    public int deleteByMenuId(int menuId) {
+        QueryWrapper<AuthResContr> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("res_contr_id", menuId).eq("res_contr_type", Constants.RES_CONTR_TYPE_M);
+        return this.authResContrMapper.delete(queryWrapper);
     }
 
     /**
