@@ -4,6 +4,7 @@ import com.bztc.constant.RedisConstants;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -28,6 +29,8 @@ import java.util.Objects;
  */
 @Configuration
 public class RedisConfig {
+    @Value("${bztc.redis.ttl:7200}")
+    private int ttl;
 
     @Bean
     @SuppressWarnings("all")
@@ -86,7 +89,7 @@ public class RedisConfig {
         return new RedisCacheManager(
                 RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory),
                 // 默认策略，未配置的 key 会使用这个
-                this.getRedisCacheConfigurationWithTtl(null),
+                this.getRedisCacheConfigurationWithTtl(ttl),
                 // 指定 key 策略
                 this.getRedisCacheConfigurationMap()
         );
