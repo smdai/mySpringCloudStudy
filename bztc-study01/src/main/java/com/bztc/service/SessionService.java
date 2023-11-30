@@ -30,5 +30,5 @@ public interface SessionService {
      * @param sessionInfoDto session信息
      * @return session
      */
-    SessionInfoDto setSessionInfo(String userId, SessionInfoDto sessionInfoDto);
+    String setSessionInfo(String userId, SessionInfoDto sessionInfoDto);
 }

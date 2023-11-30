@@ -1,6 +1,7 @@
 package com.bztc.service.impl;
 
 import cn.hutool.core.lang.UUID;
+import cn.hutool.json.JSONUtil;
 import com.bztc.constant.RedisConstants;
 import com.bztc.dto.SessionInfoDto;
 import com.bztc.service.SessionService;
@@ -43,7 +44,7 @@ public class SessionServiceImpl implements SessionService {
      */
     @Override
     @CachePut(value = RedisConstants.SESSION_AUTH_CONTR_KEY, key = "#userId")
-    public SessionInfoDto setSessionInfo(String userId, SessionInfoDto sessionInfoDto) {
-        return sessionInfoDto;
+    public String setSessionInfo(String userId, SessionInfoDto sessionInfoDto) {
+        return JSONUtil.toJsonStr(sessionInfoDto);
     }
 }

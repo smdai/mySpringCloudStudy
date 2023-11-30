@@ -1,6 +1,10 @@
 package com.bztc.filters;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.json.JSONUtil;
 import com.bztc.constants.RedisConstants;
+import com.bztc.dto.ControlInfoDto;
+import com.bztc.dto.SessionInfoDto;
 import com.bztc.utils.ApplicationContextUtil;
 import com.bztc.utils.RedisUtil;
 import org.apache.commons.lang.StringUtils;
@@ -45,6 +49,7 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
             ServerHttpRequest request = exchange.getRequest();
             //2.获取url
             String url = request.getPath().value();
+            url = url.substring(url.indexOf("/api"));
             //3.获取请求头
             HttpHeaders headers = request.getHeaders();
             //4.获取token
@@ -80,6 +85,27 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
                 String redisToken = (String) o;
                 if (!redisToken.equals(token)) {
                     logger.error("userid[{}],token unconformity", userId);
+                    exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                    return exchange.getResponse().setComplete();
+                }
+                //从redis中获取控制点
+                Object sessionObject = redisUtil.get(RedisConstants.SESSION_AUTH_CONTR_KEY + ":" + userId);
+                if (Objects.isNull(sessionObject)) {
+                    logger.error("userid[{}],session null fail", userId);
+                    exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                    return exchange.getResponse().setComplete();
+                }
+                SessionInfoDto sessionInfoDto = JSONUtil.toBean(sessionObject.toString(), SessionInfoDto.class);
+                List<ControlInfoDto> controlInfoDtos = sessionInfoDto.getControlInfoDtos();
+                if (CollectionUtil.isEmpty(controlInfoDtos)) {
+                    logger.error("userid[{}],controll null fail", userId);
+                    exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                    return exchange.getResponse().setComplete();
+                }
+                String finalUrl = url;
+                boolean match = controlInfoDtos.stream().anyMatch(it -> it.getControlUrl().equals(finalUrl));
+                if (!match) {
+                    logger.error("userid[{}],controll access fail", userId);
                     exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                     return exchange.getResponse().setComplete();
                 }

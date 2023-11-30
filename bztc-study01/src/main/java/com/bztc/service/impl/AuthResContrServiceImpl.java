@@ -83,17 +83,13 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
         if (CollectionUtil.isEmpty(userRoles)) {
             return null;
         }
-        //查询编辑权限
+        //查询权限
         QueryWrapper<AuthResContr> editAuthResContrQueryWrapper = new QueryWrapper<>();
         editAuthResContrQueryWrapper
                 .eq("res_object_type", Constants.RES_OBJECT_TYPE_R)
                 .in("res_object_id", userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList()))
-//                .eq("res_contr_type",Constants.RES_CONTR_TYPE_E)
-//                .eq("res_contr_id",Constants.STATUS_EFFECT)
                 .eq("status", Constants.STATUS_EFFECT);
         List<AuthResContr> authResContrs = authResContrService.list(editAuthResContrQueryWrapper);
-        sessionInfoDto.setEditAuth(!CollectionUtil.isEmpty(authResContrs.stream().filter(it ->
-                Constants.RES_CONTR_TYPE_E.equals(it.getResContrType()) && it.getResContrId() == 1).collect(Collectors.toList())));
         //查询菜单
         QueryWrapper<MenuInfo> menuInfoQueryWrapper = new QueryWrapper<>();
         menuInfoQueryWrapper.eq("status", Constants.STATUS_EFFECT)
@@ -319,12 +315,19 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
      * @param list
      */
     private void findParentAuthResContr(Set<String> objectIdSet, List<AuthSourceDto> list) {
+        List<String> mAuthSourceObjectIdList = list.stream().filter(it -> it.getSourceType().equals(Constants.RES_CONTR_TYPE_M)).map(AuthSourceDto::getObjectId).collect(Collectors.toList());
+
         List<String> cAuthSourceObjectIdList = list.stream().filter(it -> it.getSourceType().equals(Constants.RES_CONTR_TYPE_C)).map(AuthSourceDto::getObjectId).collect(Collectors.toList());
         if (CollectionUtil.isNotEmpty(cAuthSourceObjectIdList)) {
             objectIdSet.addAll(cAuthSourceObjectIdList);
             //查询控制点关联的菜单，并返回菜单集合
+            QueryWrapper<ControlInfo> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("status", Constants.STATUS_EFFECT).in("control_id", cAuthSourceObjectIdList.stream().map(it -> it.substring(1)).collect(Collectors.toList()));
+            List<ControlInfo> controlInfoList = controlInfoService.list(queryWrapper);
+            List<String> menus = controlInfoList.stream().map(it -> Constants.RES_CONTR_TYPE_M + it.getMenuId()).collect(Collectors.toList());
+            mAuthSourceObjectIdList.addAll(menus);
         }
-        List<String> mAuthSourceObjectIdList = list.stream().filter(it -> it.getSourceType().equals(Constants.RES_CONTR_TYPE_M)).map(AuthSourceDto::getObjectId).collect(Collectors.toList());
+
         if (CollectionUtil.isNotEmpty(mAuthSourceObjectIdList)) {
             objectIdSet.addAll(mAuthSourceObjectIdList);
             List<MenuInfo> menuInfos = menuInfoMapper.selectBatchIds(mAuthSourceObjectIdList.stream().map(it -> it.substring(1)).collect(Collectors.toList()));
