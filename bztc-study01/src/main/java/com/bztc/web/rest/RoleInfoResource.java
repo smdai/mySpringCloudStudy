@@ -143,31 +143,25 @@ public class RoleInfoResource {
     public ResultDto<Integer> delete(@RequestBody RoleInfo roleInfo) {
         logger.info("删除入参：{}", JSONUtil.toJsonStr(roleInfo));
         ResultDto<Integer> resultDto = new ResultDto<>();
-        try {
-            //校验-关联的用户不能删除
-            List<UserRole> userRoleList = userRoleService.selectByRoleId(roleInfo.getRoleId());
-            if (CollectionUtil.isNotEmpty(userRoleList)) {
-                resultDto.setCode(400);
-                resultDto.setMessage("有关联用户，不能删除。");
-                return resultDto;
-            }
-            if (Constants.STATUS_EFFECT.equals(roleInfo.getStatus())) {
-                roleInfo.setUpdateUser(Constants.ADMIN);
-                roleInfo.setStatus(Constants.STATUS_NOAVAIL);
-                UpdateWrapper<RoleInfo> wrapper = new UpdateWrapper<>();
-                wrapper.eq("role_id", roleInfo.getRoleId());
-                wrapper.set("status", Constants.STATUS_NOAVAIL);
-                this.roleInfoService.update(wrapper);
-            } else {
-                this.roleInfoService.removeById(roleInfo);
-                this.authResContrService.deleteByRoleId(roleInfo.getRoleId());
-            }
-            resultDto.setCode(200);
-        } catch (Exception e) {
-            logger.error("删除数据库失败！", e);
+        //校验-关联的用户不能删除
+        List<UserRole> userRoleList = userRoleService.selectByRoleId(roleInfo.getRoleId());
+        if (CollectionUtil.isNotEmpty(userRoleList)) {
             resultDto.setCode(400);
-            resultDto.setMessage("删除数据库失败," + e.getMessage());
+            resultDto.setMessage("有关联用户，不能删除。");
+            return resultDto;
         }
+        if (Constants.STATUS_EFFECT.equals(roleInfo.getStatus())) {
+            roleInfo.setUpdateUser(Constants.ADMIN);
+            roleInfo.setStatus(Constants.STATUS_NOAVAIL);
+            UpdateWrapper<RoleInfo> wrapper = new UpdateWrapper<>();
+            wrapper.eq("role_id", roleInfo.getRoleId());
+            wrapper.set("status", Constants.STATUS_NOAVAIL);
+            this.roleInfoService.update(wrapper);
+        } else {
+            this.roleInfoService.removeById(roleInfo);
+            this.authResContrService.deleteByRoleId(roleInfo.getRoleId());
+        }
+        resultDto.setCode(200);
         return resultDto;
     }
 }

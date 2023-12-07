@@ -53,4 +53,8 @@ public class Constants {
      * rabbitmq 方法类型-已创建好的queue
      */
     public static final String RABBIT_MQ_METHOD_TYPE = "created";
+    /**
+     * 超级管理员角色id
+     */
+    public static final Integer ADMIN_ROLE_ID = 1;
 }

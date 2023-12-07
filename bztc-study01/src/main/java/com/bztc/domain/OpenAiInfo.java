@@ -11,50 +11,40 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 控制点信息表
+ * OpenAI信息表
  *
- * @TableName control_info
+ * @TableName open_ai_info
  */
-@TableName(value = "control_info")
+@TableName(value = "open_ai_info")
 @Data
-public class ControlInfo implements Serializable {
+public class OpenAiInfo implements Serializable {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
     /**
-     * 控制点id
+     * 主键id
      */
-    @TableId(value = "control_id", type = IdType.AUTO)
-    private Integer controlId;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
     /**
-     * 菜单id
+     * 账号
      */
-    @TableField(value = "menu_id")
-    private Integer menuId;
+    @TableField(value = "account")
+    private String account;
     /**
-     * 控制点键
+     * 密码
      */
-    @TableField(value = "control_key")
-    private String controlKey;
+    @TableField(value = "password")
+    private String password;
     /**
-     * 控制点名称
+     * 密钥
      */
-    @TableField(value = "control_name")
-    private String controlName;
+    @TableField(value = "ai_key")
+    private String aiKey;
     /**
-     * 请求类型
+     * 备注
      */
-    @TableField(value = "request_type")
-    private String requestType;
-    /**
-     * 控制点url
-     */
-    @TableField(value = "control_url")
-    private String controlUrl;
-    /**
-     * 状态
-     */
-    @TableField(value = "status")
-    private String status;
+    @TableField(value = "remark")
+    private String remark;
     /**
      * 录入人
      */
@@ -89,14 +79,12 @@ public class ControlInfo implements Serializable {
         if (getClass() != that.getClass()) {
             return false;
         }
-        ControlInfo other = (ControlInfo) that;
-        return (this.getControlId() == null ? other.getControlId() == null : this.getControlId().equals(other.getControlId()))
-                && (this.getMenuId() == null ? other.getMenuId() == null : this.getMenuId().equals(other.getMenuId()))
-                && (this.getControlKey() == null ? other.getControlKey() == null : this.getControlKey().equals(other.getControlKey()))
-                && (this.getControlName() == null ? other.getControlName() == null : this.getControlName().equals(other.getControlName()))
-                && (this.getRequestType() == null ? other.getRequestType() == null : this.getRequestType().equals(other.getRequestType()))
-                && (this.getControlUrl() == null ? other.getControlUrl() == null : this.getControlUrl().equals(other.getControlUrl()))
-                && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+        OpenAiInfo other = (OpenAiInfo) that;
+        return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
+                && (this.getAccount() == null ? other.getAccount() == null : this.getAccount().equals(other.getAccount()))
+                && (this.getPassword() == null ? other.getPassword() == null : this.getPassword().equals(other.getPassword()))
+                && (this.getAiKey() == null ? other.getAiKey() == null : this.getAiKey().equals(other.getAiKey()))
+                && (this.getRemark() == null ? other.getRemark() == null : this.getRemark().equals(other.getRemark()))
                 && (this.getInputUser() == null ? other.getInputUser() == null : this.getInputUser().equals(other.getInputUser()))
                 && (this.getInputTime() == null ? other.getInputTime() == null : this.getInputTime().equals(other.getInputTime()))
                 && (this.getUpdateUser() == null ? other.getUpdateUser() == null : this.getUpdateUser().equals(other.getUpdateUser()))
@@ -107,13 +95,11 @@ public class ControlInfo implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((getControlId() == null) ? 0 : getControlId().hashCode());
-        result = prime * result + ((getMenuId() == null) ? 0 : getMenuId().hashCode());
-        result = prime * result + ((getControlKey() == null) ? 0 : getControlKey().hashCode());
-        result = prime * result + ((getControlName() == null) ? 0 : getControlName().hashCode());
-        result = prime * result + ((getRequestType() == null) ? 0 : getRequestType().hashCode());
-        result = prime * result + ((getControlUrl() == null) ? 0 : getControlUrl().hashCode());
-        result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
+        result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+        result = prime * result + ((getAccount() == null) ? 0 : getAccount().hashCode());
+        result = prime * result + ((getPassword() == null) ? 0 : getPassword().hashCode());
+        result = prime * result + ((getAiKey() == null) ? 0 : getAiKey().hashCode());
+        result = prime * result + ((getRemark() == null) ? 0 : getRemark().hashCode());
         result = prime * result + ((getInputUser() == null) ? 0 : getInputUser().hashCode());
         result = prime * result + ((getInputTime() == null) ? 0 : getInputTime().hashCode());
         result = prime * result + ((getUpdateUser() == null) ? 0 : getUpdateUser().hashCode());
@@ -127,13 +113,11 @@ public class ControlInfo implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", controlId=").append(controlId);
-        sb.append(", menuId=").append(menuId);
-        sb.append(", controlKey=").append(controlKey);
-        sb.append(", controlName=").append(controlName);
-        sb.append(", requestType=").append(requestType);
-        sb.append(", controlUrl=").append(controlUrl);
-        sb.append(", status=").append(status);
+        sb.append(", id=").append(id);
+        sb.append(", account=").append(account);
+        sb.append(", password=").append(password);
+        sb.append(", key=").append(aiKey);
+        sb.append(", remark=").append(remark);
         sb.append(", inputUser=").append(inputUser);
         sb.append(", inputTime=").append(inputTime);
         sb.append(", updateUser=").append(updateUser);

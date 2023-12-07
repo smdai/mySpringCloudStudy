@@ -36,8 +36,6 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
     @Autowired
     private UserRoleService userRoleService;
     @Autowired
-    private AuthResContrService authResContrService;
-    @Autowired
     private MenuInfoService menuInfoService;
     @Autowired
     private RedisUtil redisUtil;
@@ -83,13 +81,14 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
         if (CollectionUtil.isEmpty(userRoles)) {
             return null;
         }
+        sessionInfoDto.setRoleList(userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList()));
         //查询权限
         QueryWrapper<AuthResContr> editAuthResContrQueryWrapper = new QueryWrapper<>();
         editAuthResContrQueryWrapper
                 .eq("res_object_type", Constants.RES_OBJECT_TYPE_R)
                 .in("res_object_id", userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList()))
                 .eq("status", Constants.STATUS_EFFECT);
-        List<AuthResContr> authResContrs = authResContrService.list(editAuthResContrQueryWrapper);
+        List<AuthResContr> authResContrs = this.list(editAuthResContrQueryWrapper);
         //查询菜单
         QueryWrapper<MenuInfo> menuInfoQueryWrapper = new QueryWrapper<>();
         menuInfoQueryWrapper.eq("status", Constants.STATUS_EFFECT)
@@ -177,6 +176,7 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
         //查询所有菜单
         QueryWrapper<MenuInfo> menuInfoQueryWrapper = new QueryWrapper<>();
         menuInfoQueryWrapper.eq("status", Constants.STATUS_EFFECT);
+        menuInfoQueryWrapper.orderByAsc("sort_no");
         List<MenuInfo> menuInfos = menuInfoMapper.selectList(menuInfoQueryWrapper);
         List<MenuInfo> levelOneMenus = menuInfos.stream().filter(it -> it.getMenuLevel().equals(Constants.MENU_ONE_LEVEL)).collect(Collectors.toList());
         List<MenuInfo> levelTwoMenus = menuInfos.stream().filter(it -> it.getMenuLevel().equals(Constants.MENU_TWO_LEVEL)).collect(Collectors.toList());
@@ -263,7 +263,7 @@ public class AuthResContrServiceImpl extends ServiceImpl<AuthResContrMapper, Aut
             authResContr.setUpdateUser(UserUtil.getUserId());
             return authResContr;
         }).collect(Collectors.toList());
-        this.authResContrService.saveBatch(authResContrs);
+        this.saveBatch(authResContrs);
         return new ResultDto<>(0);
     }
 

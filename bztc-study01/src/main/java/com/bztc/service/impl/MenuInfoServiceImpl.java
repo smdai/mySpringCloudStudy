@@ -158,6 +158,7 @@ public class MenuInfoServiceImpl extends ServiceImpl<MenuInfoMapper, MenuInfo> i
         //查询所有菜单
         QueryWrapper<MenuInfo> menuInfoQueryWrapper = new QueryWrapper<>();
         menuInfoQueryWrapper.eq("status", Constants.STATUS_EFFECT);
+        menuInfoQueryWrapper.orderByAsc("sort_no");
         List<MenuInfo> menuInfos = this.baseMapper.selectList(menuInfoQueryWrapper);
         List<MenuInfo> levelOneMenus = menuInfos.stream().filter(it -> it.getMenuLevel().equals(Constants.MENU_ONE_LEVEL)).collect(Collectors.toList());
         List<MenuInfo> levelTwoMenus = menuInfos.stream().filter(it -> it.getMenuLevel().equals(Constants.MENU_TWO_LEVEL)).collect(Collectors.toList());

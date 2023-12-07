@@ -117,24 +117,18 @@ public class ControlInfoResource {
     public ResultDto<Integer> delete(@RequestBody ControlInfo controlInfo) {
         log.info("删除入参：{}", JSONUtil.toJsonStr(controlInfo));
         ResultDto<Integer> resultDto = new ResultDto<>();
-        try {
-            if (Constants.STATUS_EFFECT.equals(controlInfo.getStatus())) {
-                controlInfo.setUpdateUser(Constants.ADMIN);
-                controlInfo.setStatus(Constants.STATUS_NOAVAIL);
-                UpdateWrapper<ControlInfo> wrapper = new UpdateWrapper<>();
-                wrapper.eq("control_id", controlInfo.getControlId());
-                wrapper.set("status", Constants.STATUS_NOAVAIL);
-                this.controlInfoService.update(wrapper);
-            } else {
-                this.controlInfoService.removeById(controlInfo);
-                authResContrService.deleteByControlId(controlInfo.getControlId());
-            }
-            resultDto.setCode(200);
-        } catch (Exception e) {
-            log.error("删除数据库失败！", e);
-            resultDto.setCode(400);
-            resultDto.setMessage("删除数据库失败," + e.getMessage());
+        if (Constants.STATUS_EFFECT.equals(controlInfo.getStatus())) {
+            controlInfo.setUpdateUser(Constants.ADMIN);
+            controlInfo.setStatus(Constants.STATUS_NOAVAIL);
+            UpdateWrapper<ControlInfo> wrapper = new UpdateWrapper<>();
+            wrapper.eq("control_id", controlInfo.getControlId());
+            wrapper.set("status", Constants.STATUS_NOAVAIL);
+            this.controlInfoService.update(wrapper);
+        } else {
+            this.controlInfoService.removeById(controlInfo);
+            authResContrService.deleteByControlId(controlInfo.getControlId());
         }
+        resultDto.setCode(200);
         return resultDto;
     }
 

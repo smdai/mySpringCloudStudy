@@ -124,24 +124,18 @@ public class UserInfoResource {
     public ResultDto<Integer> delete(@RequestBody UserInfo userInfo) {
         logger.info("删除入参：{}", JSONUtil.toJsonStr(userInfo));
         ResultDto<Integer> resultDto = new ResultDto<>();
-        try {
-            if (Constants.STATUS_EFFECT.equals(userInfo.getStatus())) {
-                userInfo.setUpdateUser(Constants.ADMIN);
-                userInfo.setStatus(Constants.STATUS_NOAVAIL);
-                UpdateWrapper<UserInfo> wrapper = new UpdateWrapper<>();
-                wrapper.eq("id", userInfo.getId());
-                wrapper.set("status", Constants.STATUS_NOAVAIL);
-                this.userInfoService.update(wrapper);
-            } else {
-                this.userInfoService.removeById(userInfo);
-                userRoleService.deleteByUserId(userInfo.getId());
-            }
-            resultDto.setCode(200);
-        } catch (Exception e) {
-            logger.error("删除数据库失败！", e);
-            resultDto.setCode(400);
-            resultDto.setMessage("删除数据库失败," + e.getMessage());
+        if (Constants.STATUS_EFFECT.equals(userInfo.getStatus())) {
+            userInfo.setUpdateUser(Constants.ADMIN);
+            userInfo.setStatus(Constants.STATUS_NOAVAIL);
+            UpdateWrapper<UserInfo> wrapper = new UpdateWrapper<>();
+            wrapper.eq("id", userInfo.getId());
+            wrapper.set("status", Constants.STATUS_NOAVAIL);
+            this.userInfoService.update(wrapper);
+        } else {
+            this.userInfoService.removeById(userInfo);
+            userRoleService.deleteByUserId(userInfo.getId());
         }
+        resultDto.setCode(200);
         return resultDto;
     }
 

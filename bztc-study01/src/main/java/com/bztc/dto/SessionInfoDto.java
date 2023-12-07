@@ -24,6 +24,10 @@ public class SessionInfoDto {
      */
     private List<MenuInfoDto> menuInfoDtos;
     /**
+     * 角色列表
+     */
+    private List<Integer> roleList;
+    /**
      * 登录令牌
      */
     private String token;
