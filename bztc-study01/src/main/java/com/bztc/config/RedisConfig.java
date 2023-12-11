@@ -29,8 +29,10 @@ import java.util.Objects;
  */
 @Configuration
 public class RedisConfig {
-    @Value("${bztc.redis.ttl:7200}")
-    private int ttl;
+    @Value("${bztc.redis.custom.ttl:3600}")
+    private int customTtl;
+    @Value("${bztc.redis.default.ttl:7200}")
+    private int defultTtl;
 
     @Bean
     @SuppressWarnings("all")
@@ -80,7 +82,10 @@ public class RedisConfig {
         Map<String, RedisCacheConfiguration> redisCacheConfigurationMap = new HashMap<>(8);
         // 自定义设置缓存时间
         // 这个k0 表示的是缓存注解中的 cacheNames/value
-        redisCacheConfigurationMap.put(RedisConstants.SESSION_TOKEN_KEY, this.getRedisCacheConfigurationWithTtl(RedisConstants.SESSION_TOKEN_TTL_SECONDS));
+        redisCacheConfigurationMap.put(RedisConstants.SESSION_TOKEN_KEY, this.getRedisCacheConfigurationWithTtl(customTtl));
+        redisCacheConfigurationMap.put(RedisConstants.SESSION_USERID_KEY, this.getRedisCacheConfigurationWithTtl(customTtl));
+        redisCacheConfigurationMap.put(RedisConstants.SESSION_AUTH_CONTR_KEY, this.getRedisCacheConfigurationWithTtl(customTtl));
+        redisCacheConfigurationMap.put(RedisConstants.CODE_LIBRARY_ITEM_KEY, this.getRedisCacheConfigurationWithTtl(null));
         return redisCacheConfigurationMap;
     }
 
@@ -89,7 +94,7 @@ public class RedisConfig {
         return new RedisCacheManager(
                 RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory),
                 // 默认策略，未配置的 key 会使用这个
-                this.getRedisCacheConfigurationWithTtl(ttl),
+                this.getRedisCacheConfigurationWithTtl(defultTtl),
                 // 指定 key 策略
                 this.getRedisCacheConfigurationMap()
         );

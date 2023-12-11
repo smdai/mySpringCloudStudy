@@ -4,6 +4,7 @@ import com.bztc.constants.RedisConstants;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -28,6 +29,10 @@ import java.util.Objects;
  */
 @Configuration
 public class RedisConfig {
+    @Value("${bztc.redis.custom.ttl:3600}")
+    private int customTtl;
+    @Value("${bztc.redis.default.ttl:7200}")
+    private int defultTtl;
 
     @Bean
     @SuppressWarnings("all")
@@ -77,7 +82,9 @@ public class RedisConfig {
         Map<String, RedisCacheConfiguration> redisCacheConfigurationMap = new HashMap<>(8);
         // 自定义设置缓存时间
         // 这个k0 表示的是缓存注解中的 cacheNames/value
-        redisCacheConfigurationMap.put(RedisConstants.SESSION_TOKEN_KEY, this.getRedisCacheConfigurationWithTtl(RedisConstants.SESSION_TOKEN_TTL_SECONDS));
+        redisCacheConfigurationMap.put(RedisConstants.SESSION_TOKEN_KEY, this.getRedisCacheConfigurationWithTtl(customTtl));
+        redisCacheConfigurationMap.put(RedisConstants.SESSION_USERID_KEY, this.getRedisCacheConfigurationWithTtl(customTtl));
+        redisCacheConfigurationMap.put(RedisConstants.SESSION_AUTH_CONTR_KEY, this.getRedisCacheConfigurationWithTtl(customTtl));
         return redisCacheConfigurationMap;
     }
 

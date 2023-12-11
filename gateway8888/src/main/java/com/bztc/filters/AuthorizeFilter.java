@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -35,12 +36,15 @@ import java.util.Objects;
  */
 @Order(-1)
 @Component
+@RefreshScope
 public class AuthorizeFilter implements GlobalFilter, Ordered {
     private static final Logger logger = LoggerFactory.getLogger(AuthorizeFilter.class);
     private static final int AUTHORIZATION_CHECK_LENGTH = 8;
 
     @Value("${white.urls}")
     private String whiteUrls;
+    @Value("${bztc.redis.custom.ttl:3600}")
+    private int customTtl;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -110,9 +114,9 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
                     return exchange.getResponse().setComplete();
                 }
                 //初始化缓存时间
-                redisUtil.expire(RedisConstants.SESSION_TOKEN_KEY + ":" + userId, RedisConstants.SESSION_TOKEN_TTL_SECONDS);
-                redisUtil.expire(RedisConstants.SESSION_USERID_KEY + ":" + token, RedisConstants.SESSION_TOKEN_TTL_SECONDS);
-                redisUtil.expire(RedisConstants.SESSION_AUTH_CONTR_KEY + ":" + userId, RedisConstants.SESSION_TOKEN_TTL_SECONDS);
+                redisUtil.expire(RedisConstants.SESSION_TOKEN_KEY + ":" + userId, customTtl);
+                redisUtil.expire(RedisConstants.SESSION_USERID_KEY + ":" + token, customTtl);
+                redisUtil.expire(RedisConstants.SESSION_AUTH_CONTR_KEY + ":" + userId, customTtl);
             }
             return chain.filter(exchange);
         } catch (Exception e) {

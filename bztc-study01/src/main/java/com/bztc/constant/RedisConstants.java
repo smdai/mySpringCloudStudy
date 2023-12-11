@@ -9,6 +9,5 @@ public class RedisConstants {
     public static final String SESSION_TOKEN_KEY = "session:token";
     public static final String SESSION_USERID_KEY = "session:userid";
     public static final String SESSION_AUTH_CONTR_KEY = "session:auth-contr";
-    public static final Integer SESSION_TOKEN_TTL_SECONDS = 60 * 60;
     public static final String CODE_LIBRARY_ITEM_KEY = "codeLibrary:item";
 }
