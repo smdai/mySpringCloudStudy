@@ -55,6 +55,7 @@ public class CodeLibraryServiceImpl extends ServiceImpl<CodeLibraryMapper, CodeL
      */
     @Override
     public void freshCodeLibrary() {
+        redisUtil.delAll(RedisConstants.CODE_LIBRARY_ITEM_KEY);
         QueryWrapper<CodeLibrary> codeLibraryQueryWrapper = new QueryWrapper<>();
         codeLibraryQueryWrapper.eq("status", Constants.STATUS_EFFECT);
         codeLibraryQueryWrapper.orderByAsc("sort_no");

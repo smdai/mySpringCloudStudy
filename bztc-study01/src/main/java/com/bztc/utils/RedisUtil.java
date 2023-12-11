@@ -89,6 +89,18 @@ public class RedisUtil {
         }
     }
 
+    /**
+     * 全量删除缓存
+     *
+     * @param key 可以传一个值 或多个
+     */
+    public void delAll(String key) {
+        Set<String> keys = redisTemplate.keys(key + "*");
+        if (keys != null) {
+            redisTemplate.delete(keys);
+        }
+    }
+
     // ============================2-String=============================
 
     /**
