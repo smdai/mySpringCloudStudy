@@ -53,4 +53,9 @@ public class MenuInfoDto {
      * vue路径
      */
     private String componentUrl;
+
+    /**
+     * 是否显示
+     */
+    private String isVisible;
 }

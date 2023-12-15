@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bztc.mapper.MessageRoleRelMapper">
+
+    <resultMap id="BaseResultMap" type="com.bztc.domain.MessageRoleRel">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="messageId" column="message_id" jdbcType="INTEGER"/>
+            <result property="roleId" column="role_id" jdbcType="INTEGER"/>
+            <result property="sendStatus" column="send_status" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,message_id,role_id,
+        send_status
+    </sql>
+</mapper>

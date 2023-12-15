@@ -97,6 +97,11 @@ public class MenuInfo implements Serializable {
     @TableField(value = "update_time")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date updateTime;
+    /**
+     * 是否显示
+     */
+    @TableField(value = "is_visible")
+    private String isVisible;
 
     @Override
     public boolean equals(Object that) {
@@ -124,7 +129,8 @@ public class MenuInfo implements Serializable {
                 && (this.getInputUser() == null ? other.getInputUser() == null : this.getInputUser().equals(other.getInputUser()))
                 && (this.getInputTime() == null ? other.getInputTime() == null : this.getInputTime().equals(other.getInputTime()))
                 && (this.getUpdateUser() == null ? other.getUpdateUser() == null : this.getUpdateUser().equals(other.getUpdateUser()))
-                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
+                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
+                && (this.getIsVisible() == null ? other.getIsVisible() == null : this.getIsVisible().equals(other.getIsVisible()));
     }
 
     @Override
@@ -146,6 +152,7 @@ public class MenuInfo implements Serializable {
         result = prime * result + ((getInputTime() == null) ? 0 : getInputTime().hashCode());
         result = prime * result + ((getUpdateUser() == null) ? 0 : getUpdateUser().hashCode());
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
+        result = prime * result + ((getIsVisible() == null) ? 0 : getIsVisible().hashCode());
         return result;
     }
 
@@ -170,6 +177,7 @@ public class MenuInfo implements Serializable {
         sb.append(", inputTime=").append(inputTime);
         sb.append(", updateUser=").append(updateUser);
         sb.append(", updateTime=").append(updateTime);
+        sb.append(", isVisible=").append(isVisible);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
