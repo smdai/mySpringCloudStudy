@@ -57,4 +57,14 @@ public class Constants {
      * 超级管理员角色id
      */
     public static final Integer ADMIN_ROLE_ID = 1;
+
+    /**
+     * 发送状态：1-成功
+     */
+    public static final String SEND_STATUS_1 = "1";
+    /**
+     * 发送状态：2-失败
+     */
+    public static final String SEND_STATUS_2 = "2";
+
 }

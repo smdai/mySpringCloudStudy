@@ -1,11 +1,15 @@
 package com.bztc.web.rest;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bztc.constant.Constants;
 import com.bztc.domain.MessageRoleRel;
+import com.bztc.dto.MessageRoleRelDto;
 import com.bztc.dto.ResultDto;
 import com.bztc.service.MessageRoleRelService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author daism
@@ -62,13 +67,22 @@ public class MessageRoleRelResource {
      * @date 2022-09-29 10:35:10
      */
     @PostMapping("/insert")
-    public ResultDto<MessageRoleRel> insert(@RequestBody MessageRoleRel messageRoleRel) {
-        log.info("新增入参：{}", JSONUtil.toJsonStr(messageRoleRel));
+    public ResultDto<MessageRoleRel> insert(@RequestBody MessageRoleRelDto messageRoleRelDto) {
+        log.info("新增入参：{}", JSONUtil.toJsonStr(messageRoleRelDto));
+        Assert.notNull(messageRoleRelDto, "入参不能为空");
+        Assert.notNull(messageRoleRelDto.getMessageId(), "messageId不能为空");
+        Assert.isFalse(CollectionUtil.isEmpty(messageRoleRelDto.getRoleIds()), "关联角色id不能为空");
         ResultDto<MessageRoleRel> resultDto = new ResultDto<>();
+        List<MessageRoleRel> messageRoleRels = messageRoleRelDto.getRoleIds().stream().map(it -> {
+            MessageRoleRel messageRoleRel = new MessageRoleRel();
+            messageRoleRel.setMessageId(messageRoleRelDto.getMessageId());
+            messageRoleRel.setRoleId(it);
+            messageRoleRel.setSendStatus(Constants.SEND_STATUS_1);
+            return messageRoleRel;
+        }).collect(Collectors.toList());
         try {
-            this.messageRoleRelService.save(messageRoleRel);
+            this.messageRoleRelService.saveBatch(messageRoleRels);
             resultDto.setCode(200);
-            resultDto.setData(messageRoleRel);
         } catch (Exception e) {
             log.error("插入数据库失败！", e);
             resultDto.setCode(400);
