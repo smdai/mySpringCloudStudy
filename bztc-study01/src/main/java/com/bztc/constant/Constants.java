@@ -18,7 +18,7 @@ public class Constants {
     /**
      * 用户-管理员
      **/
-    public static final String ADMIN = "admin";
+    public static final String ADMIN = "1";
 
     /**
      * 菜单-第一层级

@@ -10,6 +10,7 @@ import com.bztc.constant.Constants;
 import com.bztc.domain.WebsiteList;
 import com.bztc.dto.ResultDto;
 import com.bztc.service.WebsiteListService;
+import com.bztc.utils.UserUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +82,9 @@ public class WebsiteListResource {
         if (!StrUtil.isBlankIfStr(jsonObject.get(TYPE))) {
             queryWrapper.eq("type", jsonObject.get(TYPE));
         }
+        if ("02".equals(jsonObject.get(TYPE))) {
+            queryWrapper.eq("input_user", UserUtil.getUserId());
+        }
         //1-生效，0-失效
         queryWrapper.eq("status", Constants.STATUS_EFFECT);
         queryWrapper.orderByDesc("input_time");
@@ -100,8 +104,8 @@ public class WebsiteListResource {
         logger.info("新增入参：{}", JSONUtil.toJsonStr(websiteList));
         ResultDto<WebsiteList> resultDto = new ResultDto<>();
         websiteList.setStatus(Constants.STATUS_EFFECT);
-        websiteList.setInputUser(Constants.ADMIN);
-        websiteList.setUpdateUser(Constants.ADMIN);
+        websiteList.setInputUser(UserUtil.getUserId());
+        websiteList.setUpdateUser(UserUtil.getUserId());
         try {
             websiteListService.save(websiteList);
             resultDto.setCode(200);
@@ -125,7 +129,7 @@ public class WebsiteListResource {
     public ResultDto<WebsiteList> update(@RequestBody WebsiteList websiteList) {
         logger.info("更新入参：{}", JSONUtil.toJsonStr(websiteList));
         ResultDto<WebsiteList> resultDto = new ResultDto<>();
-        websiteList.setUpdateUser(Constants.ADMIN);
+        websiteList.setUpdateUser(UserUtil.getUserId());
         try {
             websiteListService.updateById(websiteList);
             resultDto.setCode(200);
@@ -149,7 +153,7 @@ public class WebsiteListResource {
     public ResultDto<Integer> delete(@RequestBody WebsiteList websiteList) {
         logger.info("删除入参：{}", JSONUtil.toJsonStr(websiteList));
         ResultDto<Integer> resultDto = new ResultDto<>();
-        websiteList.setUpdateUser(Constants.ADMIN);
+        websiteList.setUpdateUser(UserUtil.getUserId());
         websiteList.setStatus(Constants.STATUS_NOAVAIL);
         UpdateWrapper<WebsiteList> wrapper = new UpdateWrapper<>();
         wrapper.eq("id", websiteList.getId());
