@@ -94,6 +94,22 @@ public class MessageUserRelServiceImpl extends ServiceImpl<MessageUserRelMapper,
         queryWrapper.eq("user_id", userId).eq("operate_status", Integer.parseInt(operateStatus) - 1);
         this.messageUserRelMapper.update(messageUserRel, queryWrapper);
     }
+
+    /**
+     * 更改状态
+     *
+     * @param messageId
+     * @param operateStatus
+     * @param userId
+     */
+    @Override
+    public void updateOperatestatus(String messageId, String operateStatus, String userId) {
+        MessageUserRel messageUserRel = new MessageUserRel();
+        messageUserRel.setOperateStatus(operateStatus);
+        QueryWrapper<MessageUserRel> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", userId).eq("message_id", messageId).eq("operate_status", Integer.parseInt(operateStatus) - 1);
+        this.messageUserRelMapper.update(messageUserRel, queryWrapper);
+    }
 }
 
 

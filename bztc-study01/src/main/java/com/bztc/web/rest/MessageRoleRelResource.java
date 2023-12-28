@@ -85,7 +85,12 @@ public class MessageRoleRelResource {
         Assert.notNull(messageRoleRelDto.getMessageId(), "messageId不能为空");
         Assert.isFalse(CollectionUtil.isEmpty(messageRoleRelDto.getRoleIds()), "关联角色id不能为空");
         ResultDto<MessageRoleRel> resultDto = new ResultDto<>();
-        List<MessageRoleRel> messageRoleRels = messageRoleRelDto.getRoleIds().stream().map(it -> {
+        List<MessageRoleRel> messageRoleRels = messageRoleRelDto.getRoleIds().stream().filter(it -> {
+            QueryWrapper<MessageRoleRel> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("role_id", it).eq("message_id", messageRoleRelDto.getMessageId());
+            long count = this.messageRoleRelService.count(queryWrapper);
+            return count == 0L;
+        }).map(it -> {
             MessageRoleRel messageRoleRel = new MessageRoleRel();
             messageRoleRel.setMessageId(messageRoleRelDto.getMessageId());
             messageRoleRel.setRoleId(it);
@@ -94,11 +99,16 @@ public class MessageRoleRelResource {
         }).collect(Collectors.toList());
         this.messageRoleRelService.saveBatch(messageRoleRels);
         //查询角色关联的用户
-        List<UserRole> userRoleList = this.userRoleService.selectByRoleIds(messageRoleRelDto.getRoleIds());
-        List<MessageUserRel> messageUserRels = userRoleList.stream().map(it -> {
+        List<UserRole> userRoleList = this.userRoleService.selectByRoleIds(messageRoleRels.stream().map(MessageRoleRel::getRoleId).collect(Collectors.toList()));
+        if (CollectionUtil.isEmpty(userRoleList)) {
+            resultDto.setCode(200);
+            return resultDto;
+        }
+        List<Integer> users = userRoleList.stream().map(UserRole::getUserId).distinct().collect(Collectors.toList());
+        List<MessageUserRel> messageUserRels = users.stream().map(it -> {
             MessageUserRel messageUserRel = new MessageUserRel();
             messageUserRel.setMessageId(messageRoleRelDto.getMessageId());
-            messageUserRel.setUserId(it.getUserId());
+            messageUserRel.setUserId(it);
             messageUserRel.setOperateStatus("1");
             messageUserRel.setNoteTime(new Date());
             return messageUserRel;

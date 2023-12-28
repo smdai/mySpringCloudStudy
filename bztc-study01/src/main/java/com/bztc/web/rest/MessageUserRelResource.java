@@ -1,5 +1,6 @@
 package com.bztc.web.rest;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -67,4 +68,16 @@ public class MessageUserRelResource {
         return new ResultDto<>("success");
     }
 
+    /**
+     * 更改单个数据的状态
+     *
+     * @return
+     */
+    @PostMapping("/updateoperatestatus")
+    public ResultDto<String> updateOperatestatus(@RequestBody Map<String, String> request) {
+        Assert.notBlank(request.get("messageId"), "消息id不能为空");
+        Assert.notBlank(request.get("operateStatus"), "更改状态不能为空");
+        this.messageUserRelService.updateOperatestatus(request.get("messageId"), request.get("operateStatus"), UserUtil.getUserId());
+        return new ResultDto<>("success");
+    }
 }

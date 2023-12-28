@@ -5,12 +5,17 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bztc.domain.MessageRoleRel;
+import com.bztc.domain.MessageUserRel;
 import com.bztc.domain.PersonalMessage;
 import com.bztc.dto.ResultDto;
+import com.bztc.service.MessageRoleRelService;
+import com.bztc.service.MessageUserRelService;
 import com.bztc.service.PersonalMessageService;
 import com.bztc.utils.UserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +31,10 @@ import java.util.List;
 public class PersonalMessageResource {
     @Autowired
     PersonalMessageService personalMessageService;
+    @Autowired
+    MessageRoleRelService messageRoleRelService;
+    @Autowired
+    MessageUserRelService messageUserRelService;
 
     /**
      * 查询个人消息列表
@@ -108,17 +117,35 @@ public class PersonalMessageResource {
      * @date 2022-10-14 10:05:22
      */
     @PostMapping("/delete")
+    @Transactional(rollbackFor = Exception.class)
     public ResultDto<Integer> delete(@RequestBody PersonalMessage personalMessage) {
         log.info("删除入参：{}", JSONUtil.toJsonStr(personalMessage));
         ResultDto<Integer> resultDto = new ResultDto<>();
-        try {
-            this.personalMessageService.removeById(personalMessage);
-            resultDto.setCode(200);
-        } catch (Exception e) {
-            log.error("删除数据库失败！", e);
-            resultDto.setCode(400);
-            resultDto.setMessage("删除数据库失败," + e.getMessage());
-        }
+        this.personalMessageService.removeById(personalMessage);
+        this.cancel(personalMessage);
+        resultDto.setCode(200);
+        return resultDto;
+    }
+
+    /**
+     * 描述：根据主键撤回消息
+     *
+     * @return com.bztc.dto.ResultDto<java.lang.Integer>
+     * @author daism
+     * @date 2022-10-14 10:05:22
+     */
+    @PostMapping("/cancel")
+    @Transactional(rollbackFor = Exception.class)
+    public ResultDto<Integer> cancel(@RequestBody PersonalMessage personalMessage) {
+        log.info("根据主键撤回消息入参：{}", JSONUtil.toJsonStr(personalMessage));
+        ResultDto<Integer> resultDto = new ResultDto<>();
+        QueryWrapper<MessageRoleRel> messageRoleRelQueryWrapper = new QueryWrapper<>();
+        messageRoleRelQueryWrapper.eq("message_id", personalMessage.getId());
+        this.messageRoleRelService.remove(messageRoleRelQueryWrapper);
+        QueryWrapper<MessageUserRel> messageUserRelQueryWrapper = new QueryWrapper<>();
+        messageUserRelQueryWrapper.eq("message_id", personalMessage.getId());
+        this.messageUserRelService.remove(messageUserRelQueryWrapper);
+        resultDto.setCode(200);
         return resultDto;
     }
 }

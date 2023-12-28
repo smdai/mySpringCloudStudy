@@ -17,4 +17,6 @@ public interface MessageUserRelService extends IService<MessageUserRel> {
     Map<String, Integer> selectOperateCountByUserId(String userId);
 
     void allChangeStatus(String operateStatus, String userId);
+
+    void updateOperatestatus(String messageId, String operateStatus, String userId);
 }
