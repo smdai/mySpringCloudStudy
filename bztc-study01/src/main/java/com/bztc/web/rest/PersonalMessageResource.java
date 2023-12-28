@@ -11,7 +11,6 @@ import com.bztc.service.PersonalMessageService;
 import com.bztc.utils.UserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -109,7 +108,6 @@ public class PersonalMessageResource {
      * @date 2022-10-14 10:05:22
      */
     @PostMapping("/delete")
-    @Transactional(rollbackFor = Exception.class)
     public ResultDto<Integer> delete(@RequestBody PersonalMessage personalMessage) {
         log.info("删除入参：{}", JSONUtil.toJsonStr(personalMessage));
         ResultDto<Integer> resultDto = new ResultDto<>();

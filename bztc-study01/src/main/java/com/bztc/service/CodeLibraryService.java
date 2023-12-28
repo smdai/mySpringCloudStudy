@@ -25,4 +25,13 @@ public interface CodeLibraryService extends IService<CodeLibrary> {
      * 刷新全部缓存
      */
     void freshCodeLibrary();
+
+    /**
+     * 根据字典码值查询字典值
+     *
+     * @param catalogCode
+     * @param libraryCode
+     * @return
+     */
+    String queryValueByCode(String catalogCode, String libraryCode);
 }

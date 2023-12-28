@@ -4,42 +4,54 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 个人消息与用户关联表
+ *
  * @TableName message_user_rel
  */
-@TableName(value ="message_user_rel")
+@TableName(value = "message_user_rel")
 @Data
 public class MessageUserRel implements Serializable {
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
     /**
      * 主键id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-
     /**
      * 消息id
      */
     @TableField(value = "message_id")
     private Integer messageId;
-
     /**
      * 用户id
      */
     @TableField(value = "user_id")
     private Integer userId;
-
     /**
      * 操作状态-1未读2已读3回收站4回收站删除
      */
     @TableField(value = "operate_status")
     private String operateStatus;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
+    /**
+     * 更新时间
+     */
+    @TableField(value = "update_time")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date updateTime;
+    /**
+     * 通知时间
+     */
+    @TableField(value = "note_time")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date noteTime;
 
     @Override
     public boolean equals(Object that) {
@@ -54,9 +66,9 @@ public class MessageUserRel implements Serializable {
         }
         MessageUserRel other = (MessageUserRel) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getMessageId() == null ? other.getMessageId() == null : this.getMessageId().equals(other.getMessageId()))
-            && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
-            && (this.getOperateStatus() == null ? other.getOperateStatus() == null : this.getOperateStatus().equals(other.getOperateStatus()));
+                && (this.getMessageId() == null ? other.getMessageId() == null : this.getMessageId().equals(other.getMessageId()))
+                && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
+                && (this.getOperateStatus() == null ? other.getOperateStatus() == null : this.getOperateStatus().equals(other.getOperateStatus()));
     }
 
     @Override

@@ -38,6 +38,14 @@ public interface UserRoleService extends IService<UserRole> {
     List<UserRole> selectByRoleId(int roleId);
 
     /**
+     * 根据roleids查询
+     *
+     * @param roleIds
+     * @return
+     */
+    List<UserRole> selectByRoleIds(List<Integer> roleIds);
+
+    /**
      * 根据userid删除
      *
      * @param userId

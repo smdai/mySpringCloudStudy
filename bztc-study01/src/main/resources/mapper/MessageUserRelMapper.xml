@@ -5,14 +5,36 @@
 <mapper namespace="com.bztc.mapper.MessageUserRelMapper">
 
     <resultMap id="BaseResultMap" type="com.bztc.domain.MessageUserRel">
-            <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="messageId" column="message_id" jdbcType="INTEGER"/>
-            <result property="userId" column="user_id" jdbcType="INTEGER"/>
-            <result property="operateStatus" column="operate_status" jdbcType="VARCHAR"/>
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="messageId" column="message_id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="operateStatus" column="operate_status" jdbcType="VARCHAR"/>
+        <result property="noteTime" column="note_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,message_id,user_id,
-        operate_status
+        operate_status,note_time,update_time
     </sql>
+    <select id="selectByPage" resultType="java.util.Map">
+        select mur.id,
+               mur.message_id,
+               mur.operate_status,
+               pm.message_head,
+               pm.message_body,
+               DATE_FORMAT(mur.note_time, '%Y-%m-%d %H:%i:%s') AS note_time,
+               mur.update_Time
+        from message_user_rel mur
+                 left join personal_message pm on mur.message_id = pm.id
+        where mur.operate_status = #{operateStatus,jdbcType=VARCHAR}
+          and mur.user_id = #{userId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectOperateCountByUserId" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT operate_status, count(1) as count
+        from message_user_rel
+        where user_id = #{userId,jdbcType=VARCHAR}
+        group by operate_status
+    </select>
 </mapper>

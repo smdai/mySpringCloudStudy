@@ -62,6 +62,20 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
     }
 
     /**
+     * 根据roleids查询
+     *
+     * @param roleIds
+     * @return
+     */
+    @Override
+    public List<UserRole> selectByRoleIds(List<Integer> roleIds) {
+        QueryWrapper<UserRole> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("role_id", roleIds)
+                .eq("status", Constants.STATUS_EFFECT);
+        return this.baseMapper.selectList(queryWrapper);
+    }
+
+    /**
      * 根据userid删除
      *
      * @param userId

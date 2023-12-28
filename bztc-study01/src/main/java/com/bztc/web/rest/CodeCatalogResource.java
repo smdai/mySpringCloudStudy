@@ -118,18 +118,12 @@ public class CodeCatalogResource {
     public ResultDto<Integer> delete(@RequestBody CodeCatalog codeCatalog) {
         log.info("删除入参：{}", JSONUtil.toJsonStr(codeCatalog));
         ResultDto<Integer> resultDto = new ResultDto<>();
-        try {
-            CodeCatalog catalog = this.codeCatalogService.getById(codeCatalog);
-            QueryWrapper<CodeLibrary> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("item_catalog_code", catalog.getItemCatalogCode());
-            this.codeLibraryService.remove(queryWrapper);
-            this.codeCatalogService.removeById(codeCatalog);
-            resultDto.setCode(200);
-        } catch (Exception e) {
-            log.error("删除数据库失败！", e);
-            resultDto.setCode(400);
-            resultDto.setMessage("删除数据库失败," + e.getMessage());
-        }
+        CodeCatalog catalog = this.codeCatalogService.getById(codeCatalog);
+        QueryWrapper<CodeLibrary> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("item_catalog_code", catalog.getItemCatalogCode());
+        this.codeLibraryService.remove(queryWrapper);
+        this.codeCatalogService.removeById(codeCatalog);
+        resultDto.setCode(200);
         return resultDto;
     }
 

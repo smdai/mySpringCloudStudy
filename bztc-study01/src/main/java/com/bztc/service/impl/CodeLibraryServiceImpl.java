@@ -9,6 +9,7 @@ import com.bztc.domain.CodeLibrary;
 import com.bztc.mapper.CodeLibraryMapper;
 import com.bztc.service.CodeLibraryService;
 import com.bztc.utils.RedisUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -72,6 +73,25 @@ public class CodeLibraryServiceImpl extends ServiceImpl<CodeLibraryMapper, CodeL
             List<Map<String, String>> collects = v.stream().peek(it -> it.remove("catalog")).collect(Collectors.toList());
             redisUtil.set(RedisConstants.CODE_LIBRARY_ITEM_KEY + ":" + k, collects);
         });
+    }
+
+    /**
+     * 根据字典码值查询字典值
+     *
+     * @param catalogCode
+     * @param libraryCode
+     * @return
+     */
+    @Override
+    public String queryValueByCode(String catalogCode, String libraryCode) {
+        List<Map<String, String>> libraryList = this.queryCodeLibrary(catalogCode);
+        for (Map<String, String> library : libraryList) {
+            String key = library.get("key");
+            if (libraryCode.equals(key)) {
+                return library.get("value");
+            }
+        }
+        return StringUtils.EMPTY;
     }
 }
 
