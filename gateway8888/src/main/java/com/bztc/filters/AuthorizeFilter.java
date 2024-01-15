@@ -40,7 +40,7 @@ import java.util.Objects;
 public class AuthorizeFilter implements GlobalFilter, Ordered {
     private static final Logger logger = LoggerFactory.getLogger(AuthorizeFilter.class);
     private static final int AUTHORIZATION_CHECK_LENGTH = 8;
-
+    private static final String START_WHITE_URL = "/api/file/";
     @Value("${white.urls}")
     private String whiteUrls;
     @Value("${bztc.redis.custom.ttl:3600}")
@@ -54,6 +54,9 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
             //2.获取url
             String url = request.getPath().value();
             url = url.substring(url.indexOf("/api"));
+            if (url.startsWith(START_WHITE_URL)) {
+                return chain.filter(exchange);
+            }
             //3.获取请求头
             HttpHeaders headers = request.getHeaders();
             //4.获取token

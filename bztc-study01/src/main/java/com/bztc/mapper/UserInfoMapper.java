@@ -3,6 +3,7 @@ package com.bztc.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bztc.domain.UserInfo;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -11,6 +12,7 @@ import org.apache.ibatis.annotations.Param;
  * @createDate 2022-10-14 16:45:30
  * @Entity com.bztc.domain.UserInfo
  */
+@Mapper
 public interface UserInfoMapper extends BaseMapper<UserInfo> {
     /**
      * 查询未关联角色的用户

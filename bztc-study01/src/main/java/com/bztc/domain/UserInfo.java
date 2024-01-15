@@ -13,7 +13,6 @@ import java.util.Date;
 /**
  * 用户信息表
  *
- * @author daishuming
  * @TableName user_info
  */
 @TableName(value = "user_info")
@@ -36,6 +35,21 @@ public class UserInfo implements Serializable {
      */
     @TableField(value = "password")
     private String password;
+    /**
+     * 手机号
+     */
+    @TableField(value = "phone")
+    private String phone;
+    /**
+     * 邮箱
+     */
+    @TableField(value = "email")
+    private String email;
+    /**
+     * 头像url
+     */
+    @TableField(value = "avatar_url")
+    private String avatarUrl;
     /**
      * 状态
      */
@@ -79,6 +93,9 @@ public class UserInfo implements Serializable {
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
                 && (this.getUserName() == null ? other.getUserName() == null : this.getUserName().equals(other.getUserName()))
                 && (this.getPassword() == null ? other.getPassword() == null : this.getPassword().equals(other.getPassword()))
+                && (this.getPhone() == null ? other.getPhone() == null : this.getPhone().equals(other.getPhone()))
+                && (this.getEmail() == null ? other.getEmail() == null : this.getEmail().equals(other.getEmail()))
+                && (this.getAvatarUrl() == null ? other.getAvatarUrl() == null : this.getAvatarUrl().equals(other.getAvatarUrl()))
                 && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
                 && (this.getInputUser() == null ? other.getInputUser() == null : this.getInputUser().equals(other.getInputUser()))
                 && (this.getInputTime() == null ? other.getInputTime() == null : this.getInputTime().equals(other.getInputTime()))
@@ -93,6 +110,9 @@ public class UserInfo implements Serializable {
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getUserName() == null) ? 0 : getUserName().hashCode());
         result = prime * result + ((getPassword() == null) ? 0 : getPassword().hashCode());
+        result = prime * result + ((getPhone() == null) ? 0 : getPhone().hashCode());
+        result = prime * result + ((getEmail() == null) ? 0 : getEmail().hashCode());
+        result = prime * result + ((getAvatarUrl() == null) ? 0 : getAvatarUrl().hashCode());
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
         result = prime * result + ((getInputUser() == null) ? 0 : getInputUser().hashCode());
         result = prime * result + ((getInputTime() == null) ? 0 : getInputTime().hashCode());
@@ -103,18 +123,23 @@ public class UserInfo implements Serializable {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() +
-                " [" +
-                "Hash = " + hashCode() +
-                ", id=" + id +
-                ", userName=" + userName +
-                ", password=" + password +
-                ", status=" + status +
-                ", inputUser=" + inputUser +
-                ", inputTime=" + inputTime +
-                ", updateUser=" + updateUser +
-                ", updateTime=" + updateTime +
-                ", serialVersionUID=" + serialVersionUID +
-                "]";
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", id=").append(id);
+        sb.append(", userName=").append(userName);
+        sb.append(", password=").append(password);
+        sb.append(", phone=").append(phone);
+        sb.append(", email=").append(email);
+        sb.append(", avatarUrl=").append(avatarUrl);
+        sb.append(", status=").append(status);
+        sb.append(", inputUser=").append(inputUser);
+        sb.append(", inputTime=").append(inputTime);
+        sb.append(", updateUser=").append(updateUser);
+        sb.append(", updateTime=").append(updateTime);
+        sb.append(", serialVersionUID=").append(serialVersionUID);
+        sb.append("]");
+        return sb.toString();
     }
 }

@@ -11,6 +11,8 @@ import java.time.format.DateTimeFormatter;
  */
 public class DateUtil {
     public static final String PATTERN_YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
+    public static final String PATTERN_YYYY_MM_DD = "yyyy-MM-dd";
+    public static final String PATTERN_YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
 
     /**
      * 字符串转日期
@@ -32,4 +34,21 @@ public class DateUtil {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern(PATTERN_YYYY_MM_DD_HH_MM_SS));
     }
 
+    /**
+     * 获取当前时间字符串
+     *
+     * @return 当前时间
+     */
+    public static String getNowTimeStr(String pattern) {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(pattern));
+    }
+
+    /**
+     * 获取当前时间
+     *
+     * @return 当前时间
+     */
+    public static String getLocalDateNowStr() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(PATTERN_YYYY_MM_DD));
+    }
 }

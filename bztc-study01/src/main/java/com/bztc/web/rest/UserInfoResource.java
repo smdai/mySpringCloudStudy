@@ -11,8 +11,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bztc.constant.Constants;
 import com.bztc.domain.UserInfo;
 import com.bztc.dto.ResultDto;
+import com.bztc.dto.UserInfoDto;
 import com.bztc.service.UserInfoService;
 import com.bztc.service.UserRoleService;
+import com.bztc.utils.UserUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -154,5 +156,22 @@ public class UserInfoResource {
         Assert.notNull(roleId, "roleId不能为空");
         Page<UserInfo> listPage = this.userInfoService.queryUserNoRoles(queryPage, roleId.toString());
         return new ResultDto<>(listPage.getTotal(), listPage.getRecords());
+    }
+
+    /**
+     * 根据用户id查询用户信息
+     *
+     * @return 用户
+     */
+    @GetMapping("/selectbyid")
+    public ResultDto<UserInfoDto> selectById() {
+        UserInfo userInfo = this.userInfoService.getById(UserUtil.getUserId());
+        UserInfoDto userInfoDto = new UserInfoDto();
+        userInfoDto.setId(userInfoDto.getId());
+        userInfoDto.setUserName(userInfo.getUserName());
+        userInfoDto.setPhone(userInfo.getPhone());
+        userInfoDto.setEmail(userInfo.getEmail());
+        userInfoDto.setAvatarUrl(userInfo.getAvatarUrl());
+        return new ResultDto<>(userInfoDto);
     }
 }

@@ -36,6 +36,11 @@ public class ResultDto<T> {
         this.data = data;
     }
 
+    public ResultDto(int code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
     public ResultDto(Long total, T data) {
         this.code = 200;
         this.message = "success";

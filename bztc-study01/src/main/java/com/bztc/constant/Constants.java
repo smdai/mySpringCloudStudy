@@ -46,10 +46,6 @@ public class Constants {
      **/
     public static final String RES_CONTR_TYPE_C = "C";
     /**
-     * 关联权限类型-全局编辑
-     **/
-    public static final String RES_CONTR_TYPE_E = "E";
-    /**
      * rabbitmq 方法类型-已创建好的queue
      */
     public static final String RABBIT_MQ_METHOD_TYPE = "created";
@@ -66,5 +62,9 @@ public class Constants {
      * 发送状态：2-失败
      */
     public static final String SEND_STATUS_2 = "2";
+    /**
+     * 文件路径前缀
+     */
+    public static final String IMAGE_PREFIX = "/bztc-study01/api/file";
 
 }
