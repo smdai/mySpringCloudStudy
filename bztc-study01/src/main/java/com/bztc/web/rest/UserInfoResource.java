@@ -167,7 +167,7 @@ public class UserInfoResource {
     public ResultDto<UserInfoDto> selectById() {
         UserInfo userInfo = this.userInfoService.getById(UserUtil.getUserId());
         UserInfoDto userInfoDto = new UserInfoDto();
-        userInfoDto.setId(userInfoDto.getId());
+        userInfoDto.setId(userInfo.getId());
         userInfoDto.setUserName(userInfo.getUserName());
         userInfoDto.setPhone(userInfo.getPhone());
         userInfoDto.setEmail(userInfo.getEmail());

@@ -2,18 +2,18 @@ package com.bztc.web.rest;
 
 import cn.hutool.core.util.RandomUtil;
 import com.bztc.constant.Constants;
+import com.bztc.domain.ImageInfo;
 import com.bztc.domain.UserInfo;
 import com.bztc.dto.ResultDto;
+import com.bztc.enumeration.FileBusinessTypeEnum;
+import com.bztc.service.ImageInfoService;
 import com.bztc.service.UserInfoService;
 import com.bztc.utils.DateUtil;
 import com.bztc.utils.UserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -36,8 +36,12 @@ public class FileResource {
 
     @Autowired
     UserInfoService userInfoService;
+    @Autowired
+    ImageInfoService imageInfoService;
     @Value("${bztc.avatar.dir.url}")
     private String avatarUrl;
+    @Value("${bztc.record.img.dir.url}")
+    private String recordImgUrl;
 
     /**
      * 上传头像
@@ -78,6 +82,50 @@ public class FileResource {
         } catch (IOException e) {
             log.error("上传头像失败。", e);
             return new ResultDto<>(400, "上传头像失败。");
+        }
+    }
+
+    /**
+     * 上传图片
+     *
+     * @return 用户
+     */
+    @PostMapping("/uploadrecordimg")
+    public ResultDto<String> uploadRecordImg(@RequestBody MultipartFile file) {
+        String dirUrl = recordImgUrl + UserUtil.getUserId() + "/";
+        //获取图片原文件名
+        log.info("记录图片上传开始。");
+        if (file.isEmpty()) {
+            return new ResultDto<>(400, "请选择文件。");
+        }
+        // 获取文件名和字节数组
+        String fileName = DateUtil.getNowTimeStr(DateUtil.PATTERN_YYYYMMDDHHMMSS) + "_" + RandomUtil.randomNumbers(10) + "_" + file.getOriginalFilename();
+        //路径入表
+        ImageInfo imageInfo = new ImageInfo();
+        imageInfo.setType(FileBusinessTypeEnum.IMAGE_RECORD.key);
+        imageInfo.setStatus(Constants.STATUS_EFFECT);
+        imageInfo.setInputUser(UserUtil.getUserId());
+        imageInfo.setUrl(Constants.IMAGE_PREFIX + dirUrl + fileName);
+        imageInfoService.save(imageInfo);
+        try {
+            // 使用 Paths.get 创建 Path 对象
+            Path directory = Paths.get(dirUrl);
+
+            // 使用 Files.createDirectories 创建目录，如果目录已存在则不会抛出异常
+            Files.createDirectories(directory);
+
+            byte[] bytes = file.getBytes();
+            // 创建目标文件
+            File targetFile = new File(dirUrl + fileName);
+
+            // 写入文件内容
+            try (FileOutputStream fos = new FileOutputStream(targetFile)) {
+                fos.write(bytes);
+            }
+            return new ResultDto<>(200, "上传记录图片成功。");
+        } catch (IOException e) {
+            log.error("上传头像失败。", e);
+            return new ResultDto<>(400, "上传记录图片失败。");
         }
     }
 }
