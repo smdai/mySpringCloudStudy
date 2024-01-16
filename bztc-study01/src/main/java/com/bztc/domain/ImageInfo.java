@@ -25,6 +25,11 @@ public class ImageInfo implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
+     * 图片名称
+     */
+    @TableField(value = "name")
+    private String name;
+    /**
      * 图片地址
      */
     @TableField(value = "url")
@@ -63,6 +68,7 @@ public class ImageInfo implements Serializable {
         }
         ImageInfo other = (ImageInfo) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
+                && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
                 && (this.getUrl() == null ? other.getUrl() == null : this.getUrl().equals(other.getUrl()))
                 && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
                 && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
@@ -75,6 +81,7 @@ public class ImageInfo implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+        result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
         result = prime * result + ((getUrl() == null) ? 0 : getUrl().hashCode());
         result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
@@ -90,6 +97,7 @@ public class ImageInfo implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
+        sb.append(", name=").append(name);
         sb.append(", url=").append(url);
         sb.append(", type=").append(type);
         sb.append(", status=").append(status);

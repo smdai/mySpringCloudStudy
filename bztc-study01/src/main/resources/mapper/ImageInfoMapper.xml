@@ -6,6 +6,7 @@
 
     <resultMap id="BaseResultMap" type="com.bztc.domain.ImageInfo">
         <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="url" column="url" jdbcType="VARCHAR"/>
         <result property="type" column="type" jdbcType="VARCHAR"/>
         <result property="status" column="status" jdbcType="VARCHAR"/>
@@ -14,7 +15,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,url,type,
+        id,name,url,type,
         status,input_user,input_time
     </sql>
 </mapper>

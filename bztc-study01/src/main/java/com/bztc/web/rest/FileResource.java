@@ -46,7 +46,7 @@ public class FileResource {
     /**
      * 上传头像
      *
-     * @return 用户
+     * @return
      */
     @PostMapping("/uploadavatarimg")
     public ResultDto<String> uploadAvatarImg(@RequestParam("file") MultipartFile file) {
@@ -86,12 +86,12 @@ public class FileResource {
     }
 
     /**
-     * 上传图片
+     * 上传记录图片
      *
-     * @return 用户
+     * @return
      */
     @PostMapping("/uploadrecordimg")
-    public ResultDto<String> uploadRecordImg(@RequestBody MultipartFile file) {
+    public ResultDto<Integer> uploadRecordImg(@RequestBody MultipartFile file) {
         String dirUrl = recordImgUrl + UserUtil.getUserId() + "/";
         //获取图片原文件名
         log.info("记录图片上传开始。");
@@ -102,6 +102,7 @@ public class FileResource {
         String fileName = DateUtil.getNowTimeStr(DateUtil.PATTERN_YYYYMMDDHHMMSS) + "_" + RandomUtil.randomNumbers(10) + "_" + file.getOriginalFilename();
         //路径入表
         ImageInfo imageInfo = new ImageInfo();
+        imageInfo.setName(fileName);
         imageInfo.setType(FileBusinessTypeEnum.IMAGE_RECORD.key);
         imageInfo.setStatus(Constants.STATUS_EFFECT);
         imageInfo.setInputUser(UserUtil.getUserId());
@@ -122,10 +123,12 @@ public class FileResource {
             try (FileOutputStream fos = new FileOutputStream(targetFile)) {
                 fos.write(bytes);
             }
-            return new ResultDto<>(200, "上传记录图片成功。");
+            return new ResultDto<>(200, "上传记录图片成功。", imageInfo.getId());
         } catch (IOException e) {
             log.error("上传头像失败。", e);
             return new ResultDto<>(400, "上传记录图片失败。");
         }
     }
+
+
 }

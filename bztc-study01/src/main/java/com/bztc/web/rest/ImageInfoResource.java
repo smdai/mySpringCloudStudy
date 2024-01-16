@@ -1,6 +1,7 @@
 package com.bztc.web.rest;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -12,11 +13,10 @@ import com.bztc.enumeration.FileBusinessTypeEnum;
 import com.bztc.service.ImageInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +32,8 @@ import java.util.stream.Collectors;
 public class ImageInfoResource {
     @Autowired
     ImageInfoService imageInfoService;
+    @Value("${bztc.recycle.dir.url}")
+    private String recycleUrl;
 
     /**
      * 分页查询图片记录
@@ -58,4 +60,19 @@ public class ImageInfoResource {
         return new ResultDto<>(websiteListPage.getTotal(), urls);
     }
 
+    /**
+     * 删除记录图片
+     *
+     * @return
+     */
+    @PostMapping("/deleterecordimg")
+    public ResultDto<Boolean> deleteRecordImg(@RequestBody Integer id) {
+        //查询原路径
+        ImageInfo imageInfo = imageInfoService.getById(id);
+        String url = imageInfo.getUrl();
+        String filePath = url.substring(Constants.IMAGE_PREFIX.length());
+        FileUtil.mkdir(recycleUrl);
+        FileUtil.move(new File(filePath), new File(recycleUrl + imageInfo.getName()), true);
+        return new ResultDto<>(imageInfoService.removeById(id));
+    }
 }
