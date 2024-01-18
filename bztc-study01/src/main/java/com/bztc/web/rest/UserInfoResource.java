@@ -9,11 +9,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bztc.constant.Constants;
+import com.bztc.constant.RedisConstants;
 import com.bztc.domain.UserInfo;
+import com.bztc.dto.ChangePasswordDto;
+import com.bztc.dto.ChangePhoneDto;
 import com.bztc.dto.ResultDto;
 import com.bztc.dto.UserInfoDto;
 import com.bztc.service.UserInfoService;
 import com.bztc.service.UserRoleService;
+import com.bztc.utils.RedisUtil;
 import com.bztc.utils.UserUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author daism
@@ -36,6 +41,8 @@ public class UserInfoResource {
     private UserInfoService userInfoService;
     @Autowired
     private UserRoleService userRoleService;
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 查询用户列表
@@ -173,5 +180,63 @@ public class UserInfoResource {
         userInfoDto.setEmail(userInfo.getEmail());
         userInfoDto.setAvatarUrl(userInfo.getAvatarUrl());
         return new ResultDto<>(userInfoDto);
+    }
+
+    /**
+     * 更新手机号
+     *
+     * @param changePhoneDto
+     * @return
+     */
+    @PostMapping("/updatephone")
+    public ResultDto<String> updatePhone(@RequestBody ChangePhoneDto changePhoneDto) {
+        //从redis获取手机验证码
+        Object phoneCodeObj = redisUtil.get(RedisConstants.USERINFO_PHONECODE + changePhoneDto.getPhone());
+        if (Objects.isNull(phoneCodeObj)) {
+            return new ResultDto<>(400, "验证码错误。");
+        }
+        if (!phoneCodeObj.toString().equals(changePhoneDto.getPhoneCode())) {
+            return new ResultDto<>(400, "验证码不正确。");
+        }
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(Integer.parseInt(Objects.requireNonNull(UserUtil.getUserId())));
+        userInfo.setPhone(changePhoneDto.getPhone());
+        userInfo.setUpdateUser(UserUtil.getUserId());
+        userInfoService.updateById(userInfo);
+        return new ResultDto<>(changePhoneDto.getPhone());
+    }
+
+    /**
+     * 修改密码
+     *
+     * @param changePasswordDto
+     * @return
+     */
+    @PostMapping("/changepassword")
+    public ResultDto<String> changePassword(@RequestBody ChangePasswordDto changePasswordDto) {
+        //获取原密码
+        UserInfo userInfo = userInfoService.getById(UserUtil.getUserId());
+        if (userInfo.getPassword().equals(changePasswordDto.getOldPassword())) {
+            userInfo.setPassword(changePasswordDto.getNewPassword());
+            userInfoService.updateById(userInfo);
+            return new ResultDto<>(200, "修改成功。请重新登录。");
+        } else {
+            return new ResultDto<>(400, "原密码错误，请重试。");
+        }
+    }
+
+    /**
+     * 管理员修改密码
+     *
+     * @param changePasswordDto
+     * @return
+     */
+    @PostMapping("/changepasswordbyadmin")
+    public ResultDto<String> changePasswordByAdmin(@RequestBody ChangePasswordDto changePasswordDto) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(Integer.parseInt(changePasswordDto.getUserId()));
+        userInfo.setPassword(changePasswordDto.getNewPassword());
+        userInfoService.updateById(userInfo);
+        return new ResultDto<>("修改成功。");
     }
 }

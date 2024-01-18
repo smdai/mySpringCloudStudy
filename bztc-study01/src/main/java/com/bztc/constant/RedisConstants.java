@@ -10,4 +10,5 @@ public class RedisConstants {
     public static final String SESSION_USERID_KEY = "session:userid";
     public static final String SESSION_AUTH_CONTR_KEY = "session:auth-contr";
     public static final String CODE_LIBRARY_ITEM_KEY = "codeLibrary:item";
+    public static final String USERINFO_PHONECODE = "userInfo:phoneCode:";
 }

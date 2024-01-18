@@ -1,10 +1,14 @@
 package com.bztc.web.rest;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bztc.constant.RedisConstants;
 import com.bztc.domain.MessageRoleRel;
 import com.bztc.domain.MessageUserRel;
 import com.bztc.domain.PersonalMessage;
@@ -12,13 +16,16 @@ import com.bztc.dto.ResultDto;
 import com.bztc.service.MessageRoleRelService;
 import com.bztc.service.MessageUserRelService;
 import com.bztc.service.PersonalMessageService;
+import com.bztc.utils.RedisUtil;
 import com.bztc.utils.UserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author daism
@@ -35,6 +42,8 @@ public class PersonalMessageResource {
     MessageRoleRelService messageRoleRelService;
     @Autowired
     MessageUserRelService messageUserRelService;
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 查询个人消息列表
@@ -147,5 +156,36 @@ public class PersonalMessageResource {
         this.messageUserRelService.remove(messageUserRelQueryWrapper);
         resultDto.setCode(200);
         return resultDto;
+    }
+
+    /**
+     * 获取手机验证码
+     *
+     * @param phone
+     * @return
+     */
+    @PostMapping("/getphonecode")
+    public ResultDto<String> getPhoneCode(@RequestBody String phone) {
+        String phoneCode = RandomUtil.randomNumbers(6);
+        redisUtil.set(RedisConstants.USERINFO_PHONECODE + phone, phoneCode, 600);
+        return new ResultDto<>(phoneCode);
+    }
+
+    /**
+     * 获取每日一句
+     *
+     * @return
+     */
+    @GetMapping("/getcibasentence")
+    public ResultDto<String> getCiBaSentence() {
+        try {
+            String url = "https://open.iciba.com/dsapi/?date=" + DateUtil.format(new Date(), "yyyy-MM-dd");
+            String response = HttpUtil.get(url);
+            Map resMap = JSONUtil.toBean(response, Map.class);
+            return new ResultDto<>(resMap.get("note").toString());
+        } catch (Exception e) {
+            log.error("获取每日一句失败。", e);
+            return new ResultDto<>(400, "获取每日一句失败。");
+        }
     }
 }
