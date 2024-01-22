@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bztc.constant.Constants;
 import com.bztc.constant.RedisConstants;
 import com.bztc.domain.UserInfo;
+import com.bztc.domain.UserRole;
 import com.bztc.dto.ChangePasswordDto;
 import com.bztc.dto.ChangePhoneDto;
 import com.bztc.dto.ResultDto;
@@ -22,6 +23,7 @@ import com.bztc.utils.UserUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -238,5 +240,39 @@ public class UserInfoResource {
         userInfo.setPassword(changePasswordDto.getNewPassword());
         userInfoService.updateById(userInfo);
         return new ResultDto<>("修改成功。");
+    }
+
+    /**
+     * 注册
+     *
+     * @param userInfo
+     * @return
+     */
+    @PostMapping("/register")
+    public ResultDto<String> register(@RequestBody UserInfo userInfo) {
+        Assert.notNull(userInfo, "注册对象不能为空");
+        Assert.notBlank(userInfo.getUserName(), "用户名不能为空");
+        Assert.notBlank(userInfo.getPassword(), "密码不能为空");
+        userInfo.setStatus(Constants.STATUS_EFFECT);
+        userInfo.setInputUser(Constants.ADMIN);
+        userInfo.setUpdateUser(Constants.ADMIN);
+        try {
+            userInfoService.save(userInfo);
+            //赋予普通用户权限
+            UserRole userRole = new UserRole();
+            userRole.setUserId(userInfo.getId());
+            userRole.setRoleId(Constants.COMMON_ROLE_ID);
+            userRole.setStatus(Constants.STATUS_EFFECT);
+            userRole.setInputUser(Constants.ADMIN);
+            userRole.setUpdateUser(Constants.ADMIN);
+            userRoleService.save(userRole);
+            return new ResultDto<>("success");
+        } catch (DuplicateKeyException e) {
+            logger.error("用户名：【{}】已被注册，请更换其他用户名。", userInfo.getUserName(), e);
+            return new ResultDto<>(400, "用户名：【" + userInfo.getUserName() + "】已被注册，请更换其他用户名。");
+        } catch (Exception e) {
+            logger.error("注册异常。", e);
+            return new ResultDto<>(400, "注册异常，请重试。");
+        }
     }
 }

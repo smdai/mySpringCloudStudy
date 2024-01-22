@@ -53,6 +53,10 @@ public class Constants {
      * 超级管理员角色id
      */
     public static final Integer ADMIN_ROLE_ID = 1;
+    /**
+     * 普通角色id
+     */
+    public static final Integer COMMON_ROLE_ID = 2;
 
     /**
      * 发送状态：1-成功
