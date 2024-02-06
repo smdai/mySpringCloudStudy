@@ -54,6 +54,11 @@ public class ImageInfo implements Serializable {
      */
     @TableField(value = "input_time")
     private Date inputTime;
+    /**
+     * 图片索引地址
+     */
+    @TableField(value = "url_index")
+    private String urlIndex;
 
     @Override
     public boolean equals(Object that) {
@@ -73,7 +78,8 @@ public class ImageInfo implements Serializable {
                 && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
                 && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
                 && (this.getInputUser() == null ? other.getInputUser() == null : this.getInputUser().equals(other.getInputUser()))
-                && (this.getInputTime() == null ? other.getInputTime() == null : this.getInputTime().equals(other.getInputTime()));
+                && (this.getInputTime() == null ? other.getInputTime() == null : this.getInputTime().equals(other.getInputTime()))
+                && (this.getUrlIndex() == null ? other.getUrlIndex() == null : this.getUrlIndex().equals(other.getUrlIndex()));
     }
 
     @Override
@@ -87,6 +93,7 @@ public class ImageInfo implements Serializable {
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
         result = prime * result + ((getInputUser() == null) ? 0 : getInputUser().hashCode());
         result = prime * result + ((getInputTime() == null) ? 0 : getInputTime().hashCode());
+        result = prime * result + ((getUrlIndex() == null) ? 0 : getUrlIndex().hashCode());
         return result;
     }
 
@@ -103,6 +110,7 @@ public class ImageInfo implements Serializable {
         sb.append(", status=").append(status);
         sb.append(", inputUser=").append(inputUser);
         sb.append(", inputTime=").append(inputTime);
+        sb.append(", urlIndex=").append(urlIndex);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

@@ -1,5 +1,7 @@
 package com.bztc.web.rest;
 
+import cn.hutool.core.img.Img;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.bztc.constant.Constants;
 import com.bztc.domain.ImageInfo;
@@ -42,6 +44,9 @@ public class FileResource {
     private String avatarUrl;
     @Value("${bztc.record.img.dir.url}")
     private String recordImgUrl;
+
+    @Value("${bztc.record_index.img.dir.url}")
+    private String recordIndexImgUrl;
 
     /**
      * 上传头像
@@ -93,6 +98,7 @@ public class FileResource {
     @PostMapping("/uploadrecordimg")
     public ResultDto<Integer> uploadRecordImg(@RequestBody MultipartFile file) {
         String dirUrl = recordImgUrl + UserUtil.getUserId() + "/";
+        String dirIndexUrl = recordIndexImgUrl + UserUtil.getUserId() + "/";
         //获取图片原文件名
         log.info("记录图片上传开始。");
         if (file.isEmpty()) {
@@ -100,6 +106,7 @@ public class FileResource {
         }
         // 获取文件名和字节数组
         String fileName = DateUtil.getNowTimeStr(DateUtil.PATTERN_YYYYMMDDHHMMSS) + "_" + RandomUtil.randomNumbers(10) + "_" + file.getOriginalFilename();
+        String fileIndexName = fileName + ".jpg";
         //路径入表
         ImageInfo imageInfo = new ImageInfo();
         imageInfo.setName(fileName);
@@ -107,6 +114,7 @@ public class FileResource {
         imageInfo.setStatus(Constants.STATUS_EFFECT);
         imageInfo.setInputUser(UserUtil.getUserId());
         imageInfo.setUrl(Constants.IMAGE_PREFIX + dirUrl + fileName);
+        imageInfo.setUrlIndex(Constants.IMAGE_PREFIX + dirIndexUrl + fileIndexName);
         imageInfoService.save(imageInfo);
         try {
             // 使用 Paths.get 创建 Path 对象
@@ -123,12 +131,21 @@ public class FileResource {
             try (FileOutputStream fos = new FileOutputStream(targetFile)) {
                 fos.write(bytes);
             }
+            // 使用 Paths.get 创建 Path 对象
+            Path directoryIndex = Paths.get(dirIndexUrl);
+
+            // 使用 Files.createDirectories 创建目录，如果目录已存在则不会抛出异常
+            Files.createDirectories(directoryIndex);
+
+            Img.from(targetFile)
+                    .setQuality(0.1)
+                    .write(FileUtil.file(dirIndexUrl + fileIndexName));
+
             return new ResultDto<>(200, "上传记录图片成功。", imageInfo.getId());
         } catch (IOException e) {
-            log.error("上传头像失败。", e);
+            log.error("上传图片失败。", e);
             return new ResultDto<>(400, "上传记录图片失败。");
         }
+
     }
-
-
 }

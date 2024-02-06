@@ -139,7 +139,11 @@
             <artifactId>spring-boot-starter-amqp</artifactId>
             <version>${rabbit-mq-amqp.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.neo4j.driver</groupId>
+            <artifactId>neo4j-java-driver</artifactId>
+            <version>5.6.0</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>bztc-study01-${project.version}</finalName>

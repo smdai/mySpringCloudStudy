@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bztc.constant.Constants;
 import com.bztc.domain.ImageInfo;
+import com.bztc.dto.ImageUrlDto;
 import com.bztc.dto.ResultDto;
 import com.bztc.enumeration.FileBusinessTypeEnum;
 import com.bztc.service.ImageInfoService;
@@ -41,7 +42,7 @@ public class ImageInfoResource {
      * @return 用户
      */
     @GetMapping("/queryrecordimgbypage")
-    public ResultDto<List<String>> queryRecordImgByPage(@RequestParam("param") String params) {
+    public ResultDto<List<ImageUrlDto>> queryRecordImgByPage(@RequestParam("param") String params) {
         log.info("分页查询入参：{}", params);
         JSONObject jsonObject = JSONUtil.parseObj(params);
 
@@ -53,11 +54,16 @@ public class ImageInfoResource {
         //1-生效，0-失效
         queryWrapper.orderByDesc("id");
         Page<ImageInfo> websiteListPage = this.imageInfoService.page(queryPage, queryWrapper);
-        List<String> urls = new ArrayList<>();
+        List<ImageUrlDto> imageUrlDtos = new ArrayList<>();
         if (CollectionUtil.isNotEmpty(websiteListPage.getRecords())) {
-            urls = websiteListPage.getRecords().stream().map(ImageInfo::getUrl).collect(Collectors.toList());
+            imageUrlDtos = websiteListPage.getRecords().stream().map(it -> {
+                ImageUrlDto imageUrlDto = new ImageUrlDto();
+                imageUrlDto.setUrl(it.getUrl());
+                imageUrlDto.setUrlIndex(it.getUrlIndex());
+                return imageUrlDto;
+            }).collect(Collectors.toList());
         }
-        return new ResultDto<>(websiteListPage.getTotal(), urls);
+        return new ResultDto<>(websiteListPage.getTotal(), imageUrlDtos);
     }
 
     /**
@@ -73,6 +79,7 @@ public class ImageInfoResource {
         String filePath = url.substring(Constants.IMAGE_PREFIX.length());
         FileUtil.mkdir(recycleUrl);
         FileUtil.move(new File(filePath), new File(recycleUrl + imageInfo.getName()), true);
+        FileUtil.del(new File(imageInfo.getUrlIndex().substring(Constants.IMAGE_PREFIX.length())));
         return new ResultDto<>(imageInfoService.removeById(id));
     }
 }
