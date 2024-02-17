@@ -16,12 +16,13 @@
         <result property="phone" column="phone" jdbcType="VARCHAR"/>
         <result property="email" column="email" jdbcType="VARCHAR"/>
         <result property="avatarUrl" column="avatar_url" jdbcType="VARCHAR"/>
+        <result property="openid" column="openid" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,user_name,password,phone,email,avatar_url
         status,input_user,input_time,
-        update_user,update_time
+        update_user,update_time,openid
     </sql>
     <select id="queryUserNoRoles" parameterType="java.lang.String" resultMap="BaseResultMap">
         select ui.id, ui.user_name

@@ -39,4 +39,12 @@ public class SessionInfoDto {
      * 登录状态
      */
     private int loginStatus;
+    /**
+     * 用户名
+     */
+    private String userName;
+    /**
+     * 头像url
+     */
+    private String avatarUrl;
 }

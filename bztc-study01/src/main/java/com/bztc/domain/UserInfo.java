@@ -77,6 +77,11 @@ public class UserInfo implements Serializable {
     @TableField(value = "update_time")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date updateTime;
+    /**
+     * 微信小程序openid
+     */
+    @TableField(value = "openid")
+    private String openid;
 
     @Override
     public boolean equals(Object that) {
@@ -100,7 +105,8 @@ public class UserInfo implements Serializable {
                 && (this.getInputUser() == null ? other.getInputUser() == null : this.getInputUser().equals(other.getInputUser()))
                 && (this.getInputTime() == null ? other.getInputTime() == null : this.getInputTime().equals(other.getInputTime()))
                 && (this.getUpdateUser() == null ? other.getUpdateUser() == null : this.getUpdateUser().equals(other.getUpdateUser()))
-                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
+                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
+                && (this.getOpenid() == null ? other.getOpenid() == null : this.getOpenid().equals(other.getOpenid()));
     }
 
     @Override
@@ -118,6 +124,7 @@ public class UserInfo implements Serializable {
         result = prime * result + ((getInputTime() == null) ? 0 : getInputTime().hashCode());
         result = prime * result + ((getUpdateUser() == null) ? 0 : getUpdateUser().hashCode());
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
+        result = prime * result + ((getOpenid() == null) ? 0 : getOpenid().hashCode());
         return result;
     }
 
@@ -138,6 +145,7 @@ public class UserInfo implements Serializable {
         sb.append(", inputTime=").append(inputTime);
         sb.append(", updateUser=").append(updateUser);
         sb.append(", updateTime=").append(updateTime);
+        sb.append(", openid=").append(openid);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
