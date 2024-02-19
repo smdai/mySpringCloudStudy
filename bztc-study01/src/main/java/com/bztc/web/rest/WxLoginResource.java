@@ -101,7 +101,7 @@ public class WxLoginResource {
             sessionInfoDto.setToken(token);
             sessionInfoDto.setUserId(userInfo.getId());
             sessionInfoDto.setLoginStatus(LoginEnum.SUCCESS.key);
-            sessionInfoDto.setUserName(userInfo.getUserName());
+            sessionInfoDto.setUserName(userInfo.getUserName().equals(userInfo.getOpenid()) ? userInfo.getUserName().substring(0, 8) : userInfo.getUserName());
             sessionInfoDto.setAvatarUrl(userInfo.getAvatarUrl());
             return new ResultDto<>(sessionInfoDto);
         } catch (Exception e) {

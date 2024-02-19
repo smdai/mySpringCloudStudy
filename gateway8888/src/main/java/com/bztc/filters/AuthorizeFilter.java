@@ -86,20 +86,20 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
                 Object o = redisUtil.get(RedisConstants.SESSION_TOKEN_KEY + ":" + userId);
                 if (Objects.isNull(o)) {
                     logger.error("userid[{}],redis token non", userId);
-                    exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                    exchange.getResponse().setStatusCode(HttpStatus.NOT_ACCEPTABLE);
                     return exchange.getResponse().setComplete();
                 }
                 String redisToken = (String) o;
                 if (!redisToken.equals(token)) {
                     logger.error("userid[{}],token unconformity", userId);
-                    exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                    exchange.getResponse().setStatusCode(HttpStatus.NOT_ACCEPTABLE);
                     return exchange.getResponse().setComplete();
                 }
                 //从redis中获取控制点
                 Object sessionObject = redisUtil.get(RedisConstants.SESSION_AUTH_CONTR_KEY + ":" + userId);
                 if (Objects.isNull(sessionObject)) {
                     logger.error("userid[{}],session null fail", userId);
-                    exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                    exchange.getResponse().setStatusCode(HttpStatus.NOT_ACCEPTABLE);
                     return exchange.getResponse().setComplete();
                 }
                 SessionInfoDto sessionInfoDto = JSONUtil.toBean(sessionObject.toString(), SessionInfoDto.class);

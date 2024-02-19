@@ -228,6 +228,29 @@ public class UserInfoResource {
     }
 
     /**
+     * 修改用户名
+     *
+     * @param changeUserInfo
+     * @return
+     */
+    @PostMapping("/changeusername")
+    public ResultDto<String> changeUserName(@RequestBody UserInfo changeUserInfo) {
+        Assert.notBlank(changeUserInfo.getUserName(), "用户名不能为空");
+        //校验用户名是否被使用
+        QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_name", changeUserInfo.getUserName());
+        UserInfo one = userInfoService.getOne(queryWrapper);
+        if (Objects.nonNull(one)) {
+            return new ResultDto<>(400, "该用户名已被使用。");
+        }
+        //获取原密码
+        UserInfo userInfo = userInfoService.getById(UserUtil.getUserId());
+        userInfo.setUserName(changeUserInfo.getUserName());
+        userInfoService.updateById(userInfo);
+        return new ResultDto<>(200, "修改成功。");
+    }
+
+    /**
      * 管理员修改密码
      *
      * @param changePasswordDto
