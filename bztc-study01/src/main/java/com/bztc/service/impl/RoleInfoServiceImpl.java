@@ -7,6 +7,8 @@ import com.bztc.mapper.RoleInfoMapper;
 import com.bztc.service.RoleInfoService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author daishuming
  * @description 针对表【role_info(角色信息表)】的数据库操作Service实现
@@ -26,6 +28,17 @@ public class RoleInfoServiceImpl extends ServiceImpl<RoleInfoMapper, RoleInfo>
     @Override
     public Page<RoleInfo> queryUserNoRoles(Page<RoleInfo> rowPage, String userId) {
         return this.baseMapper.queryUserNoRoles(rowPage, userId);
+    }
+
+    /**
+     * 查询用户所拥有的角色
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<RoleInfo> queryUserRoleList(String userId) {
+        return this.baseMapper.queryUserRoleList(userId);
     }
 }
 

@@ -28,4 +28,12 @@
                          where role.role_id = userrole.role_id
                            and userrole.user_id = #{userId})
     </select>
+    <select id="queryUserRoleList" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select ri.*
+        from user_role ur,
+             role_info ri
+        where ur.role_id = ri.role_id
+          and ur.user_id = #{userId}
+    </select>
+
 </mapper>

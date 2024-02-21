@@ -51,6 +51,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         sessionInfoDto.setToken(token);
         sessionInfoDto.setUserId(userInfoData.getId());
         sessionInfoDto.setLoginStatus(LoginEnum.SUCCESS.key);
+        sessionInfoDto.setUserName(userInfoData.getUserName());
+        sessionInfoDto.setAvatarUrl(userInfoData.getAvatarUrl());
         return sessionInfoDto;
     }
 

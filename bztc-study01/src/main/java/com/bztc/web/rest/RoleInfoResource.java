@@ -15,6 +15,7 @@ import com.bztc.dto.ResultDto;
 import com.bztc.service.AuthResContrService;
 import com.bztc.service.RoleInfoService;
 import com.bztc.service.UserRoleService;
+import com.bztc.utils.UserUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,5 +164,16 @@ public class RoleInfoResource {
         }
         resultDto.setCode(200);
         return resultDto;
+    }
+
+    /**
+     * 查询用户所拥有的角色
+     *
+     * @return
+     */
+    @GetMapping("/queryuserrolelist")
+    public ResultDto<List<RoleInfo>> queryUserRoleList() {
+        String userId = UserUtil.getUserId();
+        return new ResultDto<>(this.roleInfoService.queryUserRoleList(userId));
     }
 }

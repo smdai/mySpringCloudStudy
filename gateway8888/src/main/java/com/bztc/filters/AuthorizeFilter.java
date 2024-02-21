@@ -64,7 +64,6 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
             //5.获取userId
             String userId = headers.getFirst("userId");
             logger.info("requestUrl:{},userId:{},authorization:{}", url, userId, authorization);
-            logger.info("whiteUrls:{}", whiteUrls);
             List<String> whiteUrlList = new ArrayList<>();
             if (StringUtils.isNotBlank(whiteUrls)) {
                 whiteUrlList = Arrays.asList(whiteUrls.split(","));

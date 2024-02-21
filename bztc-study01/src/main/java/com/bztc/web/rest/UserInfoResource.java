@@ -23,6 +23,7 @@ import com.bztc.utils.UserUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,8 @@ public class UserInfoResource {
     private UserRoleService userRoleService;
     @Autowired
     private RedisUtil redisUtil;
+    @Value("${bztc.defult.avatar.path}")
+    private String defultAvatarPath;
 
     /**
      * 查询用户列表
@@ -279,6 +282,7 @@ public class UserInfoResource {
         userInfo.setStatus(Constants.STATUS_EFFECT);
         userInfo.setInputUser(Constants.ADMIN);
         userInfo.setUpdateUser(Constants.ADMIN);
+        userInfo.setAvatarUrl(Constants.IMAGE_PREFIX + defultAvatarPath);
         try {
             userInfoService.save(userInfo);
             //赋予普通用户权限

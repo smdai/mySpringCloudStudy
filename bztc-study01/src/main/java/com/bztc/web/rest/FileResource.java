@@ -64,9 +64,10 @@ public class FileResource {
         // 获取文件名和字节数组
         String fileName = DateUtil.getNowTimeStr(DateUtil.PATTERN_YYYYMMDDHHMMSS) + "_" + RandomUtil.randomNumbers(10) + "_" + file.getOriginalFilename();
         //路径入表
+        String avatarUrl = Constants.IMAGE_PREFIX + dirUrl + fileName;
         UserInfo userInfo = new UserInfo();
         userInfo.setId(Integer.parseInt(Objects.requireNonNull(UserUtil.getUserId())));
-        userInfo.setAvatarUrl(Constants.IMAGE_PREFIX + dirUrl + fileName);
+        userInfo.setAvatarUrl(avatarUrl);
         userInfoService.updateById(userInfo);
         try {
             // 使用 Paths.get 创建 Path 对象
@@ -83,7 +84,7 @@ public class FileResource {
             try (FileOutputStream fos = new FileOutputStream(targetFile)) {
                 fos.write(bytes);
             }
-            return new ResultDto<>(200, "上传头像成功。");
+            return new ResultDto<>(200, "上传头像成功。", avatarUrl);
         } catch (IOException e) {
             log.error("上传头像失败。", e);
             return new ResultDto<>(400, "上传头像失败。");

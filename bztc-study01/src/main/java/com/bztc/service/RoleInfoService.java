@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.bztc.domain.RoleInfo;
 
+import java.util.List;
+
 /**
  * @author daishuming
  * @description 针对表【role_info(角色信息表)】的数据库操作Service
@@ -18,4 +20,12 @@ public interface RoleInfoService extends IService<RoleInfo> {
      * @return
      */
     Page<RoleInfo> queryUserNoRoles(Page<RoleInfo> rowPage, String userId);
+
+    /**
+     * 查询用户所拥有的角色
+     *
+     * @param userId
+     * @return
+     */
+    List<RoleInfo> queryUserRoleList(String userId);
 }
