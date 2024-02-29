@@ -10,7 +10,6 @@ import com.bztc.constant.Constants;
 import com.bztc.domain.ImageInfo;
 import com.bztc.dto.ImageUrlDto;
 import com.bztc.dto.ResultDto;
-import com.bztc.enumeration.FileBusinessTypeEnum;
 import com.bztc.service.ImageInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +48,7 @@ public class ImageInfoResource {
         Page<ImageInfo> queryPage = new Page<>((int) jsonObject.get("pageIndex"), (int) jsonObject.get("pageSize"));
 
         QueryWrapper<ImageInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("type", FileBusinessTypeEnum.IMAGE_RECORD.key);
+        queryWrapper.eq("type", String.valueOf(jsonObject.get("type")));
         queryWrapper.eq("status", Constants.STATUS_EFFECT);
         //1-生效，0-失效
         queryWrapper.orderByDesc("id");

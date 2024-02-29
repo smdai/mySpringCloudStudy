@@ -7,7 +7,6 @@ import com.bztc.constant.Constants;
 import com.bztc.domain.ImageInfo;
 import com.bztc.domain.UserInfo;
 import com.bztc.dto.ResultDto;
-import com.bztc.enumeration.FileBusinessTypeEnum;
 import com.bztc.service.ImageInfoService;
 import com.bztc.service.UserInfoService;
 import com.bztc.utils.DateUtil;
@@ -15,7 +14,10 @@ import com.bztc.utils.UserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -97,7 +99,8 @@ public class FileResource {
      * @return
      */
     @PostMapping("/uploadrecordimg")
-    public ResultDto<Integer> uploadRecordImg(@RequestBody MultipartFile file) {
+    public ResultDto<Integer> uploadRecordImg(@RequestParam("file") MultipartFile file,
+                                              @RequestParam("type") String type) {
         String dirUrl = recordImgUrl + UserUtil.getUserId() + "/";
         String dirIndexUrl = recordIndexImgUrl + UserUtil.getUserId() + "/";
         //获取图片原文件名
@@ -111,7 +114,7 @@ public class FileResource {
         //路径入表
         ImageInfo imageInfo = new ImageInfo();
         imageInfo.setName(fileName);
-        imageInfo.setType(FileBusinessTypeEnum.IMAGE_RECORD.key);
+        imageInfo.setType(type);
         imageInfo.setStatus(Constants.STATUS_EFFECT);
         imageInfo.setInputUser(UserUtil.getUserId());
         imageInfo.setUrl(Constants.IMAGE_PREFIX + dirUrl + fileName);
