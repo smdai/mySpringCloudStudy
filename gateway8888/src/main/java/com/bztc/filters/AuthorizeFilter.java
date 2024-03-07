@@ -40,9 +40,10 @@ import java.util.Objects;
 public class AuthorizeFilter implements GlobalFilter, Ordered {
     private static final Logger logger = LoggerFactory.getLogger(AuthorizeFilter.class);
     private static final int AUTHORIZATION_CHECK_LENGTH = 8;
-    private static final String START_WHITE_URL = "/api/file/";
     @Value("${white.urls}")
     private String whiteUrls;
+    @Value("${white.startUrls}")
+    private String startUrls;
     @Value("${bztc.redis.custom.ttl:3600}")
     private int customTtl;
 
@@ -54,8 +55,15 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
             //2.获取url
             String url = request.getPath().value();
             url = url.substring(url.indexOf("/api"));
-            if (url.startsWith(START_WHITE_URL)) {
-                return chain.filter(exchange);
+            //校验是否白名单url前缀
+            List<String> whiteStartUrls;
+            if (StringUtils.isNotBlank(startUrls)) {
+                whiteStartUrls = Arrays.asList(startUrls.split(","));
+                for (String startUrl : whiteStartUrls) {
+                    if (url.startsWith(startUrl)) {
+                        return chain.filter(exchange);
+                    }
+                }
             }
             //3.获取请求头
             HttpHeaders headers = request.getHeaders();
