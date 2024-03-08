@@ -19,6 +19,7 @@ import com.bztc.dto.ResultDto;
 import com.bztc.dto.SessionInfoDto;
 import com.bztc.dto.WxBindDto;
 import com.bztc.enumeration.LoginEnum;
+import com.bztc.enumeration.OutApiHttpUrlEnum;
 import com.bztc.service.SessionService;
 import com.bztc.service.UserInfoService;
 import com.bztc.service.UserRoleService;
@@ -83,7 +84,7 @@ public class WxLoginResource {
         SessionInfoDto sessionInfoDto = new SessionInfoDto();
         String openid = "";
         HttpRequest get = HttpUtil.createGet(
-                "https://api.weixin.qq.com/sns/jscode2session?appid=" + appId + "&secret=" + appSecret + "&js_code=" + code + "&grant_type=authorization_code");
+                String.format(OutApiHttpUrlEnum.WEIXIN_JSCODE2_SESSION.url, appId, appSecret, code));
         try (HttpResponse response = get.execute()) {
             String body = response.body();
             Jscode2sessionDto jscode2sessionDto = JSONUtil.toBean(body, Jscode2sessionDto.class);
@@ -194,7 +195,7 @@ public class WxLoginResource {
         int accountUserId = userNameUserInfo.getId();
         String openid = "";
         HttpRequest get = HttpUtil.createGet(
-                "https://api.weixin.qq.com/sns/jscode2session?appid=" + appId + "&secret=" + appSecret + "&js_code=" + wxBindDto.getCode() + "&grant_type=authorization_code");
+                String.format(OutApiHttpUrlEnum.WEIXIN_JSCODE2_SESSION.url, appId, appSecret, wxBindDto.getCode()));
         try (HttpResponse response = get.execute()) {
             String body = response.body();
             Jscode2sessionDto jscode2sessionDto = JSONUtil.toBean(body, Jscode2sessionDto.class);
@@ -254,7 +255,7 @@ public class WxLoginResource {
             accessToken = String.valueOf(accessTokenObject);
         } else {
             HttpRequest get = HttpUtil.createGet(
-                    "https://api.weixin.qq.com/cgi-bin/token?appid=" + appId + "&secret=" + appSecret + "&grant_type=client_credential");
+                    String.format(OutApiHttpUrlEnum.WEIXIN_GET_ACCESS_TOKEN.url, appId, appSecret));
             try (HttpResponse response = get.execute()) {
                 String body = response.body();
                 log.info("body:{}", body);
@@ -272,7 +273,7 @@ public class WxLoginResource {
         postBody.put("page", toPageUrl);
         postBody.put("env_version", envVersion);
         byte[] bytes;
-        try (HttpResponse execute = HttpRequest.post("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + accessToken).body(JSONUtil.toJsonStr(postBody)).execute()) {
+        try (HttpResponse execute = HttpRequest.post(String.format(OutApiHttpUrlEnum.WEIXIN_GET_UNLIMIT_QRCODE.url, accessToken)).body(JSONUtil.toJsonStr(postBody)).execute()) {
             bytes = execute.bodyBytes();
         } catch (Exception e) {
             log.error("请求https://api.weixin.qq.com/wxa/getwxacodeunlimit失败。", e);

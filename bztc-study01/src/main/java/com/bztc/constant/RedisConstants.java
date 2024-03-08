@@ -14,4 +14,5 @@ public class RedisConstants {
     public static final String WX_ACCESS_TOKEN_KEY = "wx:accessToken";
     public static final String WX_WEBSITE_LOGIN_FLAG = "wx:website:loginFlag:";
     public static final String WX_WEBSITE_LOGIN_INFO = "wx:website:loginInfo:";
+    public static final String OUT_API_PREFIX = "out:api:";
 }
