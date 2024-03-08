@@ -13,6 +13,7 @@ import com.bztc.domain.MessageRoleRel;
 import com.bztc.domain.MessageUserRel;
 import com.bztc.domain.PersonalMessage;
 import com.bztc.dto.ResultDto;
+import com.bztc.enumeration.OutApiHttpUrlEnum;
 import com.bztc.service.MessageRoleRelService;
 import com.bztc.service.MessageUserRelService;
 import com.bztc.service.PersonalMessageService;
@@ -179,7 +180,7 @@ public class PersonalMessageResource {
     @GetMapping("/getcibasentence")
     public ResultDto<String> getCiBaSentence() {
         try {
-            String url = "https://open.iciba.com/dsapi/?date=" + DateUtil.format(new Date(), "yyyy-MM-dd");
+            String url = String.format(OutApiHttpUrlEnum.CIBA_EVERYDAY_SENTENCE.url, DateUtil.format(new Date(), "yyyy-MM-dd"));
             String response = HttpUtil.get(url);
             Map resMap = JSONUtil.toBean(response, Map.class);
             return new ResultDto<>(resMap.get("note").toString());
