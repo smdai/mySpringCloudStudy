@@ -99,4 +99,47 @@ public class WxMiniProgramToolsOne {
             return new ResultDto<>(400, "解析返回报文失败。");
         }
     }
+
+    /**
+     * 查询白银数据
+     *
+     * @param type
+     * @return
+     */
+    @GetMapping("/querysilverdata")
+    public ResultDto<List> querySilverData(@RequestParam("type") String type) {
+        //获取redis
+        Object o = redisUtil.get(RedisConstants.OUT_API_PREFIX + OutApiHttpUrlEnum.TANSHU_SILVER_DATA.name + ":" + type);
+        if (Objects.nonNull(o)) {
+            Map bodyMap = JSONUtil.toBean(String.valueOf(o), Map.class);
+            Object data = bodyMap.get("data");
+            Map dataMap = JSONUtil.toBean(String.valueOf(data), Map.class);
+            return new ResultDto<>((List) dataMap.get("list"));
+        }
+        HttpRequest httpRequest = HttpRequest.get(String.format(OutApiHttpUrlEnum.TANSHU_SILVER_DATA.url, type, tanshuApiKey));
+
+        String body;
+        try (HttpResponse execute = httpRequest.execute()) {
+            body = execute.body();
+        } catch (Exception e) {
+            log.error("调{}失败。", OutApiHttpUrlEnum.TANSHU_SILVER_DATA.name, e);
+            return new ResultDto<>(400, "调外部api失败。");
+        }
+        redisUtil.set(RedisConstants.OUT_API_PREFIX + OutApiHttpUrlEnum.TANSHU_SILVER_DATA.name + ":" + type, body, 14400);
+        //入表
+        OutApiResponseRecord outApiResponseRecord = new OutApiResponseRecord();
+        outApiResponseRecord.setApiType(OutApiHttpUrlEnum.TANSHU_SILVER_DATA.name);
+        outApiResponseRecord.setCallType1(type);
+        outApiResponseRecord.setResponse(body);
+        outApiResponseRecordService.save(outApiResponseRecord);
+        try {
+            Map bodyMap = JSONUtil.toBean(body, Map.class);
+            Object data = bodyMap.get("data");
+            Map dataMap = JSONUtil.toBean(String.valueOf(data), Map.class);
+            return new ResultDto<>((List) dataMap.get("list"));
+        } catch (Exception e) {
+            log.error("解析返回报文失败。{}", body, e);
+            return new ResultDto<>(400, "解析返回报文失败。");
+        }
+    }
 }
