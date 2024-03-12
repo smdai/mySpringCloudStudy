@@ -8,8 +8,7 @@ import com.bztc.domain.OutApiResponseRecord;
 import com.bztc.dto.ResultDto;
 import com.bztc.enumeration.OutApiHttpUrlEnum;
 import com.bztc.service.OutApiResponseRecordService;
-import com.bztc.utils.RedisUtil;
-import com.bztc.utils.YamlPropertiesUtil;
+import com.bztc.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -137,6 +136,128 @@ public class WxMiniProgramToolsOne {
             Object data = bodyMap.get("data");
             Map dataMap = JSONUtil.toBean(String.valueOf(data), Map.class);
             return new ResultDto<>((List) dataMap.get("list"));
+        } catch (Exception e) {
+            log.error("解析返回报文失败。{}", body, e);
+            return new ResultDto<>(400, "解析返回报文失败。");
+        }
+    }
+
+    /**
+     * 查询油价
+     *
+     * @return
+     */
+    @GetMapping("/queryoilprice")
+    public ResultDto<List> queryOilPrice() {
+        //获取当前日期
+        String nowDateStr = DateUtil.getNowTimeStr("yyyyMMdd");
+        //获取redis
+        Object o = redisUtil.get(RedisConstants.OUT_API_PREFIX + OutApiHttpUrlEnum.TANSHU_OIL_PRICE_DATA.name + ":" + nowDateStr);
+        if (Objects.nonNull(o)) {
+            Map bodyMap = JSONUtil.toBean(String.valueOf(o), Map.class);
+            Object data = bodyMap.get("data");
+            Map dataMap = JSONUtil.toBean(String.valueOf(data), Map.class);
+            return new ResultDto<>((List) dataMap.get("list"));
+        }
+        HttpRequest httpRequest = HttpRequest.get(String.format(OutApiHttpUrlEnum.TANSHU_OIL_PRICE_DATA.url, tanshuApiKey));
+
+        String body;
+        try (HttpResponse execute = httpRequest.execute()) {
+            body = execute.body();
+        } catch (Exception e) {
+            log.error("调{}失败。", OutApiHttpUrlEnum.TANSHU_OIL_PRICE_DATA.name, e);
+            return new ResultDto<>(400, "调外部api失败。");
+        }
+        redisUtil.set(RedisConstants.OUT_API_PREFIX + OutApiHttpUrlEnum.TANSHU_OIL_PRICE_DATA.name + ":" + nowDateStr, body, 24 * 60 * 60);
+        //入表
+        OutApiResponseRecord outApiResponseRecord = new OutApiResponseRecord();
+        outApiResponseRecord.setApiType(OutApiHttpUrlEnum.TANSHU_OIL_PRICE_DATA.name);
+        outApiResponseRecord.setCallType1(nowDateStr);
+        outApiResponseRecord.setResponse(body);
+        outApiResponseRecordService.save(outApiResponseRecord);
+        try {
+            Map bodyMap = JSONUtil.toBean(body, Map.class);
+            Object data = bodyMap.get("data");
+            Map dataMap = JSONUtil.toBean(String.valueOf(data), Map.class);
+            return new ResultDto<>((List) dataMap.get("list"));
+        } catch (Exception e) {
+            log.error("解析返回报文失败。{}", body, e);
+            return new ResultDto<>(400, "解析返回报文失败。");
+        }
+    }
+
+    /**
+     * 查询全球ip地址
+     *
+     * @return
+     */
+    @GetMapping("/queryglobalipaddress")
+    public ResultDto<Map> queryGlobalIpAddress(@RequestParam("ip") String ip) {
+        if (!NetWorkUtil.isValidIpAddress(ip)) {
+            return new ResultDto<>(400, "不是有效ip");
+        }
+        //获取redis
+        Object o = redisUtil.get(RedisConstants.OUT_API_PREFIX + OutApiHttpUrlEnum.TANSHU_GLOBAL_IP_ADDRESS_DATA.name + ":" + ip);
+        if (Objects.nonNull(o)) {
+            Map bodyMap = JSONUtil.toBean(String.valueOf(o), Map.class);
+            Object data = bodyMap.get("data");
+            Map dataMap = JSONUtil.toBean(String.valueOf(data), Map.class);
+            return new ResultDto<>(dataMap);
+        }
+        HttpRequest httpRequest = HttpRequest.get(String.format(OutApiHttpUrlEnum.TANSHU_GLOBAL_IP_ADDRESS_DATA.url, tanshuApiKey, ip));
+
+        String body;
+        try (HttpResponse execute = httpRequest.execute()) {
+            body = execute.body();
+        } catch (Exception e) {
+            log.error("调{}失败。", OutApiHttpUrlEnum.TANSHU_GLOBAL_IP_ADDRESS_DATA.name, e);
+            return new ResultDto<>(400, "调外部api失败。");
+        }
+        redisUtil.set(RedisConstants.OUT_API_PREFIX + OutApiHttpUrlEnum.TANSHU_GLOBAL_IP_ADDRESS_DATA.name + ":" + ip, body, 6 * 60 * 60);
+        try {
+            Map bodyMap = JSONUtil.toBean(body, Map.class);
+            Object data = bodyMap.get("data");
+            Map dataMap = JSONUtil.toBean(String.valueOf(data), Map.class);
+            return new ResultDto<>(dataMap);
+        } catch (Exception e) {
+            log.error("解析返回报文失败。{}", body, e);
+            return new ResultDto<>(400, "解析返回报文失败。");
+        }
+    }
+
+    /**
+     * 查询手机归属地
+     *
+     * @return
+     */
+    @GetMapping("/queryphoneownership")
+    public ResultDto<Map> queryPhoneOwnership(@RequestParam("phoneNo") String phoneNo) {
+        if (!CommonUtil.isValidPhoneNumber(phoneNo)) {
+            return new ResultDto<>(400, "不是有效手机号");
+        }
+        //获取redis
+        Object o = redisUtil.get(RedisConstants.OUT_API_PREFIX + OutApiHttpUrlEnum.TANSHU_PHONE_OWNERSHIP_DATA.name + ":" + phoneNo);
+        if (Objects.nonNull(o)) {
+            Map bodyMap = JSONUtil.toBean(String.valueOf(o), Map.class);
+            Object data = bodyMap.get("data");
+            Map dataMap = JSONUtil.toBean(String.valueOf(data), Map.class);
+            return new ResultDto<>(dataMap);
+        }
+        HttpRequest httpRequest = HttpRequest.get(String.format(OutApiHttpUrlEnum.TANSHU_PHONE_OWNERSHIP_DATA.url, tanshuApiKey, phoneNo));
+
+        String body;
+        try (HttpResponse execute = httpRequest.execute()) {
+            body = execute.body();
+        } catch (Exception e) {
+            log.error("调{}失败。", OutApiHttpUrlEnum.TANSHU_PHONE_OWNERSHIP_DATA.name, e);
+            return new ResultDto<>(400, "调外部api失败。");
+        }
+        redisUtil.set(RedisConstants.OUT_API_PREFIX + OutApiHttpUrlEnum.TANSHU_PHONE_OWNERSHIP_DATA.name + ":" + phoneNo, body, 24 * 60 * 60);
+        try {
+            Map bodyMap = JSONUtil.toBean(body, Map.class);
+            Object data = bodyMap.get("data");
+            Map dataMap = JSONUtil.toBean(String.valueOf(data), Map.class);
+            return new ResultDto<>(dataMap);
         } catch (Exception e) {
             log.error("解析返回报文失败。{}", body, e);
             return new ResultDto<>(400, "解析返回报文失败。");
