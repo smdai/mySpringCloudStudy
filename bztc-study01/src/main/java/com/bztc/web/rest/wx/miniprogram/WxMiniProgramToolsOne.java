@@ -2,6 +2,7 @@ package com.bztc.web.rest.wx.miniprogram;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
 import com.bztc.constant.RedisConstants;
 import com.bztc.domain.OutApiResponseRecord;
@@ -244,7 +245,6 @@ public class WxMiniProgramToolsOne {
             return new ResultDto<>(dataMap);
         }
         HttpRequest httpRequest = HttpRequest.get(String.format(OutApiHttpUrlEnum.TANSHU_PHONE_OWNERSHIP_DATA.url, tanshuApiKey, phoneNo));
-
         String body;
         try (HttpResponse execute = httpRequest.execute()) {
             body = execute.body();
@@ -253,8 +253,58 @@ public class WxMiniProgramToolsOne {
             return new ResultDto<>(400, "调外部api失败。");
         }
         redisUtil.set(RedisConstants.OUT_API_PREFIX + OutApiHttpUrlEnum.TANSHU_PHONE_OWNERSHIP_DATA.name + ":" + phoneNo, body, 24 * 60 * 60);
+        //入表
+        OutApiResponseRecord outApiResponseRecord = new OutApiResponseRecord();
+        outApiResponseRecord.setApiType(OutApiHttpUrlEnum.TANSHU_PHONE_OWNERSHIP_DATA.name);
+        outApiResponseRecord.setCallType1(phoneNo);
+        outApiResponseRecord.setResponse(body);
+        outApiResponseRecordService.save(outApiResponseRecord);
         try {
             Map bodyMap = JSONUtil.toBean(body, Map.class);
+            Object data = bodyMap.get("data");
+            Map dataMap = JSONUtil.toBean(String.valueOf(data), Map.class);
+            return new ResultDto<>(dataMap);
+        } catch (Exception e) {
+            log.error("解析返回报文失败。{}", body, e);
+            return new ResultDto<>(400, "解析返回报文失败。");
+        }
+    }
+
+    /**
+     * 查询星座运势
+     *
+     * @return
+     */
+    @GetMapping("/queryconstellationfortune")
+    public ResultDto<Map> queryConstellationFortune(@RequestParam("constellationId") String constellationId, @RequestParam("constellationFortuneType") String constellationFortuneType) {
+        JSONConfig jsonConfig = new JSONConfig();
+        //获取redis
+        Object o = redisUtil.get(RedisConstants.OUT_API_PREFIX + OutApiHttpUrlEnum.TANSHU_CONSTELLATION_FORTUNE_DATA.name + ":" + constellationId + ":" + constellationFortuneType);
+        if (Objects.nonNull(o)) {
+            Map bodyMap = JSONUtil.toBean(String.valueOf(o), jsonConfig, Map.class);
+            Object data = bodyMap.get("data");
+            Map dataMap = JSONUtil.toBean(String.valueOf(data), Map.class);
+            return new ResultDto<>(dataMap);
+        }
+        HttpRequest httpRequest = HttpRequest.get(String.format(OutApiHttpUrlEnum.TANSHU_CONSTELLATION_FORTUNE_DATA.url, tanshuApiKey, constellationId, constellationFortuneType));
+
+        String body;
+        try (HttpResponse execute = httpRequest.execute()) {
+            body = execute.body();
+        } catch (Exception e) {
+            log.error("调{}失败。", OutApiHttpUrlEnum.TANSHU_CONSTELLATION_FORTUNE_DATA.name, e);
+            return new ResultDto<>(400, "调外部api失败。");
+        }
+        redisUtil.set(RedisConstants.OUT_API_PREFIX + OutApiHttpUrlEnum.TANSHU_CONSTELLATION_FORTUNE_DATA.name + ":" + constellationId + ":" + constellationFortuneType, body, 24 * 60 * 60);
+        //入表
+        OutApiResponseRecord outApiResponseRecord = new OutApiResponseRecord();
+        outApiResponseRecord.setApiType(OutApiHttpUrlEnum.TANSHU_CONSTELLATION_FORTUNE_DATA.name);
+        outApiResponseRecord.setCallType1(constellationId);
+        outApiResponseRecord.setCallType2(constellationFortuneType);
+        outApiResponseRecord.setResponse(body);
+        outApiResponseRecordService.save(outApiResponseRecord);
+        try {
+            Map bodyMap = JSONUtil.toBean(body, jsonConfig, Map.class);
             Object data = bodyMap.get("data");
             Map dataMap = JSONUtil.toBean(String.valueOf(data), Map.class);
             return new ResultDto<>(dataMap);
