@@ -33,7 +33,7 @@ public enum OutApiHttpUrlEnum {
     /**
      * 探数星座运势查询
      */
-    TANSHU_CONSTELLATION_FORTUNE_DATA("QueryPhoneOwnership", "http://api.tanshuapi.com/api/constellation/v1/index?key=%s&cid=%s&type=%s"),
+    TANSHU_CONSTELLATION_FORTUNE_DATA("QueryConstellationFortune", "http://api.tanshuapi.com/api/constellation/v1/index?key=%s&cid=%s&type=%s"),
     CIBA_EVERYDAY_SENTENCE("词霸每日一句", "https://open.iciba.com/dsapi/?date=%s"),
     WEIXIN_JSCODE2_SESSION("微信临时登录凭证校验", "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code"),
     WEIXIN_GET_ACCESS_TOKEN("微信获取access_token", "https://api.weixin.qq.com/cgi-bin/token?appid=%s&secret=%s&grant_type=client_credential"),

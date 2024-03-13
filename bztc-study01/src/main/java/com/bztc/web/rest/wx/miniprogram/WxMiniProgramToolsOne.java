@@ -277,9 +277,11 @@ public class WxMiniProgramToolsOne {
      */
     @GetMapping("/queryconstellationfortune")
     public ResultDto<Map> queryConstellationFortune(@RequestParam("constellationId") String constellationId, @RequestParam("constellationFortuneType") String constellationFortuneType) {
+        //获取当前日期
+        String nowDateStr = DateUtil.getNowTimeStr("yyyyMMdd");
         JSONConfig jsonConfig = new JSONConfig();
         //获取redis
-        Object o = redisUtil.get(RedisConstants.OUT_API_PREFIX + OutApiHttpUrlEnum.TANSHU_CONSTELLATION_FORTUNE_DATA.name + ":" + constellationId + ":" + constellationFortuneType);
+        Object o = redisUtil.get(RedisConstants.OUT_API_PREFIX + OutApiHttpUrlEnum.TANSHU_CONSTELLATION_FORTUNE_DATA.name + ":" + constellationId + ":" + constellationFortuneType + ":" + nowDateStr);
         if (Objects.nonNull(o)) {
             Map bodyMap = JSONUtil.toBean(String.valueOf(o), jsonConfig, Map.class);
             Object data = bodyMap.get("data");
@@ -295,12 +297,13 @@ public class WxMiniProgramToolsOne {
             log.error("调{}失败。", OutApiHttpUrlEnum.TANSHU_CONSTELLATION_FORTUNE_DATA.name, e);
             return new ResultDto<>(400, "调外部api失败。");
         }
-        redisUtil.set(RedisConstants.OUT_API_PREFIX + OutApiHttpUrlEnum.TANSHU_CONSTELLATION_FORTUNE_DATA.name + ":" + constellationId + ":" + constellationFortuneType, body, 24 * 60 * 60);
+        redisUtil.set(RedisConstants.OUT_API_PREFIX + OutApiHttpUrlEnum.TANSHU_CONSTELLATION_FORTUNE_DATA.name + ":" + constellationId + ":" + constellationFortuneType + ":" + nowDateStr, body, 24 * 60 * 60);
         //入表
         OutApiResponseRecord outApiResponseRecord = new OutApiResponseRecord();
         outApiResponseRecord.setApiType(OutApiHttpUrlEnum.TANSHU_CONSTELLATION_FORTUNE_DATA.name);
         outApiResponseRecord.setCallType1(constellationId);
         outApiResponseRecord.setCallType2(constellationFortuneType);
+        outApiResponseRecord.setCallType3(nowDateStr);
         outApiResponseRecord.setResponse(body);
         outApiResponseRecordService.save(outApiResponseRecord);
         try {
