@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class YamlPropertiesUtil {
+    private static final Pattern pattern = Pattern.compile("\\s*([^=\\s]*)\\s*=\\s*(.*)\\s*");
 
     /**
      * yaml 转 Properties
@@ -62,7 +63,7 @@ public class YamlPropertiesUtil {
         for (String line : input.split(StrUtil.LF)) {
             if (StrUtil.isNotBlank(line)) {
                 // 使用正则表达式解析每一行中的键值对
-                Pattern pattern = Pattern.compile("\\s*([^=\\s]*)\\s*=\\s*(.*)\\s*");
+
                 Matcher matcher = pattern.matcher(line);
                 if (matcher.matches()) {
                     String key = matcher.group(1);
