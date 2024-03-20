@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.OK)
     public ResultDto handleException(Exception e) {
         log.error(e.getMessage(), e);
-        return R.fail("server errror");
+        return R.fail("server errror." + e.getMessage());
     }
 
     /**

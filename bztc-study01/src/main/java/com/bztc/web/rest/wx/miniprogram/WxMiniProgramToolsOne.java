@@ -1,5 +1,6 @@
 package com.bztc.web.rest.wx.miniprogram;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONConfig;
@@ -277,6 +278,8 @@ public class WxMiniProgramToolsOne {
      */
     @GetMapping("/queryconstellationfortune")
     public ResultDto<Map> queryConstellationFortune(@RequestParam("constellationId") String constellationId, @RequestParam("constellationFortuneType") String constellationFortuneType) {
+        Assert.notBlank(constellationId, "请选择星座。");
+        Assert.notBlank(constellationFortuneType, "请选择时间。");
         //获取当前日期
         String nowDateStr = DateUtil.getNowTimeStr("yyyyMMdd");
         JSONConfig jsonConfig = new JSONConfig();
