@@ -33,4 +33,26 @@
                          where ui.id = userrole.user_id
                            and userrole.role_id = #{roleId})
     </select>
+    <select id="selectUserByPage" parameterType="java.util.Map" resultType="java.util.Map">
+        select ui.id as user_id, ui.user_name,ui.status
+        from user_info ui
+        <if test="userRole.roleId !=null and userRole.roleId != ''">
+            inner join user_role userrole on userrole.user_id = ui.id
+        </if>
+        <where>
+            <if test="userRole.roleId !=null and userRole.roleId != ''">
+                and userrole.role_id = #{userRole.roleId}
+            </if>
+            <if test="userRole.userId !=null and userRole.userId != ''">
+                and ui.id = #{userRole.userId}
+            </if>
+            <if test="userRole.status !=null and userRole.status != ''">
+                and ui.status = #{userRole.status}
+            </if>
+            <if test="userRole.userName !=null and userRole.userName != ''">
+                and ui.user_name like concat('%',#{userRole.userName},'%')
+            </if>
+        </where>
+        order by ui.id
+    </select>
 </mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bztc.mapper.FlowApplyMapper">
+
+    <resultMap id="BaseResultMap" type="com.bztc.domain.FlowApply">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="applyType" column="apply_type" jdbcType="VARCHAR"/>
+            <result property="objectType" column="object_type" jdbcType="VARCHAR"/>
+            <result property="objectNo" column="object_no" jdbcType="INTEGER"/>
+            <result property="flowNo" column="flow_no" jdbcType="VARCHAR"/>
+            <result property="phaseNo" column="phase_no" jdbcType="VARCHAR"/>
+            <result property="phaseName" column="phase_name" jdbcType="VARCHAR"/>
+            <result property="nodeNo" column="node_no" jdbcType="VARCHAR"/>
+            <result property="inputUser" column="input_user" jdbcType="VARCHAR"/>
+            <result property="inputTime" column="input_time" jdbcType="TIMESTAMP"/>
+            <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,apply_type,object_type,
+        object_no,flow_no,phase_no,
+        phase_name,node_no,input_user,
+        input_time,update_user,update_time
+    </sql>
+</mapper>

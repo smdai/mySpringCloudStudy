@@ -3,8 +3,11 @@ package com.bztc.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bztc.domain.UserInfo;
+import com.bztc.domain.UserRole;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.Map;
 
 /**
  * @author daishuming
@@ -22,6 +25,15 @@ public interface UserInfoMapper extends BaseMapper<UserInfo> {
      * @return
      */
     Page<UserInfo> queryUserNoRoles(Page<UserInfo> rowPage, @Param("roleId") String roleId);
+
+    /**
+     * 分页查询用户信息
+     *
+     * @param rowPage
+     * @param userRole
+     * @return
+     */
+    Page<Map<String, Object>> selectUserByPage(Page<UserRole> rowPage, @Param("userRole") Map<String, Object> userRole);
 }
 
 

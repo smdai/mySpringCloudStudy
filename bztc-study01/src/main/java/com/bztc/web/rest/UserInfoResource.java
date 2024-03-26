@@ -28,7 +28,9 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -73,6 +75,39 @@ public class UserInfoResource {
         queryWrapper.orderByAsc("id");
         Page<UserInfo> websiteListPage = this.userInfoService.page(queryPage, queryWrapper);
         return new ResultDto<>(websiteListPage.getTotal(), websiteListPage.getRecords());
+    }
+
+    /**
+     * 查询用户列表
+     *
+     * @return 用户
+     */
+    @GetMapping("/queryuserbypage")
+    public ResultDto<List<Map<String, Object>>> queryUserByPage(@RequestParam("param") String params) {
+        logger.info("分页查询入参：{}", params);
+        JSONObject jsonObject = JSONUtil.parseObj(params);
+        //需要权限判断，非管理员有限制
+        if (UserUtil.judgeAuth()) {
+            Object roleId = jsonObject.get("roleId");
+            Assert.notBlank(StrUtil.toStringOrNull(roleId), "角色不能为空");
+            Assert.isTrue(Integer.parseInt(roleId.toString()) == Constants.ADMIN_ROLE_ID, "角色只能选择超级管理员");
+        }
+        Map<String, Object> userRole = new HashMap<>();
+        if (!StrUtil.isBlankIfStr(jsonObject.get("roleId"))) {
+            userRole.put("roleId", jsonObject.get("roleId"));
+        }
+        if (!StrUtil.isBlankIfStr(jsonObject.get("userId"))) {
+            userRole.put("userId", jsonObject.get("userId"));
+        }
+        if (!StrUtil.isBlankIfStr(jsonObject.get("status"))) {
+            userRole.put("status", jsonObject.get("status"));
+        }
+        if (!StrUtil.isBlankIfStr(jsonObject.get("userName"))) {
+            userRole.put("userName", jsonObject.get("userName"));
+        }
+        Page<UserRole> queryPage = new Page<>((int) jsonObject.get("pageIndex"), (int) jsonObject.get("pageSize"));
+        Page<Map<String, Object>> userRolePage = this.userInfoService.selectUserByPage(queryPage, userRole);
+        return new ResultDto<>(userRolePage.getTotal(), userRolePage.getRecords());
     }
 
     /**

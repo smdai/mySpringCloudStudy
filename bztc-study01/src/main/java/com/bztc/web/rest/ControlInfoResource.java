@@ -8,9 +8,11 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bztc.constant.Constants;
 import com.bztc.domain.ControlInfo;
+import com.bztc.domain.MenuInfo;
 import com.bztc.dto.ResultDto;
 import com.bztc.service.AuthResContrService;
 import com.bztc.service.ControlInfoService;
+import com.bztc.service.MenuInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +33,8 @@ public class ControlInfoResource {
     private ControlInfoService controlInfoService;
     @Autowired
     private AuthResContrService authResContrService;
+    @Autowired
+    private MenuInfoService menuInfoService;
 
     /**
      * 查询控制点列表
@@ -52,6 +56,10 @@ public class ControlInfoResource {
                 .eq(!StrUtil.isBlankIfStr(jsonObject.get("menuId")), "menu_id", jsonObject.get("menuId"));
         queryWrapper.orderByDesc("control_id");
         Page<ControlInfo> websiteListPage = this.controlInfoService.page(queryPage, queryWrapper);
+        websiteListPage.getRecords().forEach(it -> {
+            MenuInfo menuInfo = menuInfoService.getById(it.getMenuId());
+            it.setMenuName(menuInfo.getMenuName());
+        });
         return new ResultDto<>(websiteListPage.getTotal(), websiteListPage.getRecords());
     }
 

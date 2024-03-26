@@ -86,6 +86,7 @@ public class RedisConfig {
         redisCacheConfigurationMap.put(RedisConstants.SESSION_USERID_KEY, this.getRedisCacheConfigurationWithTtl(customTtl));
         redisCacheConfigurationMap.put(RedisConstants.SESSION_AUTH_CONTR_KEY, this.getRedisCacheConfigurationWithTtl(customTtl));
         redisCacheConfigurationMap.put(RedisConstants.CODE_LIBRARY_ITEM_KEY, this.getRedisCacheConfigurationWithTtl(null));
+//        redisCacheConfigurationMap.put(RedisConstants.CODE_LIBRARY_ROLE_KEY, this.getRedisCacheConfigurationWithTtl(null));
         return redisCacheConfigurationMap;
     }
 

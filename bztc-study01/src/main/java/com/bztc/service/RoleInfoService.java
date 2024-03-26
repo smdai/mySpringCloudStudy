@@ -28,4 +28,12 @@ public interface RoleInfoService extends IService<RoleInfo> {
      * @return
      */
     List<RoleInfo> queryUserRoleList(String userId);
+
+    /**
+     * 根据roleid获取userName
+     *
+     * @param roleId
+     * @return
+     */
+    String getRoleNameByRoleId(int roleId);
 }

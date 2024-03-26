@@ -3,6 +3,7 @@ package com.bztc.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bztc.domain.RoleInfo;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
  * @createDate 2022-10-18 09:25:40
  * @Entity com.bztc.domain.RoleInfo
  */
+@Mapper
 public interface RoleInfoMapper extends BaseMapper<RoleInfo> {
     /**
      * 查询用户未关联的角色

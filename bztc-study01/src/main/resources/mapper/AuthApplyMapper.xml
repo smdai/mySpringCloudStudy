@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bztc.mapper.AuthApplyMapper">
+
+    <resultMap id="BaseResultMap" type="com.bztc.domain.AuthApply">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="roleId" column="role_id" jdbcType="VARCHAR"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="inputUser" column="input_user" jdbcType="VARCHAR"/>
+        <result property="inputTime" column="input_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,role_id,remark,
+        input_user,input_time,update_user,
+        update_time
+    </sql>
+    <select id="selectByPage" resultType="java.util.Map" parameterType="java.util.Map">
+        select aa.*,fa.phase_no,DATE_FORMAT(aa.input_time, '%Y-%m-%d %H:%i:%s') AS apply_input_time,
+        DATE_FORMAT(aa.update_time, '%Y-%m-%d %H:%i:%s') AS apply_update_time
+        from flow_apply fa
+        left join auth_apply aa on fa.object_type = 'AuthType' and fa.object_no = aa.id
+        <where>
+            <if test="paramMap.roleId != null and paramMap.roleId != ''">
+                and aa.role_id = #{paramMap.roleId,jdbcType=VARCHAR}
+            </if>
+            <if test="paramMap.phaseNo != null and paramMap.phaseNo != ''">
+                and fa.phase_no = #{paramMap.phaseNo,jdbcType=VARCHAR}
+            </if>
+            <if test="paramMap.inputUser != null and paramMap.inputUser != ''">
+                and aa.input_user = #{paramMap.inputUser,jdbcType=INTEGER}
+            </if>
+        </where>
+        order by aa.input_time desc
+    </select>
+</mapper>

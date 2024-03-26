@@ -3,9 +3,12 @@ package com.bztc.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.bztc.domain.UserInfo;
+import com.bztc.domain.UserRole;
 import com.bztc.dto.SessionInfoDto;
 import com.bztc.enumeration.LoginEnum;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.Map;
 
 /**
  * @author daishuming
@@ -31,4 +34,20 @@ public interface UserInfoService extends IService<UserInfo> {
      * @return
      */
     Page<UserInfo> queryUserNoRoles(Page<UserInfo> rowPage, @Param("roleId") String roleId);
+
+    /**
+     * 根据userid获取userName
+     *
+     * @param userId
+     * @return
+     */
+    String getUserNameByUserId(int userId);
+
+    /**
+     * 查询用户
+     *
+     * @param queryPage
+     * @return
+     */
+    Page<Map<String, Object>> selectUserByPage(Page<UserRole> queryPage, Map<String, Object> userRole);
 }

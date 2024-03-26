@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bztc.mapper.FlowTaskMapper">
+
+    <resultMap id="BaseResultMap" type="com.bztc.domain.FlowTask">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="objectType" column="object_type" jdbcType="VARCHAR"/>
+            <result property="objectNo" column="object_no" jdbcType="INTEGER"/>
+            <result property="nodeNo" column="node_no" jdbcType="VARCHAR"/>
+            <result property="nodeApproveUser" column="node_approve_user" jdbcType="INTEGER"/>
+            <result property="beginTime" column="begin_time" jdbcType="TIMESTAMP"/>
+            <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,object_type,object_no,
+        node_no,node_approve_user,begin_time,
+        end_time
+    </sql>
+</mapper>

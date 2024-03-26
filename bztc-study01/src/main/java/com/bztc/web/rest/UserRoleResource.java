@@ -1,5 +1,6 @@
 package com.bztc.web.rest;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -180,5 +181,20 @@ public class UserRoleResource {
             resultDto.setMessage("删除失败," + e.getMessage());
         }
         return resultDto;
+    }
+
+    /**
+     * 查询该用户是否拥有该角色
+     *
+     * @param roleId
+     * @return
+     */
+    @GetMapping("/isrelrole")
+    public ResultDto<Boolean> isRelRole(@RequestParam("roleId") int roleId) {
+        QueryWrapper<UserRole> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", UserUtil.getUserId());
+        queryWrapper.eq("role_id", roleId);
+        queryWrapper.eq("status", Constants.STATUS_EFFECT);
+        return new ResultDto<>(CollectionUtil.isNotEmpty(this.userRoleService.list(queryWrapper)));
     }
 }

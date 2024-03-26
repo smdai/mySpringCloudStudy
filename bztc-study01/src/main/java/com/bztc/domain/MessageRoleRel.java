@@ -4,42 +4,45 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * 个人消息与角色关联表
+ *
  * @TableName message_role_rel
  */
-@TableName(value ="message_role_rel")
+@TableName(value = "message_role_rel")
 @Data
 public class MessageRoleRel implements Serializable {
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
     /**
      * 主键id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-
     /**
      * 消息id
      */
     @TableField(value = "message_id")
     private Integer messageId;
-
     /**
      * 角色id
      */
     @TableField(value = "role_id")
     private Integer roleId;
-
     /**
      * 通知状态-1已通知0未通知
      */
     @TableField(value = "send_status")
     private String sendStatus;
-
+    /**
+     * 角色名称
+     */
     @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
+    private String roleName;
 
     @Override
     public boolean equals(Object that) {
@@ -54,9 +57,9 @@ public class MessageRoleRel implements Serializable {
         }
         MessageRoleRel other = (MessageRoleRel) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getMessageId() == null ? other.getMessageId() == null : this.getMessageId().equals(other.getMessageId()))
-            && (this.getRoleId() == null ? other.getRoleId() == null : this.getRoleId().equals(other.getRoleId()))
-            && (this.getSendStatus() == null ? other.getSendStatus() == null : this.getSendStatus().equals(other.getSendStatus()));
+                && (this.getMessageId() == null ? other.getMessageId() == null : this.getMessageId().equals(other.getMessageId()))
+                && (this.getRoleId() == null ? other.getRoleId() == null : this.getRoleId().equals(other.getRoleId()))
+                && (this.getSendStatus() == null ? other.getSendStatus() == null : this.getSendStatus().equals(other.getSendStatus()));
     }
 
     @Override

@@ -78,6 +78,12 @@ public class ControlInfo implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date updateTime;
 
+    /**
+     * 菜单名称
+     */
+    @TableField(exist = false)
+    private String menuName;
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {

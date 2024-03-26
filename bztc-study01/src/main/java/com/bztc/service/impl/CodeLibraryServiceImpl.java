@@ -1,12 +1,20 @@
 package com.bztc.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bztc.constant.Constants;
 import com.bztc.constant.RedisConstants;
 import com.bztc.domain.CodeLibrary;
+import com.bztc.domain.FlowCatalog;
+import com.bztc.domain.FlowModel;
+import com.bztc.domain.RoleInfo;
+import com.bztc.dto.FlowCatalogModelDto;
 import com.bztc.mapper.CodeLibraryMapper;
+import com.bztc.mapper.FlowCatalogMapper;
+import com.bztc.mapper.FlowModelMapper;
+import com.bztc.mapper.RoleInfoMapper;
 import com.bztc.service.CodeLibraryService;
 import com.bztc.utils.RedisUtil;
 import org.apache.commons.lang.StringUtils;
@@ -28,6 +36,12 @@ import java.util.stream.Collectors;
 public class CodeLibraryServiceImpl extends ServiceImpl<CodeLibraryMapper, CodeLibrary> implements CodeLibraryService {
     @Autowired
     RedisUtil redisUtil;
+    @Autowired
+    private RoleInfoMapper roleInfoMapper;
+    @Autowired
+    private FlowCatalogMapper flowCatalogMapper;
+    @Autowired
+    private FlowModelMapper flowModelMapper;
 
     /**
      * 查询单个数据字典
@@ -72,6 +86,28 @@ public class CodeLibraryServiceImpl extends ServiceImpl<CodeLibraryMapper, CodeL
         codeLibraryListMap.forEach((k, v) -> {
             List<Map<String, String>> collects = v.stream().peek(it -> it.remove("catalog")).collect(Collectors.toList());
             redisUtil.set(RedisConstants.CODE_LIBRARY_ITEM_KEY + ":" + k, collects);
+        });
+        //刷新角色缓存
+        redisUtil.delAll(RedisConstants.CODE_LIBRARY_ROLE_KEY);
+        List<RoleInfo> roleInfos = roleInfoMapper.selectList(new QueryWrapper<>());
+        List<Map<String, String>> roleList = roleInfos.stream().map(it -> {
+            Map<String, String> map = new HashMap<>();
+            map.put("key", it.getRoleId().toString());
+            map.put("value", it.getRoleName());
+            return map;
+        }).collect(Collectors.toList());
+        redisUtil.set(RedisConstants.CODE_LIBRARY_ROLE_KEY, roleList);
+        //刷新流程缓存
+        redisUtil.delAll(RedisConstants.SYSTEM_FLOW);
+        List<FlowCatalog> flowCatalogs = this.flowCatalogMapper.selectList(new QueryWrapper<>());
+        flowCatalogs.forEach(it -> {
+            FlowCatalogModelDto flowCatalogModelDto = new FlowCatalogModelDto();
+            BeanUtil.copyProperties(it, flowCatalogModelDto, false);
+            QueryWrapper<FlowModel> flowModelQueryWrapper = new QueryWrapper<>();
+            flowModelQueryWrapper.eq("flow_no", it.getFlowNo());
+            flowModelQueryWrapper.orderByAsc("node_no");
+            flowCatalogModelDto.setFlowModelList(this.flowModelMapper.selectList(flowModelQueryWrapper));
+            redisUtil.set(RedisConstants.SYSTEM_FLOW + it.getFlowNo(), flowCatalogModelDto);
         });
     }
 

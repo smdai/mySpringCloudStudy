@@ -70,5 +70,9 @@ public class Constants {
      * 文件路径前缀
      */
     public static final String IMAGE_PREFIX = "/bztc-study01/api/file";
+    /**
+     * 流程初始节点
+     */
+    public static final String INIT_FLOW_NODE = "0010";
 
 }

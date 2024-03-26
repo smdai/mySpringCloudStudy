@@ -15,6 +15,7 @@ import com.bztc.dto.MessageRoleRelDto;
 import com.bztc.dto.ResultDto;
 import com.bztc.service.MessageRoleRelService;
 import com.bztc.service.MessageUserRelService;
+import com.bztc.service.RoleInfoService;
 import com.bztc.service.UserRoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,9 @@ public class MessageRoleRelResource {
     @Autowired
     UserRoleService userRoleService;
 
+    @Autowired
+    RoleInfoService roleInfoService;
+
     /**
      * 查询个人消息角色列表
      *
@@ -67,6 +71,7 @@ public class MessageRoleRelResource {
         }
         queryWrapper.orderByDesc("id");
         Page<MessageRoleRel> websiteListPage = this.messageRoleRelService.page(queryPage, queryWrapper);
+        websiteListPage.getRecords().forEach(it -> it.setRoleName(roleInfoService.getRoleNameByRoleId(it.getRoleId())));
         return new ResultDto<>(websiteListPage.getTotal(), websiteListPage.getRecords());
     }
 
@@ -85,12 +90,16 @@ public class MessageRoleRelResource {
         Assert.notNull(messageRoleRelDto.getMessageId(), "messageId不能为空");
         Assert.isFalse(CollectionUtil.isEmpty(messageRoleRelDto.getRoleIds()), "关联角色id不能为空");
         ResultDto<MessageRoleRel> resultDto = new ResultDto<>();
-        List<MessageRoleRel> messageRoleRels = messageRoleRelDto.getRoleIds().stream().filter(it -> {
+        List<Integer> roleIds = messageRoleRelDto.getRoleIds().stream().filter(it -> {
             QueryWrapper<MessageRoleRel> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("role_id", it).eq("message_id", messageRoleRelDto.getMessageId());
             long count = this.messageRoleRelService.count(queryWrapper);
             return count == 0L;
-        }).map(it -> {
+        }).collect(Collectors.toList());
+        if (CollectionUtil.isEmpty(roleIds)) {
+            return new ResultDto<>(200, "重复推送。");
+        }
+        List<MessageRoleRel> messageRoleRels = roleIds.stream().map(it -> {
             MessageRoleRel messageRoleRel = new MessageRoleRel();
             messageRoleRel.setMessageId(messageRoleRelDto.getMessageId());
             messageRoleRel.setRoleId(it);

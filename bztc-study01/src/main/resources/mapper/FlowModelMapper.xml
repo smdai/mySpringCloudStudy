@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bztc.mapper.FlowModelMapper">
+
+    <resultMap id="BaseResultMap" type="com.bztc.domain.FlowModel">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="flowNo" column="flow_no" jdbcType="VARCHAR"/>
+            <result property="phaseNo" column="phase_no" jdbcType="VARCHAR"/>
+            <result property="phaseName" column="phase_name" jdbcType="VARCHAR"/>
+            <result property="nodeNo" column="node_no" jdbcType="VARCHAR"/>
+            <result property="nextNodeNo" column="next_node_no" jdbcType="VARCHAR"/>
+            <result property="nodeApproveRole" column="node_approve_role" jdbcType="VARCHAR"/>
+            <result property="inputUser" column="input_user" jdbcType="VARCHAR"/>
+            <result property="inputTime" column="input_time" jdbcType="TIMESTAMP"/>
+            <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,flow_no,phase_no,
+        phase_name,node_no,next_node_no,
+        node_approve_role,input_user,input_time,
+        update_user,update_time
+    </sql>
+</mapper>
