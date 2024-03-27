@@ -5,18 +5,38 @@
 <mapper namespace="com.bztc.mapper.FlowTaskMapper">
 
     <resultMap id="BaseResultMap" type="com.bztc.domain.FlowTask">
-            <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="objectType" column="object_type" jdbcType="VARCHAR"/>
-            <result property="objectNo" column="object_no" jdbcType="INTEGER"/>
-            <result property="nodeNo" column="node_no" jdbcType="VARCHAR"/>
-            <result property="nodeApproveUser" column="node_approve_user" jdbcType="INTEGER"/>
-            <result property="beginTime" column="begin_time" jdbcType="TIMESTAMP"/>
-            <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="objectType" column="object_type" jdbcType="VARCHAR"/>
+        <result property="objectNo" column="object_no" jdbcType="INTEGER"/>
+        <result property="nodeNo" column="node_no" jdbcType="VARCHAR"/>
+        <result property="nodeApproveUser" column="node_approve_user" jdbcType="INTEGER"/>
+        <result property="beginTime" column="begin_time" jdbcType="TIMESTAMP"/>
+        <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
     </resultMap>
-
+    <resultMap id="BaseResultDtoMap" type="com.bztc.dto.FlowTaskDto">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="objectType" column="object_type" jdbcType="VARCHAR"/>
+        <result property="objectNo" column="object_no" jdbcType="INTEGER"/>
+        <result property="nodeNo" column="node_no" jdbcType="VARCHAR"/>
+        <result property="nodeApproveUser" column="node_approve_user" jdbcType="INTEGER"/>
+        <result property="beginTime" column="begin_time" jdbcType="TIMESTAMP"/>
+        <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
+        <result property="phaseNo" column="phase_no" jdbcType="VARCHAR"/>
+        <result property="phaseName" column="phase_name" jdbcType="VARCHAR"/>
+        <result property="opinion" column="opinion" jdbcType="VARCHAR"/>
+    </resultMap>
     <sql id="Base_Column_List">
         id,object_type,object_no,
         node_no,node_approve_user,begin_time,
         end_time
     </sql>
+    <select id="queryFlowTaskList" resultMap="BaseResultDtoMap" parameterType="java.util.Map">
+        select ft.*, fm.phase_name, fm.phase_no
+        from flow_task ft
+                 left join flow_model fm
+                           on fm.flow_no = #{map.flowNo,jdbcType=VARCHAR} and fm.node_no = ft.node_no
+        where ft.object_type = #{map.objectType,jdbcType=VARCHAR}
+          and ft.object_no = #{map.objectNo,jdbcType=INTEGER}
+        order by ft.begin_time
+    </select>
 </mapper>

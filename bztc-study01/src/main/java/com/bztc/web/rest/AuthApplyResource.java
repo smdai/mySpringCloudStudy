@@ -122,23 +122,4 @@ public class AuthApplyResource {
         this.flowApplyService.deleteFlow(ObjectTypeEnum.AUTH_TYPE.key, authApply.getId());
         return new ResultDto<>(this.authApplyService.removeById(authApply));
     }
-
-    /**
-     * 描述：提交
-     *
-     * @return com.bztc.dto.ResultDto<java.lang.Integer>
-     * @author daism
-     * @date 2022-10-14 10:05:22
-     */
-    @PostMapping("/submit")
-    @Transactional(rollbackFor = {Exception.class, RuntimeException.class})
-    public ResultDto<Boolean> submit(@RequestBody AuthApply authApply) {
-        log.info("删除入参：{}", JSONUtil.toJsonStr(authApply));
-        //判断是否在申请阶段
-        if (!flowApplyService.isApplyPhase(ObjectTypeEnum.AUTH_TYPE.key, authApply.getId())) {
-            return new ResultDto<>(400, "不在申请阶段，不可删除。");
-        }
-        this.flowApplyService.deleteFlow(ObjectTypeEnum.AUTH_TYPE.key, authApply.getId());
-        return new ResultDto<>(this.authApplyService.removeById(authApply));
-    }
 }

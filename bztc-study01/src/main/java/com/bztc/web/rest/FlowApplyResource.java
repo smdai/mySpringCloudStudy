@@ -81,6 +81,6 @@ public class FlowApplyResource {
             return new ResultDto<>(400, "您对该流程没有权限");
         }
         FlowModel flowModel = flowModelService.getNextFlowModelByFlowNoNodeNo(flowApply.getFlowNo(), flowApply.getNodeNo());
-        return new ResultDto<>(this.flowApplyService.submit(flowSubmitDto, flowModel));
+        return new ResultDto<>(this.flowApplyService.submit(flowSubmitDto, flowApply, flowModel));
     }
 }

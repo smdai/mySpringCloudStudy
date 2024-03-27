@@ -5,18 +5,19 @@
 <mapper namespace="com.bztc.mapper.FlowOpinionMapper">
 
     <resultMap id="BaseResultMap" type="com.bztc.domain.FlowOpinion">
-            <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="objectType" column="object_type" jdbcType="VARCHAR"/>
-            <result property="objectNo" column="object_no" jdbcType="INTEGER"/>
-            <result property="opinion" column="opinion" jdbcType="VARCHAR"/>
-            <result property="inputUser" column="input_user" jdbcType="VARCHAR"/>
-            <result property="inputTime" column="input_time" jdbcType="TIMESTAMP"/>
-            <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="objectType" column="object_type" jdbcType="VARCHAR"/>
+        <result property="objectNo" column="object_no" jdbcType="INTEGER"/>
+        <result property="nodeNo" column="node_no" jdbcType="VARCHAR"/>
+        <result property="opinion" column="opinion" jdbcType="VARCHAR"/>
+        <result property="inputUser" column="input_user" jdbcType="VARCHAR"/>
+        <result property="inputTime" column="input_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,object_type,object_no,
+        id,object_type,object_no,node_no,
         opinion,input_user,input_time,
         update_user,update_time
     </sql>

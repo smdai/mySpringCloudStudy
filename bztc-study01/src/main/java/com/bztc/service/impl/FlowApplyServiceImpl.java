@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author daishuming
@@ -77,6 +78,7 @@ public class FlowApplyServiceImpl extends ServiceImpl<FlowApplyMapper, FlowApply
         flowTask.setObjectNo(objectNo);
         flowTask.setNodeNo(Constants.INIT_FLOW_NODE);
         flowTask.setBeginTime(new Date());
+        flowTask.setNodeApproveUser(Integer.parseInt(Objects.requireNonNull(UserUtil.getUserId())));
         flowTaskMapper.insert(flowTask);
     }
 
@@ -166,7 +168,14 @@ public class FlowApplyServiceImpl extends ServiceImpl<FlowApplyMapper, FlowApply
      */
     @Override
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class})
-    public String submit(FlowSubmitDto flowSubmitDto, FlowModel nextFlowModel) {
+    public String submit(FlowSubmitDto flowSubmitDto, FlowApply localFlowApply, FlowModel nextFlowModel) {
+        //更新当前节点的完成时间
+        QueryWrapper<FlowTask> flowTaskQueryWrapper = new QueryWrapper<>();
+        flowTaskQueryWrapper.eq("object_type", flowSubmitDto.getObjectType()).eq("object_no", flowSubmitDto.getObjectNo())
+                .eq("node_no", localFlowApply.getNodeNo());
+        FlowTask localFlowTask = new FlowTask();
+        localFlowTask.setEndTime(new Date());
+        this.flowTaskMapper.update(localFlowTask, flowTaskQueryWrapper);
         //更新flow_apply
         QueryWrapper<FlowApply> flowApplyQueryWrapper = new QueryWrapper<>();
         flowApplyQueryWrapper.eq("object_type", flowSubmitDto.getObjectType()).eq("object_no", flowSubmitDto.getObjectNo());

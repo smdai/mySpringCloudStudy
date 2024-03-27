@@ -62,5 +62,5 @@ public interface FlowApplyService extends IService<FlowApply> {
      * @param flowSubmitDto
      * @return
      */
-    String submit(FlowSubmitDto flowSubmitDto, FlowModel nextFlowModel);
+    String submit(FlowSubmitDto flowSubmitDto, FlowApply localFlowApply, FlowModel nextFlowModel);
 }
